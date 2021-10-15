@@ -114,7 +114,7 @@ query_fb_marketing_api <- function(location_type,
                              radius,",",
                              "'distance_unit':'",radius_unit,"'}]},")
   } else if (location_type == "country"){
-    query_location <- "TODO"
+    query_location <- paste0("'geo_locations':{'countries':['",country_iso2,"']},")
   }
   
   query <- paste0("https://graph.facebook.com/",version,
