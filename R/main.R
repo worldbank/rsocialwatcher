@@ -1,4 +1,24 @@
 
+get_fb_parameters <- function(class,
+                              version,
+                              token){
+  # Get Facebook Parameters
+  # ARGS
+  # -- class: "demographics", "interests", or "behaviors"
+  # -- version: API version. e.g., "v12.0"
+  
+  out_df <- GET(
+    paste0("https://graph.facebook.com/",version,"/search"),
+    query=list(
+      type='adTargetingCategory',
+      class=class,
+      access_token=token,
+      limit=2000
+    )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  
+  return(out_df)
+}
+
 is_null_or_na <- function(x){
   # Return TRUE if x is NULL or NA; FALSE otherwise
   
