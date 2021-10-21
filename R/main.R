@@ -203,7 +203,7 @@ query_fb_marketing_api <- function(location_type,
       print("Checking error!")
       
       if(!is.null(query_val$error$code)){
-        if((query_val$error$code == 80004) & param_i == 33){
+        if((query_val$error$code == 80004)){
           print("too many calls, so sleeping a bit!")
           Sys.sleep(10)
         } 
