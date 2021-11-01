@@ -16,7 +16,7 @@ VERSION      <- "[ENTER HERE]"
 CREATION_ACT <- "[ENTER HERE]"
 TOKEN        <- "[ENTER HERE]"
 
-# Get dataframe of Facebook parameter IDs and names ----------------------------
+# Get dataframe of Facebook parameter IDs and descriptions ---------------------
 demographics_df <- get_fb_parameters("demographics", VERSION, TOKEN)
 interests_df    <- get_fb_parameters("interests",   VERSION, TOKEN)
 behaviors_df    <- get_fb_parameters("behaviors",   VERSION, TOKEN)
