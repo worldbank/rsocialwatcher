@@ -11,10 +11,10 @@ source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
 
 ## Example
 ```r
-# Define API tokens ------------------------------------------------------------
-VERSION <- "[ENTER HERE]"
+# Define API version, creation act & token -------------------------------------
+VERSION      <- "[ENTER HERE]"
 CREATION_ACT <- "[ENTER HERE]"
-TOKEN <- "[ENTER HERE]"
+TOKEN        <- "[ENTER HERE]"
 
 # Get dataframe of Facebook parameter IDs and names ----------------------------
 demographics_df <- get_fb_parameters("demographics", VERSION, TOKEN)
