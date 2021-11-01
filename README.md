@@ -23,7 +23,7 @@ behaviors_df    <- get_fb_parameters("behaviors",    VERSION, TOKEN)
 
 # Query country level ----------------------------------------------------------
 # MAU/DAU of all Facebook users
-fb_all_ke <- query_fb_marketing_api(
+fb_1_ke_df <- query_fb_marketing_api(
   location_type = "country",
   country_iso2  = "KE",
   version       = VERSION,
@@ -31,7 +31,7 @@ fb_all_ke <- query_fb_marketing_api(
   token         = TOKEN)
 
 # MAU/DAU of people who primarily access Facebook using Mac OS X
-fb_max_ke <- query_fb_marketing_api(
+fb_2_ke_df <- query_fb_marketing_api(
   location_type = "country",
   country_iso2  = "KE",
   behavior      = 6003966451572,
@@ -41,7 +41,7 @@ fb_max_ke <- query_fb_marketing_api(
 
 # MAU/DAU of people who primarily access Facebook using Mac OS X OR
 # who access Facebook mobile using iPhone XS Max
-fb_max_ke <- query_fb_marketing_api(
+fb_3_ke_df <- query_fb_marketing_api(
   location_type = "country",
   country_iso2  = "KE",
   behavior      = c(6003966451572, 6120699721983),
@@ -52,7 +52,7 @@ fb_max_ke <- query_fb_marketing_api(
 # MAU/DAU of people who primarily access Facebook using Mac OS X OR
 # who access Facebook mobile using iPhone XS Max OR
 # who are interested in technology
-fb_max_ke <- query_fb_marketing_api(
+fb_4_ke_df <- query_fb_marketing_api(
   location_type = "country",
   country_iso2  = "KE",
   behavior      = c(6003966451572, 6120699721983),
@@ -63,7 +63,7 @@ fb_max_ke <- query_fb_marketing_api(
 
 # Query specific location ------------------------------------------------------
 # MAU/DAU of all Facebook users
-fb_all_latlon <- query_fb_marketing_api(
+fb_1_latlon_df <- query_fb_marketing_api(
   location_type = "coordinates",
   latitude      = 1,
   longitude     = 1,
