@@ -18,8 +18,8 @@ TOKEN        <- "[ENTER HERE]"
 
 # Get dataframe of Facebook parameter IDs and descriptions ---------------------
 demographics_df <- get_fb_parameters("demographics", VERSION, TOKEN)
-interests_df    <- get_fb_parameters("interests",   VERSION, TOKEN)
-behaviors_df    <- get_fb_parameters("behaviors",   VERSION, TOKEN)
+interests_df    <- get_fb_parameters("interests",    VERSION, TOKEN)
+behaviors_df    <- get_fb_parameters("behaviors",    VERSION, TOKEN)
 
 # Query country level ----------------------------------------------------------
 # MAU/DAU of all Facebook users
