@@ -78,7 +78,7 @@ query_fb_marketing_api <- function(location_type,
     if(is.null(latitude)) stop("Must enter numeric value for 'latitude'")
     if(is.null(longitude)) stop("Must enter numeric value for 'longitude'")
     if(is.null(radius)) stop("Must enter numeric value for 'radius'")
-    if(is.null(radius_unit)) stop("Must enter numeric value for 'radius_unit'")
+    if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
   
   if(location_type == "country"){
