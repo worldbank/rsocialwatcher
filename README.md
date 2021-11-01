@@ -65,13 +65,12 @@ fb_4_ke_df <- query_fb_marketing_api(
 # MAU/DAU of all Facebook users
 fb_1_latlon_df <- query_fb_marketing_api(
   location_type = "coordinates",
-  latitude      = 1,
-  longitude     = 1,
+  latitude      = -1.286389,
+  longitude     = 36.817222,
   radius        = 5,
   radius_unit   = "kilometer",
   version       = VERSION,
   creation_act  = CREATION_ACT,
   token         = TOKEN)
-
 
 ```
