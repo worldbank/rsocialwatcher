@@ -161,8 +161,7 @@ query_fb_marketing_api <- function(location_type,
   query_val_df <- tryCatch({
     
     query_val <- url(query) %>% fromJSON
-    query_val
-    
+
     #### If there is no error
     if(is.null(query_val$error)){
       
@@ -191,7 +190,7 @@ query_fb_marketing_api <- function(location_type,
       
       ## Print result and sleep (sleep needed b/c of rate limiting)
       if(show_result){
-        print(paste0(query_val_df$estimate_mau," ", query_val_df$estimate_dau))
+        print(paste0(query_val_df$estimate_mau_lower_bound," ", query_val_df$estimate_dau))
       }
       
       ## Sleep
