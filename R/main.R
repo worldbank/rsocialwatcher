@@ -190,7 +190,9 @@ query_fb_marketing_api <- function(location_type,
       
       ## Print result and sleep (sleep needed b/c of rate limiting)
       if(show_result){
-        print(paste0(query_val_df$estimate_mau_lower_bound," ", query_val_df$estimate_dau))
+        print(paste0(query_val_df$estimate_mau_lower_bound,"-",
+                     query_val_df$estimate_mau_upper_bound," ", 
+                     query_val_df$estimate_dau))
       }
       
       ## Sleep
