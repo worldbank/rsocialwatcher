@@ -1,4 +1,7 @@
 
+library(dplyr)
+library(jsonlite)
+
 get_fb_parameters <- function(class,
                               version,
                               token){
@@ -6,6 +9,7 @@ get_fb_parameters <- function(class,
   # ARGS
   # -- class: "demographics", "interests", or "behaviors"
   # -- version: API version. e.g., "v12.0"
+  # -- token: Facebook API token
   
   out_df <- GET(
     paste0("https://graph.facebook.com/",version,"/search"),
@@ -45,14 +49,13 @@ query_fb_marketing_api <- function(location_type,
                                    behavior = NULL,
                                    interest = NULL,
                                    gender = c(1,2),
-                                   age_min = NULL,
-                                   age_max = NULL,
+                                   age_min = 18,
+                                   age_max = 65,
+                                   sleep_time = 20,
+                                   show_result = T,
                                    version, 
                                    creation_act, 
-                                   token,
-                                   other_vars_df = NULL,
-                                   sleep_time = 20,
-                                   show_result = T){
+                                   token){
   
   # Query Facebook Marketing API
   # ARGs:
