@@ -22,7 +22,11 @@ fb_df <- query_fb_marketing_api(
   interest      = 6003985771306,
   version       = VERSION,
   creation_act  = CREATION_ACT,
-  token         = TOKEN)
+  token         = TOKEN,
+  sleep_time    = 0.1)
+
+behavior      = c(6003966451572, 6120699721983)
+interest      = 6003985771306
 
 location_type = "country"
 country_iso2 = "KE"

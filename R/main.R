@@ -79,9 +79,9 @@ query_fb_marketing_api <- function(location_type,
   }
   
   if(location_type == "coordinates"){
-    if(is.null(latitude)) stop("Must enter numeric value for 'latitude'")
-    if(is.null(longitude)) stop("Must enter numeric value for 'longitude'")
-    if(is.null(radius)) stop("Must enter numeric value for 'radius'")
+    if(is.null(latitude))    stop("Must enter numeric value for 'latitude'")
+    if(is.null(longitude))   stop("Must enter numeric value for 'longitude'")
+    if(is.null(radius))      stop("Must enter numeric value for 'radius'")
     if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
   
@@ -174,29 +174,27 @@ query_fb_marketing_api <- function(location_type,
       query_val_df$daily_outcomes_curve <- NULL
       
       ## Add parameter info
-      query_val_df$location_type <- location_type
-      query_val_df$latitude <- latitude
-      query_val_df$longitude <- longitude
-      query_val_df$radius <- radius
-      query_val_df$radius_unit <- radius_unit
-      query_val_df$country_iso2 <- country_iso2
-      query_val_df$education_statuses <- education_statuses_param
-      query_val_df$user_os <- user_os_param
-      query_val_df$wireless_carrier <- wireless_carrier_param
-      query_val_df$behavior <- behavior_param
-      query_val_df$interest <- interest_param
-      query_val_df$gender <- gender_param
-      query_val_df$age_min <- age_min
-      query_val_df$age_max <- age_max
+      query_val_df$location_type      <- location_type
+      query_val_df$latitude           <- latitude
+      query_val_df$longitude          <- longitude
+      query_val_df$radius             <- radius
+      query_val_df$radius_unit        <- radius_unit
+      query_val_df$country_iso2       <- country_iso2
+      query_val_df$education_statuses <- education_statuses %>% paste(collapse = ",")
+      query_val_df$user_os            <- user_os %>% paste(collapse = ",")
+      query_val_df$wireless_carrier   <- wireless_carrier %>% paste(collapse = ",")
+      query_val_df$behavior           <- behavior %>% paste(collapse = ",")
+      query_val_df$interest           <- interest %>% paste(collapse = ",")
+      query_val_df$gender             <- gender   %>% paste(collapse = ",")
+      query_val_df$age_min            <- age_min
+      query_val_df$age_max            <- age_max
       
       ## Add time
       query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
       
       ## Print result and sleep (sleep needed b/c of rate limiting)
       if(show_result){
-        print(paste0(query_val_df$estimate_mau_lower_bound,"-",
-                     query_val_df$estimate_mau_upper_bound," ", 
-                     query_val_df$estimate_dau))
+        print(query_val_df)
       }
       
       ## Sleep
