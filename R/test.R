@@ -30,7 +30,6 @@ latitude = NULL
 longitude = NULL
 radius = NULL
 radius_unit = NULL
-country_iso2 = NULL
 education_statuses = NULL
 user_os = NULL
 wireless_carrier = NULL

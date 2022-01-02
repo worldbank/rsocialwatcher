@@ -1,5 +1,6 @@
 
 library(dplyr)
+library(lubridate)
 library(jsonlite)
 
 get_fb_parameters <- function(class,
