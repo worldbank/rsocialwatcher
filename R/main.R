@@ -193,8 +193,12 @@ query_fb_marketing_api <- function(location_type,
       query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
       
       ## Print result and sleep (sleep needed b/c of rate limiting)
+      #if(show_result){
+      #  print(query_val_df)
+      #}
+      
       if(show_result){
-        print(query_val_df)
+        print(query_val_df$estimate_mau_upper_bound)
       }
       
       ## Sleep

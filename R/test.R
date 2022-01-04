@@ -47,3 +47,30 @@ show_result = T
 version       = VERSION
 creation_act  = CREATION_ACT
 token         = TOKEN
+
+# Test making parameter dataframe ----------------------------------------------
+## (1) Can enter this into another function, and it loops over. 
+## (2) Function should give warning if required parameters are not entered
+## --- See warnings from other script. Make those into separate functions
+##     to use in both scripts?
+## (3) **TODO Think about how this works with looping over locations
+
+latitude      = list(-1.286389)
+longitude     = list(36.817222)
+radius        = list(5)
+radius_unit   = list("kilometer")
+
+behavior <- list(c(1,3),
+                 2,
+                 c(4,5))
+
+interest <- list(c(4,5),
+                 7)
+
+gender <- list(c(1,2))
+
+
+
+
+
+
