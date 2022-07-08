@@ -2,19 +2,34 @@
 
 source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
 
+library(stringr)
+
 # Load keys --------------------------------------------------------------------
 api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
                      stringsAsFactors = F)
 
 api_keys <- api_keys %>%
   dplyr::filter(Service == "facebook_marketing_ad",
-                Details == "robmarty3@gmail.com")
+                Details == "robmarty3@gmail.com_v2")
 
 TOKEN        <- api_keys %>% dplyr::filter(Account == "token")        %>% pull(Key)
-CREATION_ACT <- api_keys %>% dplyr::filter(Account == "creation_act") %>% pull(Key)
+CREATION_ACT <- api_keys %>% dplyr::filter(Account == "creation_act") %>% pull(Key) %>% str_replace_all("ACT_", "")
 VERSION      <- api_keys %>% dplyr::filter(Account == "version")      %>% pull(Key)
 
-# Test -------------------------------------------------------------------------
+# Test: get_fb_parameters ------------------------------------------------------
+demog_df <- get_fb_parameters(class = "demographics",
+                              version = VERSION,
+                              token = TOKEN)
+
+interests_df <- get_fb_parameters(class = "interests",
+                                  version = VERSION,
+                                  token = TOKEN)
+
+behaviors_df <- get_fb_parameters(class = "behaviors",
+                                  version = VERSION,
+                                  token = TOKEN)
+
+# Test: query_fb_marketing_api -------------------------------------------------
 fb_df <- query_fb_marketing_api(
   location_type = "country",
   country_iso2  = "KE",
@@ -44,30 +59,127 @@ age_min = 18
 age_max = 65
 sleep_time = 20
 show_result = T
-version       = VERSION
-creation_act  = CREATION_ACT
-token         = TOKEN
+version      = VERSION
+creation_act = CREATION_ACT
+token        = TOKEN
 
-# Test making parameter dataframe ----------------------------------------------
+# Test making parameter dataframe ==============================================
 ## (1) Can enter this into another function, and it loops over. 
 ## (2) Function should give warning if required parameters are not entered
 ## --- See warnings from other script. Make those into separate functions
 ##     to use in both scripts?
 ## (3) **TODO Think about how this works with looping over locations
 
-latitude      = list(-1.286389)
-longitude     = list(36.817222)
-radius        = list(5)
-radius_unit   = list("kilometer")
+# TODO: (1) sleep after location; (2) sleep after parameter --> auto calculate
+# TODO: (1) Allow looping over keys! Then auto-figure out timing needed!
+# TODO: Double check requests per hour to calculate this.
 
-behavior <- list(c(1,3),
+# Parameter inputs -------------------------------------------------------------
+location_type <- "coordinates"
+
+lat_lon <- list(c(-1.286389, 36.817222),
+                c(-6.816111, 39.280278))
+
+radius        = 5
+radius_unit   = "kilometer"
+
+education_statuses <- NULL
+user_os <- NULL
+wireless_carrier <- NULL
+
+behavior <- list(NULL,
+                 c(1,3),
                  2,
                  c(4,5))
 
 interest <- list(c(4,5),
                  7)
 
-gender <- list(c(1,2))
+gender <- c(1,2)
+
+age_min <- 18
+age_max <- 65
+
+# Checks -----------------------------------------------------------------------
+if(length(location_type) != 1) stop("'location_type' must be a vector of length one, either 'coordinates' or 'country'; only one option allowed")
+
+# Convert param inputs to list -------------------------------------------------
+convert_to_list <- function(x){
+  # Converts to list if not a list
+  if(!is.list(x)) x <- list(x)
+  return(x)
+}
+
+lat_lon            <- lat_lon %>% convert_to_list()
+radius             <- radius %>% convert_to_list()
+radius_unit        <- radius_unit %>% convert_to_list()
+education_statuses <- education_statuses %>% convert_to_list()
+user_os            <- user_os %>% convert_to_list()
+wireless_carrier   <- wireless_carrier %>% convert_to_list()
+behavior           <- behavior %>% convert_to_list()
+interest           <- interest %>% convert_to_list()
+gender             <- gender %>% convert_to_list()
+age_min            <- age_min %>% convert_to_list()
+age_max            <- age_max %>% convert_to_list()
+
+# Length parameter inputs to same length ---------------------------------------
+n_param_combn <- length(lat_lon) * 
+  length(radius) *
+  length(radius_unit) *
+  length(education_statuses) *
+  length(user_os) *
+  length(wireless_carrier) *
+  length(behavior) *
+  length(interest) *
+  length(gender) *
+  length(age_min) *
+  length(age_max)
+
+lat_lon            <- rep(lat_lon, length = n_param_combn)
+radius             <- rep(radius, length = n_param_combn)
+radius_unit        <- rep(radius_unit, length = n_param_combn)
+education_statuses <- rep(education_statuses, length = n_param_combn)
+user_os            <- rep(user_os, length = n_param_combn)
+wireless_carrier   <- rep(wireless_carrier, length = n_param_combn)
+behavior           <- rep(behavior, length = n_param_combn)
+interest           <- rep(interest, length = n_param_combn)
+gender             <- rep(gender, length = n_param_combn)
+age_min            <- rep(age_min, length = n_param_combn)
+age_max            <- rep(age_max, length = n_param_combn)
+
+# Length parameter inputs to same length ---------------------------------------
+
+query_fb_marketing_api
+
+
+
+location_type,
+lat_lon = NULL,
+radius = NULL,
+radius_unit = NULL,
+country_iso2 = NULL,
+education_statuses = NULL,
+user_os = NULL,
+wireless_carrier = NULL,
+behavior = NULL,
+interest = NULL,
+gender = c(1,2),
+age_min = 18,
+age_max = 65,
+sleep_time = 20,
+show_result = T,
+version, 
+creation_act, 
+token
+
+
+addd <- function(x,y,z){
+  x-y+z
+}
+
+mapply(addd, x=1:2, y=5:6, MoreArgs = list(z=1))
+
+
 
 
 

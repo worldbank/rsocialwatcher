@@ -1,8 +1,30 @@
 
+# TODO:
+# 1. Function for 1 pull
+# 2. Wrapper; over multiple locations and multiple parameters
+# 3. behavior_not: For behaviors to exlcude (also for interests, etc.)
+
 library(dplyr)
 library(lubridate)
 library(jsonlite)
+library(httr)
 
+# Helper functions -------------------------------------------------------------
+is_null_or_na <- function(x){
+  # Return TRUE if x is NULL or NA; FALSE otherwise
+  
+  out <- FALSE
+  
+  if(is.null(x)) out <- TRUE
+  
+  if(!is.null(x)){
+    if(TRUE %in% is.na(x)) out <- TRUE
+  }
+  
+  return(out)
+}
+
+# Main functions ---------------------------------------------------------------
 get_fb_parameters <- function(class,
                               version,
                               token){
@@ -24,23 +46,10 @@ get_fb_parameters <- function(class,
   return(out_df)
 }
 
-is_null_or_na <- function(x){
-  # Return TRUE if x is NULL or NA; FALSE otherwise
-  
-  out <- FALSE
-  
-  if(is.null(x)) out <- TRUE
-  
-  if(!is.null(x)){
-    if(TRUE %in% is.na(x)) out <- TRUE
-  }
-  
-  return(out)
-}
-
 query_fb_marketing_api <- function(location_type,
-                                   latitude = NULL,
-                                   longitude = NULL,
+                                   #latitude = NULL,
+                                   #longitude = NULL,
+                                   lat_lon = NULL,
                                    radius = NULL,
                                    radius_unit = NULL,
                                    country_iso2 = NULL,
@@ -79,8 +88,10 @@ query_fb_marketing_api <- function(location_type,
   }
   
   if(location_type == "coordinates"){
-    if(is.null(latitude))    stop("Must enter numeric value for 'latitude'")
-    if(is.null(longitude))   stop("Must enter numeric value for 'longitude'")
+    
+    if(length(lat_lon) != 2 ) stop("'lat_lon' must be a vector of length 2, with latitude then longitude")
+    #if(is.null(latitude))    stop("Must enter numeric value for 'latitude'")
+    #if(is.null(longitude))   stop("Must enter numeric value for 'longitude'")
     if(is.null(radius))      stop("Must enter numeric value for 'radius'")
     if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
@@ -91,7 +102,7 @@ query_fb_marketing_api <- function(location_type,
   
   # Check internet -------------------------------------------------------------
   # Stall if not connected to internet
-  while(!curl::has_internet()){ Sys.sleep(30); print("Looking for internet")}
+  while(!curl::has_internet()){ Sys.sleep(5); print("Looking for internet")}
   
   # Prep parameters ------------------------------------------------------------
   if(is_null_or_na(behavior)){
@@ -130,6 +141,9 @@ query_fb_marketing_api <- function(location_type,
   
   # Make Query -----------------------------------------------------------------
   if(location_type == "coordinates"){
+    latitude  <- lat_lon[1]
+    longitude <- lat_lon[2]
+    
     query_location <- paste0("'geo_locations':{'location_types':['home'],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
@@ -165,7 +179,7 @@ query_fb_marketing_api <- function(location_type,
   query_val_df <- tryCatch({
     
     query_val <- url(query) %>% fromJSON
-
+    
     #### If there is no error
     if(is.null(query_val$error)){
       
@@ -175,11 +189,7 @@ query_fb_marketing_api <- function(location_type,
       
       ## Add parameter info
       query_val_df$location_type      <- location_type
-      query_val_df$latitude           <- latitude
-      query_val_df$longitude          <- longitude
-      query_val_df$radius             <- radius
-      query_val_df$radius_unit        <- radius_unit
-      query_val_df$country_iso2       <- country_iso2
+      
       query_val_df$education_statuses <- education_statuses %>% paste(collapse = ",")
       query_val_df$user_os            <- user_os %>% paste(collapse = ",")
       query_val_df$wireless_carrier   <- wireless_carrier %>% paste(collapse = ",")
@@ -188,6 +198,15 @@ query_fb_marketing_api <- function(location_type,
       query_val_df$gender             <- gender   %>% paste(collapse = ",")
       query_val_df$age_min            <- age_min
       query_val_df$age_max            <- age_max
+      
+      if(location_type == "coordinates"){
+        query_val_df$latitude    <- latitude
+        query_val_df$longitude   <- longitude
+        query_val_df$radius      <- radius
+        query_val_df$radius_unit <- radius_unit
+      } else{
+        query_val_df$country_iso2       <- country_iso2
+      }
       
       ## Add time
       query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
@@ -219,7 +238,7 @@ query_fb_marketing_api <- function(location_type,
       query_val_df <- ""
       
       # Sometimes lat/lon is not in a valid location. We still create a dataframe
-      # for those
+      # for those queries.
       if(query_val$error$error_user_title == "Incorrect Location Format"){
         query_val_df <- data.frame(ERROR = "Incorrect Location Format")
       } else{
