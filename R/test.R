@@ -84,18 +84,18 @@ lat_lon <- list(c(-1.286389, 36.817222),
 
 radius        = 5
 radius_unit   = "kilometer"
+country_iso2  <- NULL
 
 education_statuses <- NULL
 user_os <- NULL
 wireless_carrier <- NULL
 
 behavior <- list(NULL,
-                 c(1,3),
-                 2,
-                 c(4,5))
+                 6004382299972,
+                 6002714895372,
+                 c(6004382299972, 6002714895372))
 
-interest <- list(c(4,5),
-                 7)
+interest <- list(c(6003349442621, 6003020834693))
 
 gender <- c(1,2)
 
@@ -115,6 +115,7 @@ convert_to_list <- function(x){
 lat_lon            <- lat_lon %>% convert_to_list()
 radius             <- radius %>% convert_to_list()
 radius_unit        <- radius_unit %>% convert_to_list()
+country_iso2       <- country_iso2 %>% convert_to_list()
 education_statuses <- education_statuses %>% convert_to_list()
 user_os            <- user_os %>% convert_to_list()
 wireless_carrier   <- wireless_carrier %>% convert_to_list()
@@ -128,6 +129,7 @@ age_max            <- age_max %>% convert_to_list()
 n_param_combn <- length(lat_lon) * 
   length(radius) *
   length(radius_unit) *
+  length(country_iso2) *
   length(education_statuses) *
   length(user_os) *
   length(wireless_carrier) *
@@ -150,40 +152,27 @@ age_min            <- rep(age_min, length = n_param_combn)
 age_max            <- rep(age_max, length = n_param_combn)
 
 # Length parameter inputs to same length ---------------------------------------
-
-query_fb_marketing_api
-
-
-
-location_type,
-lat_lon = NULL,
-radius = NULL,
-radius_unit = NULL,
-country_iso2 = NULL,
-education_statuses = NULL,
-user_os = NULL,
-wireless_carrier = NULL,
-behavior = NULL,
-interest = NULL,
-gender = c(1,2),
-age_min = 18,
-age_max = 65,
-sleep_time = 20,
-show_result = T,
-version, 
-creation_act, 
-token
-
-
-addd <- function(x,y,z){
-  x-y+z
-}
-
-mapply(addd, x=1:2, y=5:6, MoreArgs = list(z=1))
-
-
-
-
+out_df <- mapply(query_fb_marketing_api_1call,
+                 lat_lon = lat_lon,
+                 radius = radius,
+                 radius_unit = radius_unit,
+                 education_statuses = education_statuses,
+                 user_os = user_os,
+                 wireless_carrier = wireless_carrier,
+                 behavior = behavior,
+                 interest = interest,
+                 gender = gender,
+                 age_min = age_min,
+                 age_max = age_max,
+                 MoreArgs = list(location_type = location_type,
+                                 sleep_time = 3,
+                                 show_result = T,
+                                 version = version,
+                                 creation_act = creation_act,
+                                 token = token),
+                 SIMPLIFY = F
+) %>% 
+  bind_rows()
 
 
 
