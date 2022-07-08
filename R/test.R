@@ -73,6 +73,8 @@ token        = TOKEN
 # TODO: (1) sleep after location; (2) sleep after parameter --> auto calculate
 # TODO: (1) Allow looping over keys! Then auto-figure out timing needed!
 # TODO: Double check requests per hour to calculate this.
+# TODO: Just have this be the one, main function? Yes! Then makes sleeping easier,
+#       if want different sleeping after location vs param.
 
 # Parameter inputs -------------------------------------------------------------
 location_type <- "coordinates"
