@@ -48,7 +48,7 @@ query_fb_marketing_api(
 
 \item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{c(6003349442621, 6003139266461)} will yeild active users who are interested in either entertainment or movies. Use get_fb_parameters() to get dataframe with IDs and descriptions.}
 
-\item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \url{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting} to see education status options.}
+\item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see education status options.}
 
 \item{user_os}{words}
 
