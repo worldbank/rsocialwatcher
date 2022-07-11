@@ -1,6 +1,6 @@
 
 # TODO:
-# 1. Function for 1 pull
+# 1. Add required packages as "depends"
 # 2. Wrapper; over multiple locations and multiple parameters
 # 3. behavior_not: For behaviors to exlcude (also for interests, etc.)
 
@@ -36,29 +36,38 @@ is_null_or_na <- function(x){
 #' and interests. The dataframes contain ids that can be used in the 
 #' query_fb_marketing_api function.
 #'
-#' @param class Type of data; either "behaviors", "demographics", or "interests"
+#' @param type Type of data; either "behaviors", "demographics", "interests", or "locales"
 #' @param version Facebook Marketing API version; for example, "v14.0"
 #' @param token Facebook Marketing API token
 #' 
-#' @return Dataframe with parameter IDs, descriptions, and global audience sizes
+#' @return Dataframe with parameter IDs and descriptions.
 #' @export
-get_fb_parameters <- function(class,
+get_fb_parameters <- function(type,
                               version,
                               token){
-  # Get Facebook Parameters
-  # ARGS
-  # -- class: "demographics", "interests", or "behaviors"
-  # -- version: API version. e.g., "v12.0"
-  # -- token: Facebook API token
   
-  out_df <- GET(
-    paste0("https://graph.facebook.com/",version,"/search"),
-    query=list(
-      type='adTargetingCategory',
-      class=class,
-      access_token=token,
-      limit=2000
-    )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  # Checks ---------------------------------------------------------------------
+  if(type %in% c("behaviors", "demographics", "interests", "locales"))
+    
+    # Call API -----------------------------------------------------------------
+  if(type %in% c("behaviors", "demographics", "interests")){
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adTargetingCategory',
+        class=type,
+        access_token=token,
+        limit=2000
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "locales"){
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adlocale',
+        access_token=token,
+        limit=2000
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  }
   
   return(out_df)
 }
@@ -152,7 +161,23 @@ query_fb_marketing_api_1call <- function(location_type,
     life_events_param <- paste0("{'id':", life_events, "}") %>% paste(collapse = ",")
   }
   
-  #relationship_statuses life_events industries income family_statuses
+  if(is_null_or_na(industries)){
+    industries_param <- NULL
+  } else{
+    industries_param <- paste0("{'id':", industries, "}") %>% paste(collapse = ",")
+  }
+  
+  if(is_null_or_na(income)){
+    income_param <- NULL
+  } else{
+    income_param <- paste0("{'id':", income, "}") %>% paste(collapse = ",")
+  }
+  
+  if(is_null_or_na(family_statuses)){
+    family_statuses_param <- NULL
+  } else{
+    family_statuses_param <- paste0("{'id':", family_statuses, "}") %>% paste(collapse = ",")
+  }
   
   if(is_null_or_na(education_statuses)){
     education_statuses_param <- NULL
@@ -202,9 +227,15 @@ query_fb_marketing_api_1call <- function(location_type,
                   ifelse(is.null(interest_param), "", 
                          paste0("'interests':[", interest_param, "],")), 
                   ifelse(is.null(relationship_statuses_param), "", 
-                         paste0("'interests':[", relationship_statuses_param, "],")), 
+                         paste0("'relationship_statuses':[", relationship_statuses_param, "],")), 
                   ifelse(is.null(life_events_param), "", 
-                         paste0("'interests':[", life_events_param, "],")), 
+                         paste0("'life_events':[", life_events_param, "],")), 
+                  ifelse(is.null(industries_param), "", 
+                         paste0("'industries':[", industries_param, "],")), 
+                  ifelse(is.null(income_param), "", 
+                         paste0("'income':[", income_param, "],")), 
+                  ifelse(is.null(family_statuses_param), "", 
+                         paste0("'family_statuses':[", family_statuses_param, "],")), 
                   ifelse(is.null(education_statuses_param), "", 
                          paste0("'education_statuses':[", education_statuses_param, "],")), 
                   ifelse(is.null(user_os_param), "", 
@@ -267,6 +298,12 @@ query_fb_marketing_api_1call <- function(location_type,
         
       } 
       
+      ## If no entry in dataframe ("" or NA), then remove the variable
+      for(var in names(query_val_df)){
+        if(is.na(query_val_df[[var]]))  query_val_df[[var]] <- NULL
+        if(query_val_df[[var]] %in% "") query_val_df[[var]] <- NULL
+      }
+      
       ## Print result and sleep (sleep needed b/c of rate limiting)
       #if(show_result){
       #  print(query_val_df)
@@ -326,13 +363,13 @@ query_fb_marketing_api_1call <- function(location_type,
 #' ## Other location??
 #' @param locales Words
 #' ## Parameters. These are optional. If nothing specified, then searches for all users.
-#' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `behavior = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(class = "behaviors")` to get dataframe with IDs and descriptions. 
-#' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `interest = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(class = "interests")` to get dataframe with IDs and descriptions. 
+#' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `behavior = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors")` to get dataframe with IDs and descriptions. 
+#' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `interest = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(type = "interests")` to get dataframe with IDs and descriptions. 
 #' @param relationship_statuses Vector of relationship status IDs. If multiple, uses `OR` condition; for example, `relationship_statuses = c(3,4)` targets those who are married or engaged. See `relationship_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see relationship status ID options with descriptions. 
-#' @param life_events Vector of life event IDs. If multiple, uses `OR` condition; for example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(class = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param industries Vector of industries IDs. If multiple, uses `OR` condition; for example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(class = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param income Vector of income IDs. If multiple, uses `OR` condition; for example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(class = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param family_statuses Vector of family status IDs. If multiple, uses `OR` condition; for example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(class = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param life_events Vector of life event IDs. If multiple, uses `OR` condition; for example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param industries Vector of industries IDs. If multiple, uses `OR` condition; for example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param income Vector of income IDs. If multiple, uses `OR` condition; for example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param family_statuses Vector of family status IDs. If multiple, uses `OR` condition; for example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
 #' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `education_statuses = c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see education status options. 
 #' @param user_os User operating systems. If multiple, uses `OR` condition; for example `user_os = ['iOS', 'Android']` targets those that use either an iOS or Android OS. See `user_os` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
 #' @param wireless_carrier Wireless carriet. If set to `Wifi`, then targets those connecting via a Wifi network. See `wireless_carrier` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.

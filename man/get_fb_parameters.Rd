@@ -4,17 +4,17 @@
 \alias{get_fb_parameters}
 \title{Get Facebook Parameter IDs}
 \usage{
-get_fb_parameters(class, version, token)
+get_fb_parameters(type, version, token)
 }
 \arguments{
-\item{class}{Type of data; either "behaviors", "demographics", or "interests"}
+\item{type}{Type of data; either "behaviors", "demographics", "interests", or "locales"}
 
 \item{version}{Facebook Marketing API version; for example, "v14.0"}
 
 \item{token}{Facebook Marketing API token}
 }
 \value{
-Dataframe with parameter IDs, descriptions, and global audience sizes
+Dataframe with parameter IDs and descriptions.
 }
 \description{
 This function returns dataframes of parameters for behaviors, demographics,

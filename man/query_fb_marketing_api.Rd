@@ -54,19 +54,19 @@ query_fb_marketing_api(
 \subsection{Parameters. These are optional. If nothing specified, then searches for all users.}{
 }}
 
-\item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{behavior = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameters(class = "behaviors")} to get dataframe with IDs and descriptions.}
+\item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{behavior = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameters(type = "behaviors")} to get dataframe with IDs and descriptions.}
 
-\item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{interest = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(class = "interests")} to get dataframe with IDs and descriptions.}
+\item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{interest = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(type = "interests")} to get dataframe with IDs and descriptions.}
 
 \item{relationship_statuses}{Vector of relationship status IDs. If multiple, uses \code{OR} condition; for example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. See \code{relationship_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see relationship status ID options with descriptions.}
 
-\item{life_events}{Vector of life event IDs. If multiple, uses \code{OR} condition; for example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
+\item{life_events}{Vector of life event IDs. If multiple, uses \code{OR} condition; for example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(type = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{industries}{Vector of industries IDs. If multiple, uses \code{OR} condition; for example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
+\item{industries}{Vector of industries IDs. If multiple, uses \code{OR} condition; for example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameters(type = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{income}{Vector of income IDs. If multiple, uses \code{OR} condition; for example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
+\item{income}{Vector of income IDs. If multiple, uses \code{OR} condition; for example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameters(type = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{family_statuses}{Vector of family status IDs. If multiple, uses \code{OR} condition; for example, \code{family_statuses = c(6023080302983, 6023005681983)} targets users who are parents with preteens or parents with teenagers. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
+\item{family_statuses}{Vector of family status IDs. If multiple, uses \code{OR} condition; for example, \code{family_statuses = c(6023080302983, 6023005681983)} targets users who are parents with preteens or parents with teenagers. Use \code{get_fb_parameters(type = "demographics")} to get dataframe with IDs and descriptions.}
 
 \item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{education_statuses = c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see education status options.}
 

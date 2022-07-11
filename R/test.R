@@ -55,15 +55,12 @@ if(F){
     location_type = "country",
     country_iso2  = "KE",
     behavior      = c(6003966451572, 6120699721983),
-    interest      = 6003985771306,
-    relationship_statuses = c(3,4),
+    interest      = 6003349442621,
+    family_statuses = c(6002714398372),
     version       = VERSION,
     creation_act  = CREATION_ACT,
     token         = TOKEN,
     sleep_time    = 0.1)
-  
-  behavior      = c(6003966451572, 6120699721983)
-  interest      = 6003985771306
   
   location_type = "country"
   country_iso2 = "KE"
