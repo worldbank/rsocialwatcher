@@ -285,9 +285,14 @@ query_fb_marketing_api_1call <- function(location_type,
 
 #' Query Facebook Marketing API
 #' 
-#' @param location_type: Either "coordinates" (for buffer around single point) or "country"
+#' @param location_type Either "coordinates" (for buffer around single point) or "country"
+#' @param lat_lon [If location_type = "coordinates"] Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)
+#' @param radius [If location_type = "coordinates"] Radius around coordinate
+#' @param radius_unit [If location_type = "coordinates"] Unit for radius; either "kilometer" or "mile"
+#' @param country_iso2 [If location_type = "country"] Country ISO2; for example, "US".
+#' @param education_statuses Education status
 #' 
-#' 
+#' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
 #' @export
 query_fb_marketing_api <- function(location_type,

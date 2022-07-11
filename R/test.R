@@ -1,7 +1,15 @@
 # Load data
 
-source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
+
+
 if(F){
+  
+  #source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
+  
+  #devtools::install_github("ramarty/rSocialWatcher")
+  #remove.packages("rSocialWatcher")
+  library(rSocialWatcher)
+  
   # Load keys --------------------------------------------------------------------
   api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
                        stringsAsFactors = F)

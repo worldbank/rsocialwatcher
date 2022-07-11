@@ -28,7 +28,20 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_type:}{Either "coordinates" (for buffer around single point) or "country"}
+\item{location_type}{Either "coordinates" (for buffer around single point) or "country"}
+
+\item{lat_lon}{\link{If location_type = "coordinates"} Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)}
+
+\item{radius}{\link{If location_type = "coordinates"} Radius around coordinate}
+
+\item{radius_unit}{\link{If location_type = "coordinates"} Unit for radius; either "kilometer" or "mile"}
+
+\item{country_iso2}{\link{If location_type = "country"} Country ISO2; for example, "US".}
+
+\item{education_statuses}{Education status}
+}
+\value{
+Dataframe that includes (1) daily and monthly active users and (2) parameter values
 }
 \description{
 Query Facebook Marketing API
