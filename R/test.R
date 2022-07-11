@@ -6,8 +6,9 @@ if(F){
   
   #source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
   
-  #devtools::install_github("ramarty/rSocialWatcher")
-  #remove.packages("rSocialWatcher")
+  remove.packages("rSocialWatcher")
+  
+  devtools::install_github("ramarty/rSocialWatcher")
   library(rSocialWatcher)
   
   # Load keys --------------------------------------------------------------------

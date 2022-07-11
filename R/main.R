@@ -9,7 +9,9 @@ library(lubridate)
 library(jsonlite)
 library(httr)
 library(stringr)
-#roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
+if(F){
+  roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
+}
 
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
@@ -286,7 +288,7 @@ query_fb_marketing_api_1call <- function(location_type,
 #' Query Facebook Marketing API
 #' 
 #' @param location_type Either "coordinates" (for buffer around single point) or "country"
-#' If location_Type = "coordinates":
+#' ## If location_Type = "coordinates":
 #' @param lat_lon [If location_type = "coordinates"] Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)
 #' @param radius [If location_type = "coordinates"] Radius around coordinate
 #' @param radius_unit [If location_type = "coordinates"] Unit for radius; either "kilometer" or "mile"
