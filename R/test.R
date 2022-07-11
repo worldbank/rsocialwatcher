@@ -8,8 +8,12 @@ if(F){
   
   remove.packages("rSocialWatcher")
   
+  roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
+  
   devtools::install_github("ramarty/rSocialWatcher")
   library(rSocialWatcher)
+  
+  ?query_fb_marketing_api
   
   # Load keys --------------------------------------------------------------------
   api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",

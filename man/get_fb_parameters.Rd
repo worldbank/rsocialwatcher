@@ -17,7 +17,7 @@ get_fb_parameters(class, version, token)
 Dataframe with parameter IDs, descriptions, and global audience sizes
 }
 \description{
-This function returns dataframes of parameters for behaviors., demographics,
+This function returns dataframes of parameters for behaviors, demographics,
 and interests. The dataframes contain ids that can be used in the
 query_fb_marketing_api function.
 }

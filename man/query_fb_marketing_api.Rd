@@ -10,11 +10,11 @@ query_fb_marketing_api(
   radius = NULL,
   radius_unit = NULL,
   country_iso2 = NULL,
+  behavior = NULL,
+  interest = NULL,
   education_statuses = NULL,
   user_os = NULL,
   wireless_carrier = NULL,
-  behavior = NULL,
-  interest = NULL,
   gender = c(1, 2),
   age_min = 18,
   age_max = 65,
@@ -28,31 +28,31 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_type}{Either "coordinates" (for buffer around single point) or "country"
+\item{location_type}{Either \code{"coordinates"} (for buffer around single point) or \code{"country"}
 \subsection{If location_Type = "coordinates"}{
 }}
 
-\item{lat_lon}{Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)}
+\item{lat_lon}{Coordinates, c(lat, lon). For example, \code{c(38.90, -77.01)}}
 
 \item{radius}{Radius around coordinate}
 
-\item{radius_unit}{Unit for radius; either "kilometer" or "mile"
+\item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}
 \subsection{If location_type = "country"}{
 }}
 
-\item{country_iso2}{Country ISO2; for example, "US".
+\item{country_iso2}{Country ISO2; for example, \code{"US"}.
 \subsection{Parameters}{
 }}
 
-\item{education_statuses}{Education status}
+\item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{c(6002714895372, 6008297697383)} will yeild active users who are either frequeny travlers or returned from travels 2 weeks ago. Use get_fb_parameters() to get dataframe with IDs and descriptions.}
+
+\item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{c(6003349442621, 6003139266461)} will yeild active users who are interested in either entertainment or movies. Use get_fb_parameters() to get dataframe with IDs and descriptions.}
+
+\item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \link[=https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting]{Advanced Targeting Documentation} to see education status options.}
 
 \item{user_os}{words}
 
 \item{wireless_carrier}{words}
-
-\item{behavior}{words}
-
-\item{interest}{words}
 
 \item{gender}{words}
 
@@ -62,11 +62,11 @@ query_fb_marketing_api(
 \subsection{Credentials}{
 }}
 
-\item{version}{words}
+\item{version}{API version. e.g., "v14.0"}
 
-\item{creation_act}{words}
+\item{creation_act}{Facebook creation act}
 
-\item{token}{words
+\item{token}{Facebook API token
 \subsection{Scraping parameters}{
 }}
 
@@ -78,11 +78,14 @@ query_fb_marketing_api(
 
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
 
-\item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is TRUE), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
+\item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is \code{TRUE}), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
 }
 \value{
 Dataframe that includes (1) daily and monthly active users and (2) parameter values
 }
 \description{
 Query Facebook Marketing API
+}
+\seealso{
+\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, and interests.
 }

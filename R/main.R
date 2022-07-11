@@ -32,7 +32,7 @@ is_null_or_na <- function(x){
 
 #' Get Facebook Parameter IDs
 #'
-#' This function returns dataframes of parameters for behaviors., demographics, 
+#' This function returns dataframes of parameters for behaviors, demographics, 
 #' and interests. The dataframes contain ids that can be used in the 
 #' query_fb_marketing_api function.
 #'
@@ -68,11 +68,11 @@ query_fb_marketing_api_1call <- function(location_type,
                                          radius = NULL,
                                          radius_unit = NULL,
                                          country_iso2 = NULL,
+                                         behavior = NULL,
+                                         interest = NULL,
                                          education_statuses = NULL,
                                          user_os = NULL,
                                          wireless_carrier = NULL,
-                                         behavior = NULL,
-                                         interest = NULL,
                                          gender = c(1,2),
                                          age_min = 18,
                                          age_max = 65,
@@ -287,46 +287,47 @@ query_fb_marketing_api_1call <- function(location_type,
 
 #' Query Facebook Marketing API
 #' 
-#' @param location_type Either "coordinates" (for buffer around single point) or "country"
+#' @param location_type Either `"coordinates"` (for buffer around single point) or `"country"`
 #' ## If location_Type = "coordinates"
-#' @param lat_lon Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)
+#' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
-#' @param radius_unit Unit for radius; either "kilometer" or "mile"
+#' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
 #' ## If location_type = "country" 
-#' @param country_iso2 Country ISO2; for example, "US".
+#' @param country_iso2 Country ISO2; for example, `"US"`.
 #' ## Parameters
-#' @param education_statuses Education status
+#' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `c(6002714895372, 6008297697383)` will yeild active users who are either frequeny travlers or returned from travels 2 weeks ago. Use get_fb_parameters() to get dataframe with IDs and descriptions. 
+#' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `c(6003349442621, 6003139266461)` will yeild active users who are interested in either entertainment or movies. Use get_fb_parameters() to get dataframe with IDs and descriptions. 
+#' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation][https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting] to see education status options. 
 #' @param user_os words
 #' @param wireless_carrier words
-#' @param behavior words
-#' @param interest words
 #' @param gender words
 #' @param age_min words
 #' @param age_max words
 #' ## Credentials
-#' @param version words
-#' @param creation_act words
-#' @param token words
+#' @param version API version. e.g., "v14.0"
+#' @param creation_act Facebook creation act
+#' @param token Facebook API token
 #' ## Scraping parameters
 #' @param sleep_time words
 #' @param show_result words
 #' ## Return query text as variable in returned dataframe
 #' @param add_query If `TRUE`, add query text as variable in returned dataframe 
-#' @param add_query_hide_credentials If `TRUE` (and `add_query` is TRUE), hide the `creation_act` and `token` from the query text returned in the dataframe
+#' @param add_query_hide_credentials If `TRUE` (and `add_query` is `TRUE`), hide the `creation_act` and `token` from the query text returned in the dataframe
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
+#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, and interests.
 #' @export
 query_fb_marketing_api <- function(location_type,
                                    lat_lon = NULL,
                                    radius = NULL,
                                    radius_unit = NULL,
                                    country_iso2 = NULL,
+                                   behavior = NULL,
+                                   interest = NULL,
                                    education_statuses = NULL,
                                    user_os = NULL,
                                    wireless_carrier = NULL,
-                                   behavior = NULL,
-                                   interest = NULL,
                                    gender = c(1,2),
                                    age_min = 18,
                                    age_max = 65,
