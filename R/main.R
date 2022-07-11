@@ -143,7 +143,13 @@ query_fb_marketing_api_1call <- function(location_type,
   if(is_null_or_na(relationship_statuses)){
     relationship_statuses_param <- NULL
   } else{
-    relationship_statuses_param <- paste0("{'id':", relationship_statuses, "}") %>% paste(collapse = ",")
+    relationship_statuses_param <- relationship_statuses %>% paste(collapse = ",")
+  }
+  
+  if(is_null_or_na(life_events)){
+    life_events_param <- NULL
+  } else{
+    life_events_param <- paste0("{'id':", life_events, "}") %>% paste(collapse = ",")
   }
   
   #relationship_statuses life_events industries income family_statuses
@@ -197,6 +203,8 @@ query_fb_marketing_api_1call <- function(location_type,
                          paste0("'interests':[", interest_param, "],")), 
                   ifelse(is.null(relationship_statuses_param), "", 
                          paste0("'interests':[", relationship_statuses_param, "],")), 
+                  ifelse(is.null(life_events_param), "", 
+                         paste0("'interests':[", life_events_param, "],")), 
                   ifelse(is.null(education_statuses_param), "", 
                          paste0("'education_statuses':[", education_statuses_param, "],")), 
                   ifelse(is.null(user_os_param), "", 
@@ -221,6 +229,7 @@ query_fb_marketing_api_1call <- function(location_type,
       query_val_df$daily_outcomes_curve <- NULL
       
       ## Add parameter info
+      # TODO: If "", NA or NULL, remove variable
       query_val_df$location_type         <- location_type
       query_val_df$behavior              <- behavior              %>% paste(collapse = ",")
       query_val_df$interest              <- interest              %>% paste(collapse = ",")

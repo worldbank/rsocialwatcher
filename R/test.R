@@ -56,6 +56,7 @@ if(F){
     country_iso2  = "KE",
     behavior      = c(6003966451572, 6120699721983),
     interest      = 6003985771306,
+    relationship_statuses = c(3,4),
     version       = VERSION,
     creation_act  = CREATION_ACT,
     token         = TOKEN,
