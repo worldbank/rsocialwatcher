@@ -28,7 +28,8 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_type}{Either "coordinates" (for buffer around single point) or "country"}
+\item{location_type}{Either "coordinates" (for buffer around single point) or "country"
+If location_Type = "coordinates":}
 
 \item{lat_lon}{\link{If location_type = "coordinates"} Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)}
 
