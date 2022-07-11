@@ -297,7 +297,7 @@ query_fb_marketing_api_1call <- function(location_type,
 #' ## Parameters
 #' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `c(6002714895372, 6008297697383)` will yeild active users who are either frequeny travlers or returned from travels 2 weeks ago. Use get_fb_parameters() to get dataframe with IDs and descriptions. 
 #' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `c(6003349442621, 6003139266461)` will yeild active users who are interested in either entertainment or movies. Use get_fb_parameters() to get dataframe with IDs and descriptions. 
-#' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation][https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting] to see education status options. 
+#' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the <https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting> to see education status options. 
 #' @param user_os words
 #' @param wireless_carrier words
 #' @param gender words
