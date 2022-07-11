@@ -76,11 +76,11 @@ query_fb_marketing_api_1call <- function(location_type,
                                          gender = c(1,2),
                                          age_min = 18,
                                          age_max = 65,
-                                         sleep_time = 20,
-                                         show_result = T,
                                          version, 
                                          creation_act, 
                                          token,
+                                         sleep_time = 20,
+                                         show_result = T,
                                          add_query = F,
                                          add_query_hide_credentials = T){
   
@@ -288,12 +288,31 @@ query_fb_marketing_api_1call <- function(location_type,
 #' Query Facebook Marketing API
 #' 
 #' @param location_type Either "coordinates" (for buffer around single point) or "country"
-#' ## If location_Type = "coordinates":
-#' @param lat_lon [If location_type = "coordinates"] Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)
-#' @param radius [If location_type = "coordinates"] Radius around coordinate
-#' @param radius_unit [If location_type = "coordinates"] Unit for radius; either "kilometer" or "mile"
-#' @param country_iso2 [If location_type = "country"] Country ISO2; for example, "US".
+#' ## If location_Type = "coordinates"
+#' @param lat_lon Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)
+#' @param radius Radius around coordinate
+#' @param radius_unit Unit for radius; either "kilometer" or "mile"
+#' ## If location_type = "country" 
+#' @param country_iso2 Country ISO2; for example, "US".
+#' ## Parameters
 #' @param education_statuses Education status
+#' @param user_os words
+#' @param wireless_carrier words
+#' @param behavior words
+#' @param interest words
+#' @param gender words
+#' @param age_min words
+#' @param age_max words
+#' ## Credentials
+#' @param version words
+#' @param creation_act words
+#' @param token words
+#' ## Scraping parameters
+#' @param sleep_time words
+#' @param show_result words
+#' ## Return query text as variable in returned dataframe
+#' @param add_query If `TRUE`, add query text as variable in returned dataframe 
+#' @param add_query_hide_credentials If `TRUE` (and `add_query` is TRUE), hide the `creation_act` and `token` from the query text returned in the dataframe
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
@@ -311,11 +330,11 @@ query_fb_marketing_api <- function(location_type,
                                    gender = c(1,2),
                                    age_min = 18,
                                    age_max = 65,
-                                   sleep_time = 1,
-                                   show_result = T,
                                    version, 
                                    creation_act, 
                                    token,
+                                   sleep_time = 1,
+                                   show_result = T,
                                    add_query = F,
                                    add_query_hide_credentials = T){
   

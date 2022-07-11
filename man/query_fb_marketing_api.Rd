@@ -18,29 +18,67 @@ query_fb_marketing_api(
   gender = c(1, 2),
   age_min = 18,
   age_max = 65,
-  sleep_time = 1,
-  show_result = T,
   version,
   creation_act,
   token,
+  sleep_time = 1,
+  show_result = T,
   add_query = F,
   add_query_hide_credentials = T
 )
 }
 \arguments{
 \item{location_type}{Either "coordinates" (for buffer around single point) or "country"
-\subsection{If location_Type = "coordinates":}{
+\subsection{If location_Type = "coordinates"}{
 }}
 
-\item{lat_lon}{\link{If location_type = "coordinates"} Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)}
+\item{lat_lon}{Coordinates, c(lat, lon). For example, c(38.904722, -77.016389)}
 
-\item{radius}{\link{If location_type = "coordinates"} Radius around coordinate}
+\item{radius}{Radius around coordinate}
 
-\item{radius_unit}{\link{If location_type = "coordinates"} Unit for radius; either "kilometer" or "mile"}
+\item{radius_unit}{Unit for radius; either "kilometer" or "mile"
+\subsection{If location_type = "country"}{
+}}
 
-\item{country_iso2}{\link{If location_type = "country"} Country ISO2; for example, "US".}
+\item{country_iso2}{Country ISO2; for example, "US".
+\subsection{Parameters}{
+}}
 
 \item{education_statuses}{Education status}
+
+\item{user_os}{words}
+
+\item{wireless_carrier}{words}
+
+\item{behavior}{words}
+
+\item{interest}{words}
+
+\item{gender}{words}
+
+\item{age_min}{words}
+
+\item{age_max}{words
+\subsection{Credentials}{
+}}
+
+\item{version}{words}
+
+\item{creation_act}{words}
+
+\item{token}{words
+\subsection{Scraping parameters}{
+}}
+
+\item{sleep_time}{words}
+
+\item{show_result}{words
+\subsection{Return query text as variable in returned dataframe}{
+}}
+
+\item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
+
+\item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is TRUE), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
 }
 \value{
 Dataframe that includes (1) daily and monthly active users and (2) parameter values
