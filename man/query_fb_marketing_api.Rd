@@ -10,8 +10,14 @@ query_fb_marketing_api(
   radius = NULL,
   radius_unit = NULL,
   country_iso2 = NULL,
+  locales = NULL,
   behavior = NULL,
   interest = NULL,
+  relationship_statuses = NULL,
+  life_events = NULL,
+  industries = NULL,
+  income = NULL,
+  family_statuses = NULL,
   education_statuses = NULL,
   user_os = NULL,
   wireless_carrier = NULL,
@@ -41,24 +47,38 @@ query_fb_marketing_api(
 }}
 
 \item{country_iso2}{Country ISO2; for example, \code{"US"}.
-\subsection{Parameters}{
+\subsection{Other location??}{
 }}
 
-\item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{c(6002714895372, 6008297697383)} will yeild active users who are either frequeny travlers or returned from travels 2 weeks ago. Use get_fb_parameters() to get dataframe with IDs and descriptions.}
+\item{locales}{Words
+\subsection{Parameters. These are optional. If nothing specified, then searches for all users.}{
+}}
 
-\item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{c(6003349442621, 6003139266461)} will yeild active users who are interested in either entertainment or movies. Use get_fb_parameters() to get dataframe with IDs and descriptions.}
+\item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{behavior = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameters(class = "behaviors")} to get dataframe with IDs and descriptions.}
 
-\item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see education status options.}
+\item{interest}{Vector of interest IDs. If multiple, uses \code{OR} condition; for example, \code{interest = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(class = "interests")} to get dataframe with IDs and descriptions.}
 
-\item{user_os}{words}
+\item{relationship_statuses}{Vector of relationship status IDs. If multiple, uses \code{OR} condition; for example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. See \code{relationship_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see relationship status ID options with descriptions.}
 
-\item{wireless_carrier}{words}
+\item{life_events}{Vector of life event IDs. If multiple, uses \code{OR} condition; for example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{gender}{words}
+\item{industries}{Vector of industries IDs. If multiple, uses \code{OR} condition; for example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{age_min}{words}
+\item{income}{Vector of income IDs. If multiple, uses \code{OR} condition; for example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
 
-\item{age_max}{words
+\item{family_statuses}{Vector of family status IDs. If multiple, uses \code{OR} condition; for example, \code{family_statuses = c(6023080302983, 6023005681983)} targets users who are parents with preteens or parents with teenagers. Use \code{get_fb_parameters(class = "demographics")} to get dataframe with IDs and descriptions.}
+
+\item{education_statuses}{Education status IDs. If multiple, uses \code{OR} condition; for example, \code{education_statuses = c(9,10)} will yeild those who report to have either a Master degree or professional degree. See \code{education_statuses} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} to see education status options.}
+
+\item{user_os}{User operating systems. If multiple, uses \code{OR} condition; for example \verb{user_os = ['iOS', 'Android']} targets those that use either an iOS or Android OS. See \code{user_os} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} for additional details.}
+
+\item{wireless_carrier}{Wireless carriet. If set to \code{Wifi}, then targets those connecting via a Wifi network. See \code{wireless_carrier} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting}{Advanced Targeting Documentation} for additional details.}
+
+\item{gender}{Genders to target; 1 targets males and 2 targets females Default is both. See \code{gender} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
+
+\item{age_min}{Minimum age. Default is 18. See \code{age_min} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
+
+\item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.
 \subsection{Credentials}{
 }}
 

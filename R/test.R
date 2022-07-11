@@ -40,6 +40,16 @@ if(F){
                                     version = VERSION,
                                     token = TOKEN)
   
+  
+  
+  out_df <- GET(
+    paste0("https://graph.facebook.com/",VERSION,"/search"),
+    query=list(
+      type='adlocale',
+      access_token=TOKEN,
+      limit=2000
+    )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  
   # Test: query_fb_marketing_api -------------------------------------------------
   fb_df <- query_fb_marketing_api(
     location_type = "country",
