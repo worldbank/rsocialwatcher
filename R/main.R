@@ -1,8 +1,11 @@
 
 # TODO:
 # 1. Add required packages as "depends"
-# 2. Wrapper; over multiple locations and multiple parameters
-# 3. behavior_not: For behaviors to exlcude (also for interests, etc.)
+# 2. And/Or
+# 3. More geolocation options; other types (region, etc etc -- implement all)
+# 4. locales
+# 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
+# 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
 
 library(dplyr)
 library(lubridate)
@@ -30,6 +33,7 @@ is_null_or_na <- function(x){
 
 # Main functions ---------------------------------------------------------------
 
+# TODO: Instead of "demographics", maybe "relationship_statuses", etc.
 #' Get Facebook Parameter IDs
 #'
 #' This function returns dataframes of parameters for behaviors, demographics, 
@@ -47,9 +51,9 @@ get_fb_parameters <- function(type,
                               token){
   
   # Checks ---------------------------------------------------------------------
-  if(type %in% c("behaviors", "demographics", "interests", "locales"))
-    
-    # Call API -----------------------------------------------------------------
+  if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
+  
+  # Call API -----------------------------------------------------------------
   if(type %in% c("behaviors", "demographics", "interests")){
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
@@ -352,13 +356,13 @@ query_fb_marketing_api_1call <- function(location_type,
 }
 
 #' Query Facebook Marketing API
-#' 
+#' ## Location
 #' @param location_type Either `"coordinates"` (for buffer around single point) or `"country"`
-#' ## If location_Type = "coordinates"
+#' ### If location_Type = "coordinates"
 #' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
-#' ## If location_type = "country" 
+#' ### If location_type = "country" 
 #' @param country_iso2 Country ISO2; for example, `"US"`.
 #' ## Other location??
 #' @param locales Words
@@ -389,6 +393,7 @@ query_fb_marketing_api_1call <- function(location_type,
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
+#' @details FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
 #' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, and interests.
 #' @export
 query_fb_marketing_api <- function(location_type,
