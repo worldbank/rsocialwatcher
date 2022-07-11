@@ -8,6 +8,8 @@ library(dplyr)
 library(lubridate)
 library(jsonlite)
 library(httr)
+library(stringr)
+#roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
 
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
@@ -382,3 +384,4 @@ query_fb_marketing_api <- function(location_type,
     bind_rows()
   
 }
+
