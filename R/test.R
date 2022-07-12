@@ -28,15 +28,59 @@ if(F){
   VERSION      <- api_keys %>% dplyr::filter(Account == "version")      %>% pull(Key)
   
   # Test: get_fb_parameters ------------------------------------------------------
-  demog_df <- get_fb_parameters(class = "demographics",
+  ## Geolocation keys
+  country_df <- get_fb_parameters(type = "country",
+                                  version = VERSION,
+                                  token = TOKEN)
+  
+  states_df <- get_fb_parameters(type = "region",
+                                 version = VERSION,
+                                 token = TOKEN,
+                                 country_code = "US")
+  
+  # All cities that start with "New" in New York
+  city_df <- get_fb_parameters(type = "city",
+                               version = VERSION,
+                               token = TOKEN,
+                               country_code = "US",
+                               q="New York City",
+                               region_id = 3875)
+  
+  # NYC and all locations within NYC (boroughs, neighborhoods, etc)
+  nyc_df <- get_fb_parameters(type = "city",
+                              version = VERSION,
+                              token = TOKEN,
+                              country_code = "US",
+                              q="New York City",
+                              region_id = 3875,
+                              key = 2490299)
+  
+  nyc_subcity_df <- get_fb_parameters(type = "subcity",
+                                      version = VERSION,
+                                      token = TOKEN,
+                                      country_code = "US",
+                                      q="New York City",
+                                      region_id = 3875,
+                                      key = 2490299)
+  
+  nyc_neigh_df <- get_fb_parameters(type = "neighborhood",
+                                    version = VERSION,
+                                    token = TOKEN,
+                                    country_code = "US",
+                                    q="New York City",
+                                    region_id = 3875,
+                                    key = 2490299)
+  
+  ## Parameters
+  demog_df <- get_fb_parameters(type = "demographics",
                                 version = VERSION,
                                 token = TOKEN)
   
-  interests_df <- get_fb_parameters(class = "interests",
+  interests_df <- get_fb_parameters(type = "interests",
                                     version = VERSION,
                                     token = TOKEN)
   
-  behaviors_df <- get_fb_parameters(class = "behaviors",
+  behaviors_df <- get_fb_parameters(type = "behaviors",
                                     version = VERSION,
                                     token = TOKEN)
   

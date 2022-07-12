@@ -3,9 +3,11 @@
 # 1. Add required packages as "depends"
 # 2. And/Or
 # 3. More geolocation options; other types (region, etc etc -- implement all)
+#   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
 # 4. locales
 # 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
 # 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
+# 7. Allow entering multiple keys (token, version, creation_act must be same length). Here, we just iterate through them??
 
 library(dplyr)
 library(lubridate)
@@ -48,10 +50,14 @@ is_null_or_na <- function(x){
 #' @export
 get_fb_parameters <- function(type,
                               version,
-                              token){
+                              token,
+                              q = NULL,
+                              country_code = NULL,
+                              region_id = NULL,
+                              key=NULL){
   
   # Checks ---------------------------------------------------------------------
-  if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
+  #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
   
   # Call API -----------------------------------------------------------------
   if(type %in% c("behaviors", "demographics", "interests")){
@@ -71,7 +77,64 @@ get_fb_parameters <- function(type,
         access_token=token,
         limit=2000
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  }
+  } else if (type %in% "job_titles"){
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adworkposition',
+        q=q,
+        access_token=token,
+        limit=5000
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "education_major"){
+    if(is.null(q)) stop("'q' required")
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adeducationmajor',
+        q=q,
+        access_token=token,
+        limit=5000
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "country"){
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        location_types="country",
+        type='adgeolocation',
+        access_token=token,
+        limit=300
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% c("region",
+                         "large_geo_area",
+                         "medium_geo_area",
+                         "small_geo_area",
+                         "metro_area",
+                         "city",
+                         "subcity",
+                         "neighborhood",
+                         "subneighborhood",
+                         "zip")){
+    
+    if(type %in% c("zip")){
+      if(is.null(q)){
+        #stop("Parameter 'q' required")
+      }
+    }
+    
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        location_types=type,
+        type='adgeolocation',
+        q=q,
+        region_id=region_id,
+        country_code=country_code,
+        key=key,
+        access_token=token,
+        limit=3000
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } 
   
   return(out_df)
 }
@@ -80,7 +143,7 @@ query_fb_marketing_api_1call <- function(location_type,
                                          lat_lon = NULL,
                                          radius = NULL,
                                          radius_unit = NULL,
-                                         country_iso2 = NULL,
+                                         country_code = NULL,
                                          locales = NULL,
                                          behavior = NULL,
                                          interest = NULL,
@@ -133,7 +196,7 @@ query_fb_marketing_api_1call <- function(location_type,
   }
   
   if(location_type == "country"){
-    if(is.null(country_iso2)) stop("Must enter value for 'country_iso2'")
+    if(is.null(country_code)) stop("Must enter value for 'country_code'")
   }
   
   # Check internet -------------------------------------------------------------
@@ -218,7 +281,7 @@ query_fb_marketing_api_1call <- function(location_type,
                              radius,",",
                              "'distance_unit':'",radius_unit,"'}]},")
   } else if (location_type == "country"){
-    query_location <- paste0("'geo_locations':{'countries':['",country_iso2,"']},")
+    query_location <- paste0("'geo_locations':{'countries':['",country_code,"']},")
   }
   
   query <- paste0("https://graph.facebook.com/",version,
@@ -286,7 +349,7 @@ query_fb_marketing_api_1call <- function(location_type,
         query_val_df$radius      <- radius
         query_val_df$radius_unit <- radius_unit
       } else{
-        query_val_df$country_iso2 <- country_iso2
+        query_val_df$country_code <- country_code
       }
       
       ## Add time
@@ -363,7 +426,7 @@ query_fb_marketing_api_1call <- function(location_type,
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
 #' ### If location_type = "country" 
-#' @param country_iso2 Country ISO2; for example, `"US"`.
+#' @param country_code Country ISO2; for example, `"US"`.
 #' ## Other location??
 #' @param locales Words
 #' ## Parameters. These are optional. If nothing specified, then searches for all users.
@@ -394,13 +457,13 @@ query_fb_marketing_api_1call <- function(location_type,
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
 #' @details FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
-#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, and interests.
+#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales.
 #' @export
 query_fb_marketing_api <- function(location_type,
                                    lat_lon = NULL,
                                    radius = NULL,
                                    radius_unit = NULL,
-                                   country_iso2 = NULL,
+                                   country_code = NULL,
                                    locales = NULL,
                                    behavior = NULL,
                                    interest = NULL,
@@ -436,7 +499,7 @@ query_fb_marketing_api <- function(location_type,
   lat_lon               <- lat_lon               %>% convert_to_list()
   radius                <- radius                %>% convert_to_list()
   radius_unit           <- radius_unit           %>% convert_to_list()
-  country_iso2          <- country_iso2          %>% convert_to_list()
+  country_code          <- country_code          %>% convert_to_list()
   locales               <- locales               %>% convert_to_list()
   behavior              <- behavior              %>% convert_to_list()
   interest              <- interest              %>% convert_to_list()
@@ -456,7 +519,7 @@ query_fb_marketing_api <- function(location_type,
   n_param_combn <- length(lat_lon) * 
     length(radius) *
     length(radius_unit) *
-    length(country_iso2) *
+    length(country_code) *
     length(locales) *
     length(behavior) *
     length(interest) *
@@ -495,7 +558,7 @@ query_fb_marketing_api <- function(location_type,
                    lat_lon               = lat_lon,
                    radius                = radius,
                    radius_unit           = radius_unit,
-                   country_iso2          = country_iso2,
+                   country_code          = country_code,
                    locales               = locales,
                    behavior              = behavior,
                    interest              = interest,
