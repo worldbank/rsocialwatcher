@@ -3,11 +3,14 @@
 # 1. Add required packages as "depends"
 # 2. And/Or
 # 3. More geolocation options; other types (region, etc etc -- implement all)
+#   -- Allow searching...
 #   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
 # 4. locales
 # 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
 # 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
 # 7. Allow entering multiple keys (token, version, creation_act must be same length). Here, we just iterate through them??
+# -- Or maybe just give an example? For example, loop over location?
+# 8. Add examples
 
 library(dplyr)
 library(lubridate)
@@ -96,11 +99,11 @@ get_fb_parameters <- function(type,
         access_token=token,
         limit=5000
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% "country"){
+  } else if (type %in% c("country", "country_group")){
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
       query=list(
-        location_types="country",
+        location_types=type,
         type='adgeolocation',
         access_token=token,
         limit=300
@@ -114,7 +117,9 @@ get_fb_parameters <- function(type,
                          "subcity",
                          "neighborhood",
                          "subneighborhood",
-                         "zip")){
+                         "zip",
+                         "geo_market",
+                         "electoral_district")){
     
     if(type %in% c("zip")){
       if(is.null(q)){
@@ -144,6 +149,8 @@ query_fb_marketing_api_1call <- function(location_type,
                                          radius = NULL,
                                          radius_unit = NULL,
                                          country_code = NULL,
+                                         country_group = NULL,
+                                         location_keys = NULL,
                                          locales = NULL,
                                          behavior = NULL,
                                          interest = NULL,
@@ -183,7 +190,7 @@ query_fb_marketing_api_1call <- function(location_type,
   }
   
   if(!(location_type %in% c("coordinates", "country"))){
-    stop("'location_type' must be either 'coordinates' or 'country'")
+    # stop("'location_type' must be either 'coordinates' or 'country'")
   }
   
   if(location_type == "coordinates"){
@@ -195,8 +202,12 @@ query_fb_marketing_api_1call <- function(location_type,
     if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
   
-  if(location_type == "country"){
+  if(location_type == "countries"){
     if(is.null(country_code)) stop("Must enter value for 'country_code'")
+  }
+  
+  if(!is.null(radius_unit)){
+    if(!(radius_unit %in% c("mile", "kilometer"))) stop("Invalid 'radius_unit'; if specify radius_unit, must be either 'mile' or 'kilometer'")
   }
   
   # Check internet -------------------------------------------------------------
@@ -266,6 +277,44 @@ query_fb_marketing_api_1call <- function(location_type,
     wireless_carrier_param <- paste0("'", wireless_carrier, "'")
   }
   
+  if(location_type == "places"){
+    if(is.null(radius))      stop("'radius' not spacified. When location_type = 'places', must specify radius (and radius_unit).")
+    if(is.null(radius_unit)) stop("'radius_unit' not spacified. When location_type = 'places', must specify radius_unit (and radius).")
+  }
+  
+  if(location_type %in% c("countries","regions","zips","geo_markets","electoral_district","country_groups")){
+    if(!is.null(radius))      stop(paste0("'radius' parameter not allowed when location_type = '", location_type, "'"))
+    if(!is.null(radius_unit)) stop(paste0("'radius_unit' parameter not allowed when location_type = '", location_type, "'"))
+  }
+  
+  if(location_type %in% c("coordinates","places")){
+    
+    if(radius_unit == "mile"){
+      if(radius > 50)   stop("Radius too large; radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+      if(radius < 0.63) stop("Radius too small; radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+    }
+    
+    if(radius_unit == "kilometer"){
+      if(radius > 80) stop("Radius too large; radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+      if(radius < 1)  stop("Radius too small; radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+    }
+    
+  }
+  
+  if(location_type %in% c("cities")){
+    
+    if(radius_unit == "mile"){
+      if(radius > 50) stop("Radius too large; if specify radius, radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+      if(radius < 10) stop("Radius too small; if specify radius, radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+    }
+    
+    if(radius_unit == "kilometer"){
+      if(radius > 80) stop("Radius too large; if specify radius, radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+      if(radius < 17) stop("Radius too small; if specify radius, radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+    }
+    
+  }
+  
   gender_param <- gender %>% paste(collapse = ",")
   
   # Make Query -----------------------------------------------------------------
@@ -273,6 +322,7 @@ query_fb_marketing_api_1call <- function(location_type,
     latitude  <- lat_lon[1]
     longitude <- lat_lon[2]
     
+    # TODO: Maybe location_type doesn't need to be here?? As should be another parameter? Or put in all?
     query_location <- paste0("'geo_locations':{'location_types':['home'],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
@@ -280,8 +330,24 @@ query_fb_marketing_api_1call <- function(location_type,
                              "'radius':",
                              radius,",",
                              "'distance_unit':'",radius_unit,"'}]},")
-  } else if (location_type == "country"){
-    query_location <- paste0("'geo_locations':{'countries':['",country_code,"']},")
+  } else if (location_type %in% c("countries", "country_groups")){
+    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             paste0("'",country_code,"'") %>% paste(collapse = ","),
+                             "]},")
+  } else if (location_type %in% c("regions","electoral_districts","zips","geo_markets")){
+    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
+                             "]},")
+  } else if ( (location_type %in% c("cities")) & is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             paste0("{'key':'",location_keys,"'}") %>% 
+                               paste(collapse = ","),
+                             "]},")
+  } else if ( (location_type %in% c("cities", "places")) & !is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             paste0("{'key':'",location_keys,"','radius':",radius,",'distance_unit':'",radius_unit,"'}") %>% 
+                               paste(collapse = ","),
+                             "]},")
   }
   
   query <- paste0("https://graph.facebook.com/",version,
@@ -315,105 +381,112 @@ query_fb_marketing_api_1call <- function(location_type,
                   "}")
   
   # Make query and prep dataframe with results and parameter
-  query_val_df <- tryCatch({
+  try_api_call <- TRUE
+  while(try_api_call){
+    try_api_call <- FALSE
     
-    query_val <- url(query) %>% fromJSON
-    
-    #### If there is no error
-    if(is.null(query_val$error)){
+    query_val_df <- tryCatch({
       
-      ## Marketing info to dataframe
-      query_val_df <- query_val$data
-      query_val_df$daily_outcomes_curve <- NULL
+      query_val <- url(query) %>% fromJSON
       
-      ## Add parameter info
-      # TODO: If "", NA or NULL, remove variable
-      query_val_df$location_type         <- location_type
-      query_val_df$behavior              <- behavior              %>% paste(collapse = ",")
-      query_val_df$interest              <- interest              %>% paste(collapse = ",")
-      query_val_df$relationship_statuses <- relationship_statuses %>% paste(collapse = ",")
-      query_val_df$life_events           <- life_events           %>% paste(collapse = ",")
-      query_val_df$industries            <- industries            %>% paste(collapse = ",")
-      query_val_df$income                <- income                %>% paste(collapse = ",")
-      query_val_df$family_statuses       <- family_statuses       %>% paste(collapse = ",")
-      query_val_df$education_statuses    <- education_statuses    %>% paste(collapse = ",")
-      query_val_df$user_os               <- user_os               %>% paste(collapse = ",")
-      query_val_df$wireless_carrier      <- wireless_carrier      %>% paste(collapse = ",")
-      query_val_df$gender                <- gender                %>% paste(collapse = ",")
-      query_val_df$age_min               <- age_min
-      query_val_df$age_max               <- age_max
-      
-      if(location_type == "coordinates"){
-        query_val_df$latitude    <- latitude
-        query_val_df$longitude   <- longitude
-        query_val_df$radius      <- radius
-        query_val_df$radius_unit <- radius_unit
-      } else{
-        query_val_df$country_code <- country_code
-      }
-      
-      ## Add time
-      query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
-      
-      if(add_query){
-        query_val_df$query <- query
-        if(add_query_hide_credentials){
-          query_val_df$query <- query_val_df$query %>%
-            str_replace_all(paste0("act_", creation_act), "act_CREATION_ACT") %>%
-            str_replace_all(paste0("access_token=", token), "access_token=TOKEN")
+      #### If there is no error
+      if(is.null(query_val$error)){
+        
+        ## Marketing info to dataframe
+        query_val_df <- query_val$data
+        query_val_df$daily_outcomes_curve <- NULL
+        
+        ## Add parameter info
+        # TODO: If "", NA or NULL, remove variable
+        query_val_df$location_type         <- location_type
+        query_val_df$behavior              <- behavior              %>% paste(collapse = ",")
+        query_val_df$interest              <- interest              %>% paste(collapse = ",")
+        query_val_df$relationship_statuses <- relationship_statuses %>% paste(collapse = ",")
+        query_val_df$life_events           <- life_events           %>% paste(collapse = ",")
+        query_val_df$industries            <- industries            %>% paste(collapse = ",")
+        query_val_df$income                <- income                %>% paste(collapse = ",")
+        query_val_df$family_statuses       <- family_statuses       %>% paste(collapse = ",")
+        query_val_df$education_statuses    <- education_statuses    %>% paste(collapse = ",")
+        query_val_df$user_os               <- user_os               %>% paste(collapse = ",")
+        query_val_df$wireless_carrier      <- wireless_carrier      %>% paste(collapse = ",")
+        query_val_df$gender                <- gender                %>% paste(collapse = ",")
+        query_val_df$age_min               <- age_min
+        query_val_df$age_max               <- age_max
+        query_val_df$location_type         <- location_type
+        query_val_df$radius                <- radius
+        query_val_df$radius_unit           <- radius_unit
+        query_val_df$country_code          <- country_code  %>% paste(collapse = ",")
+        query_val_df$country_group         <- country_group  %>% paste(collapse = ",")
+        query_val_df$location_keys         <- location_keys %>% paste(collapse = ",")
+        
+        if(location_type == "coordinates"){
+          query_val_df$latitude  <- latitude
+          query_val_df$longitude <- longitude
         }
         
-      } 
-      
-      ## If no entry in dataframe ("" or NA), then remove the variable
-      for(var in names(query_val_df)){
-        if(is.na(query_val_df[[var]]))  query_val_df[[var]] <- NULL
-        if(query_val_df[[var]] %in% "") query_val_df[[var]] <- NULL
-      }
-      
-      ## Print result and sleep (sleep needed b/c of rate limiting)
-      #if(show_result){
-      #  print(query_val_df)
-      #}
-      
-      if(show_result){
-        print(query_val_df$estimate_mau_upper_bound)
-      }
-      
-      ## Sleep
-      Sys.sleep(sleep_time) 
-      
-      #### If there is an error, print the error and make output null  
-    } else{
-      print(query_val)
-      print("Checking error!")
-      
-      if(!is.null(query_val$error$code)){
-        if((query_val$error$code == 80004)){
-          print("too many calls, so sleeping a bit!")
-          Sys.sleep(10)
+        ## Add time
+        query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
+        
+        if(add_query){
+          query_val_df$query <- query
+          if(add_query_hide_credentials){
+            query_val_df$query <- query_val_df$query %>%
+              str_replace_all(paste0("act_", creation_act), "act_CREATION_ACT") %>%
+              str_replace_all(paste0("access_token=", token), "access_token=TOKEN")
+          }
+          
         } 
-      }
-      
-      query_val_df <- ""
-      
-      # Sometimes lat/lon is not in a valid location. We still create a dataframe
-      # for those queries.
-      if(query_val$error$error_user_title == "Incorrect Location Format"){
-        query_val_df <- data.frame(ERROR = "Incorrect Location Format")
+        
+        ## If no entry in dataframe ("" or NA), then remove the variable
+        for(var in names(query_val_df)){
+          if(is.na(query_val_df[[var]]))  query_val_df[[var]] <- NULL
+          if(query_val_df[[var]] %in% "") query_val_df[[var]] <- NULL
+        }
+        
+        ## Print result and sleep (sleep needed b/c of rate limiting)
+        #if(show_result){
+        #  print(query_val_df)
+        #}
+        
+        if(show_result){
+          print(query_val_df$estimate_mau_upper_bound)
+        }
+        
+        ## Sleep
+        Sys.sleep(sleep_time) 
+        
+        #### If there is an error, print the error and make output null  
       } else{
-        query_val_df <- NULL
+        
+        if(!is.null(query_val$error$code)){
+          if((query_val$error$code == 80004)){
+            try_api_call <- TRUE
+            print("Too many calls, so pausing for 30 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.")
+            Sys.sleep(30)
+          } 
+        }
+        
+        query_val_df <- ""
+        
+        # Sometimes lat/lon is not in a valid location. We still create a dataframe
+        # for those queries.
+        if(query_val$error$error_user_title == "Incorrect Location Format"){
+          query_val_df <- data.frame(ERROR = "Incorrect Location Format")
+        } else{
+          query_val_df <- NULL
+        }
+        
       }
       
-    }
-    
-    query_val_df
-    
-  },error = function(e){
-    print("ERROR")
-    Sys.sleep(0.1)
-    return(NULL)
-  })
+      query_val_df
+      
+    },error = function(e){
+      print("ERROR")
+      try_api_call <- F
+      Sys.sleep(0.1)
+      return(NULL)
+    })
+  }
   
   return(query_val_df)
 }
@@ -464,6 +537,8 @@ query_fb_marketing_api <- function(location_type,
                                    radius = NULL,
                                    radius_unit = NULL,
                                    country_code = NULL,
+                                   country_group = NULL,
+                                   location_keys = NULL,
                                    locales = NULL,
                                    behavior = NULL,
                                    interest = NULL,
@@ -500,6 +575,8 @@ query_fb_marketing_api <- function(location_type,
   radius                <- radius                %>% convert_to_list()
   radius_unit           <- radius_unit           %>% convert_to_list()
   country_code          <- country_code          %>% convert_to_list()
+  country_group         <- country_group         %>% convert_to_list()
+  location_keys         <- location_keys         %>% convert_to_list()
   locales               <- locales               %>% convert_to_list()
   behavior              <- behavior              %>% convert_to_list()
   interest              <- interest              %>% convert_to_list()
@@ -516,63 +593,71 @@ query_fb_marketing_api <- function(location_type,
   age_max               <- age_max               %>% convert_to_list()
   
   # Length parameter inputs to same length ---------------------------------------
-  n_param_combn <- length(lat_lon) * 
-    length(radius) *
-    length(radius_unit) *
-    length(country_code) *
-    length(locales) *
-    length(behavior) *
-    length(interest) *
-    length(relationship_statuses) *
-    length(life_events) *
-    length(industries) *
-    length(income) *
-    length(family_statuses) *
-    length(education_statuses) *
-    length(user_os) *
-    length(wireless_carrier) *
-    length(gender) *
-    length(age_min) *
-    length(age_max)
+  # n_param_combn <- length(lat_lon) * 
+  #   length(radius) *
+  #   length(radius_unit) *
+  #   length(country_code) *
+  #   length(country_group) *
+  #   length(location_keys) *
+  #   length(locales) *
+  #   length(behavior) *
+  #   length(interest) *
+  #   length(relationship_statuses) *
+  #   length(life_events) *
+  #   length(industries) *
+  #   length(income) *
+  #   length(family_statuses) *
+  #   length(education_statuses) *
+  #   length(user_os) *
+  #   length(wireless_carrier) *
+  #   length(gender) *
+  #   length(age_min) *
+  #   length(age_max)
   
-  lat_lon               <- rep(lat_lon,               length = n_param_combn)
-  radius                <- rep(radius,                length = n_param_combn)
-  radius_unit           <- rep(radius_unit,           length = n_param_combn)
-  locales               <- rep(locales,               length = n_param_combn)
-  behavior              <- rep(behavior,              length = n_param_combn)
-  interest              <- rep(interest,              length = n_param_combn)
-  relationship_statuses <- rep(relationship_statuses, length = n_param_combn)
-  life_events           <- rep(life_events,           length = n_param_combn)
-  industries            <- rep(industries,            length = n_param_combn)
-  income                <- rep(income,                length = n_param_combn)
-  family_statuses       <- rep(family_statuses,       length = n_param_combn)
-  education_statuses    <- rep(education_statuses,    length = n_param_combn)
-  user_os               <- rep(user_os,               length = n_param_combn)
-  wireless_carrier      <- rep(wireless_carrier,      length = n_param_combn)
-  gender                <- rep(gender,                length = n_param_combn)
-  age_min               <- rep(age_min,               length = n_param_combn)
-  age_max               <- rep(age_max,               length = n_param_combn)
+  
+  param_grid_df <- expand.grid(lat_lon               = lat_lon,
+                               country_code          = country_code,
+                               country_group         = country_group,
+                               location_keys         = location_keys,
+                               radius                = radius,
+                               radius_unit           = radius_unit,
+                               locales               = locales,
+                               behavior              = behavior,
+                               interest              = interest,
+                               relationship_statuses = relationship_statuses,
+                               life_events           = life_events,
+                               industries            = industries,
+                               income                = income,
+                               family_statuses       = family_statuses,
+                               education_statuses    = education_statuses,
+                               user_os               = user_os,
+                               wireless_carrier      = wireless_carrier,
+                               gender                = gender,
+                               age_min               = age_min,
+                               age_max               = age_max)
   
   # Length parameter inputs to same length -------------------------------------
   out_df <- mapply(query_fb_marketing_api_1call,
-                   lat_lon               = lat_lon,
-                   radius                = radius,
-                   radius_unit           = radius_unit,
-                   country_code          = country_code,
-                   locales               = locales,
-                   behavior              = behavior,
-                   interest              = interest,
-                   relationship_statuses = relationship_statuses,
-                   life_events           = life_events,
-                   industries            = industries,
-                   income                = income,
-                   family_statuses       = family_statuses,
-                   education_statuses    = education_statuses,
-                   user_os               = user_os,
-                   wireless_carrier      = wireless_carrier,
-                   gender                = gender,
-                   age_min               = age_min,
-                   age_max               = age_max,
+                   lat_lon               = param_grid_df$lat_lon,
+                   radius                = param_grid_df$radius,
+                   radius_unit           = param_grid_df$radius_unit,
+                   country_code          = param_grid_df$country_code,
+                   country_group         = param_grid_df$country_group,
+                   location_keys         = param_grid_df$location_keys,
+                   locales               = param_grid_df$locales,
+                   behavior              = param_grid_df$behavior,
+                   interest              = param_grid_df$interest,
+                   relationship_statuses = param_grid_df$relationship_statuses,
+                   life_events           = param_grid_df$life_events,
+                   industries            = param_grid_df$industries,
+                   income                = param_grid_df$income,
+                   family_statuses       = param_grid_df$family_statuses,
+                   education_statuses    = param_grid_df$education_statuses,
+                   user_os               = param_grid_df$user_os,
+                   wireless_carrier      = param_grid_df$wireless_carrier,
+                   gender                = param_grid_df$gender,
+                   age_min               = param_grid_df$age_min,
+                   age_max               = param_grid_df$age_max,
                    MoreArgs = list(location_type = location_type,
                                    sleep_time    = sleep_time,
                                    show_result   = show_result,

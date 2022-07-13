@@ -1,7 +1,5 @@
 # Load data
 
-
-
 if(F){
   
   #source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
@@ -29,6 +27,10 @@ if(F){
   
   # Test: get_fb_parameters ------------------------------------------------------
   ## Geolocation keys
+  country_group_df <- get_fb_parameters(type = "country_group",
+                                        version = VERSION,
+                                        token = TOKEN)
+  
   country_df <- get_fb_parameters(type = "country",
                                   version = VERSION,
                                   token = TOKEN)
@@ -45,6 +47,19 @@ if(F){
                                country_code = "US",
                                q="New York City",
                                region_id = 3875)
+  
+  city_df <- get_fb_parameters(type = "city",
+                               version = VERSION,
+                               token = TOKEN,
+                               country_code = "US",
+                               q="Cincinnati")
+  
+  city_df <- get_fb_parameters(type = "city",
+                               version = VERSION,
+                               token = TOKEN,
+                               country_code = "US",
+                               q="Cincinnati",
+                               region_id = 3878)
   
   # NYC and all locations within NYC (boroughs, neighborhoods, etc)
   nyc_df <- get_fb_parameters(type = "city",
@@ -71,6 +86,32 @@ if(F){
                                     region_id = 3875,
                                     key = 2490299)
   
+  zip_df <- get_fb_parameters(type = "zip",
+                              version = VERSION,
+                              token = TOKEN,
+                              country_code = "US",
+                              q="1",
+                              region_id = 3875)
+  
+  zip_nyc_df <- get_fb_parameters(type = "zip",
+                                  version = VERSION,
+                                  token = TOKEN,
+                                  country_code = "US",
+                                  q="1",
+                                  region_id = 3875,
+                                  key = 2490299)
+  
+  # US ONLY
+  dma_market <- get_fb_parameters(type = "geo_market",
+                                  version = VERSION,
+                                  token = TOKEN)
+  
+  elec_dist_df <- get_fb_parameters(type = "electoral_district",
+                                    version = VERSION,
+                                    token = TOKEN,
+                                    q = 'Ohio')
+  elec_dist_df
+  
   ## Parameters
   demog_df <- get_fb_parameters(type = "demographics",
                                 version = VERSION,
@@ -94,18 +135,83 @@ if(F){
       limit=2000
     )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   
-  # Test: query_fb_marketing_api -------------------------------------------------
+  # Examples -------------------------------------------------------------------
+  library(WDI)
+  
+  wdi_df <- WDI(
+    country = "all",
+    indicator = c("SE.TER.ENRR", "SE.ADT.1524.LT.ZS", "SE.SEC.ENRR"),
+    start = 2019,
+    end = 2019,
+    extra = FALSE,
+    cache = NULL,
+    latest = NULL,
+    language = "en"
+  )
+  
+  wdi_df <- wdi_df %>%
+    dplyr::filter(!is.na(SE.TER.ENRR))
+  
+  country_df <- get_fb_parameters(type = "country",
+                                  version = VERSION,
+                                  token = TOKEN)
+  country_df <- country_df[country_df$country_code %in% wdi_df$iso2c,]
+  
+  countries_list <- as.list(country_df$country_code[1:30])
+  
   fb_df <- query_fb_marketing_api(
-    location_type = "country",
-    country_iso2  = "KE",
-    behavior      = c(6003966451572, 6120699721983),
-    interest      = 6003349442621,
-    family_statuses = c(6002714398372),
+    location_type = "countries",
+    country_code  = countries_list,
+    education_statuses = list(NULL, c(2,5,6,7,8,9,10,11)),
     version       = VERSION,
     creation_act  = CREATION_ACT,
     token         = TOKEN,
-    sleep_time    = 0.1)
+    sleep_time    = 0.5,
+    add_query=T)
   
+  ## Proportion high school grad
+  fb_wide_df <- fb_df %>%
+    mutate(educ_level = ifelse(is.na(education_statuses), "all", "educ_ter")) %>%
+    pivot_wider(id_cols = country_code, names_from = educ_level, values_from = estimate_mau_upper_bound) %>%
+    mutate(prop_hs = (educ_ter / all)*100) %>%
+    rename(iso2c = country_code) %>%
+    left_join(wdi_df, by = "iso2c")
+  
+  fb_wide_df
+  
+  fb_wide_df %>%
+    ggplot() +
+    geom_point(aes(x = prop_hs,
+                   y = SE.TER.ENRR))
+  
+  fb_wide_df %>%
+    ggplot() +
+    geom_point(aes(x = prop_hs,
+                   y = SE.SEC.ENRR))
+  
+  
+  
+  head(fb_df)
+  
+  # Test: query_fb_marketing_api -------------------------------------------------
+  states_df
+  fb_df <- query_fb_marketing_api(
+    location_type = "cities",
+    location_key  = 2733673,
+    radius = 30,
+    radius_unit = "kilometer",
+    version       = VERSION,
+    creation_act  = CREATION_ACT,
+    token         = TOKEN,
+    sleep_time    = 0.1,
+    add_query=T)
+  
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEBjOHkd2milRM59TOelStburKciiiDy2ZBfhLbgP4a5JujRZC39yMQ2dIg4ZChuUV9zOeL6KlOxcMIGgkn8MsOYE1smQWpvkCynu21r4qzNG68yZBR99spsrGuno4nUZAFmwW66BwcOb5LKxIPuZAHT6NeRJiOQtTonZCVz1bO&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'places':[{'key':'129672430416115'}]},'genders':[1,2],'age_min':18,'age_max':65}
+  
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEBjOHkd2milRM59TOelStburKciiiDy2ZBfhLbgP4a5JujRZC39yMQ2dIg4ZChuUV9zOeL6KlOxcMIGgkn8MsOYE1smQWpvkCynu21r4qzNG68yZBR99spsrGuno4nUZAFmwW66BwcOb5LKxIPuZAHT6NeRJiOQtTonZCVz1bO&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US']},'genders':[1,2],'age_min':18,'age_max':65}
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEBjOHkd2milRM59TOelStburKciiiDy2ZBfhLbgP4a5JujRZC39yMQ2dIg4ZChuUV9zOeL6KlOxcMIGgkn8MsOYE1smQWpvkCynu21r4qzNG68yZBR99spsrGuno4nUZAFmwW66BwcOb5LKxIPuZAHT6NeRJiOQtTonZCVz1bO&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['KE']},'genders':[1,2],'age_min':18,'age_max':65}
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEBjOHkd2milRM59TOelStburKciiiDy2ZBfhLbgP4a5JujRZC39yMQ2dIg4ZChuUV9zOeL6KlOxcMIGgkn8MsOYE1smQWpvkCynu21r4qzNG68yZBR99spsrGuno4nUZAFmwW66BwcOb5LKxIPuZAHT6NeRJiOQtTonZCVz1bO&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US','KE']},'genders':[1,2],'age_min':18,'age_max':65}
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEBjOHkd2milRM59TOelStburKciiiDy2ZBfhLbgP4a5JujRZC39yMQ2dIg4ZChuUV9zOeL6KlOxcMIGgkn8MsOYE1smQWpvkCynu21r4qzNG68yZBR99spsrGuno4nUZAFmwW66BwcOb5LKxIPuZAHT6NeRJiOQtTonZCVz1bO&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['KE','US']},'relationship_statuses':[3,4],'genders':[1,2],'age_min':18,'age_max':65}
   location_type = "country"
   country_iso2 = "KE"
   latitude = NULL
