@@ -1,15 +1,24 @@
 # rSocialWatcher
 
-__A Social Data Collector from Facebook Marketing API. This package is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), but adapted for R.__
+Query data from the Facebook Marketing API using R, with a focus for social science research.
+
+## Overview
+
+This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, [Fatehkia et al 2020](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) show the use of Facebook data for estimating poverty; features such as the proportion of monthly active Facebook users with a high-end phone correlate strongly with ground-truth measures of poverty.
 
 ## Installation
-rSocialWatcher is an an R package. Until the package is made available via devtools (coming soon!), the functions can be loaded by running the following script
+The package is available via Github and can be install using `devtools`.
 
 ```r
-source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
+# install.packages("devtools")
+devtools::install_github("ramarty/rSocialWatcher")
 ```
 
-## Example
+## Facebook API Keys
+
+[INCLUDE TEXT HERE DESCRIBING HOW TO GET KEY].
+
+## Quickstart
 ```r
 # Define API version, creation act & token -------------------------------------
 VERSION      <- "[ENTER HERE]"
