@@ -38,12 +38,13 @@ is_null_or_na <- function(x){
 
 # Main functions ---------------------------------------------------------------
 
-# TODO: Instead of "demographics", maybe "relationship_statuses", etc.
 #' Get Facebook Parameter IDs
 #'
-#' This function returns dataframes of parameters for behaviors, demographics, 
-#' and interests. The dataframes contain ids that can be used in the 
-#' query_fb_marketing_api function.
+#' This function returns dataframes of Facebook parameters and their associated
+#' IDs for different categories of information. Categories include behaviors,
+#' demographics, interests, locales, job titles, education major, and location 
+#' (e.g., country, city, zip code, etc). The returned dataframe contains ids 
+#' that can be used in the query_fb_marketing_api function.
 #'
 #' @param type Type of data; either "behaviors", "demographics", "interests", or "locales"
 #' @param version Facebook Marketing API version; for example, "v14.0"
@@ -51,13 +52,13 @@ is_null_or_na <- function(x){
 #' 
 #' @return Dataframe with parameter IDs and descriptions.
 #' @export
-get_fb_parameters <- function(type,
-                              version,
-                              token,
-                              q = NULL,
-                              country_code = NULL,
-                              region_id = NULL,
-                              key=NULL){
+get_fb_parameter_ids <- function(type,
+                                 version,
+                                 token,
+                                 q = NULL,
+                                 country_code = NULL,
+                                 region_id = NULL,
+                                 key=NULL){
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")

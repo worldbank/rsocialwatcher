@@ -2,14 +2,18 @@
 % Please edit documentation in R/main.R
 \name{query_fb_marketing_api}
 \alias{query_fb_marketing_api}
-\title{Query Facebook Marketing API}
+\title{Query Facebook Marketing API
+\subsection{Location}{
+}}
 \usage{
 query_fb_marketing_api(
   location_type,
   lat_lon = NULL,
   radius = NULL,
   radius_unit = NULL,
-  country_iso2 = NULL,
+  country_code = NULL,
+  country_group = NULL,
+  location_keys = NULL,
   locales = NULL,
   behavior = NULL,
   interest = NULL,
@@ -46,7 +50,7 @@ query_fb_marketing_api(
 \subsection{If location_type = "country"}{
 }}
 
-\item{country_iso2}{Country ISO2; for example, \code{"US"}.
+\item{country_code}{Country ISO2; for example, \code{"US"}.
 \subsection{Other location??}{
 }}
 
@@ -105,7 +109,12 @@ Dataframe that includes (1) daily and monthly active users and (2) parameter val
 }
 \description{
 Query Facebook Marketing API
+\subsection{Location}{
+}
+}
+\details{
+FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
 }
 \seealso{
-\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, and interests.
+\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, interests, and locales.
 }

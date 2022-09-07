@@ -2,59 +2,71 @@
 
 if(F){
   
-  #source("https://raw.githubusercontent.com/ramarty/rSocialWatcher/main/R/main.R")
-  
-  remove.packages("rSocialWatcher")
-  
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
   
+  remove.packages("rSocialWatcher")
   devtools::install_github("ramarty/rSocialWatcher")
+  
+  ## Setup
   library(rSocialWatcher)
+  library(tidyverse)
   
-  ?query_fb_marketing_api
-  
-  # Load keys --------------------------------------------------------------------
+  ## Load keys
   api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
                        stringsAsFactors = F)
+
   
   api_keys <- api_keys %>%
     dplyr::filter(Service == "facebook_marketing_ad",
-                  Details == "robmarty3@gmail.com_v2")
+                  Details == "robmarty3@gmail.com")
   
   TOKEN        <- api_keys %>% dplyr::filter(Account == "token")        %>% pull(Key)
   CREATION_ACT <- api_keys %>% dplyr::filter(Account == "creation_act") %>% pull(Key) %>% str_replace_all("ACT_", "")
   VERSION      <- api_keys %>% dplyr::filter(Account == "version")      %>% pull(Key)
   
   # Test: get_fb_parameters ------------------------------------------------------
+  ## Parameters
+  demog_df <- get_fb_parameter_ids(type = "demographics",
+                                   version = VERSION,
+                                   token = TOKEN)
+  
+  interests_df <- get_fb_parameter_ids(type = "interests",
+                                       version = VERSION,
+                                       token = TOKEN)
+  
+  behaviors_df <- get_fb_parameter_ids(type = "behaviors",
+                                       version = VERSION,
+                                       token = TOKEN)
+  
   ## Geolocation keys
-  country_group_df <- get_fb_parameters(type = "country_group",
+  country_group_df <- get_fb_parameter_ids(type = "country_group",
                                         version = VERSION,
                                         token = TOKEN)
   
-  country_df <- get_fb_parameters(type = "country",
+  country_df <- get_fb_parameter_ids(type = "country",
                                   version = VERSION,
                                   token = TOKEN)
   
-  states_df <- get_fb_parameters(type = "region",
+  states_df <- get_fb_parameter_ids(type = "region",
                                  version = VERSION,
                                  token = TOKEN,
                                  country_code = "US")
   
   # All cities that start with "New" in New York
-  city_df <- get_fb_parameters(type = "city",
+  city_df <- get_fb_parameter_ids(type = "city",
                                version = VERSION,
                                token = TOKEN,
                                country_code = "US",
                                q="New York City",
                                region_id = 3875)
   
-  city_df <- get_fb_parameters(type = "city",
+  city_df <- get_fb_parameter_ids(type = "city",
                                version = VERSION,
                                token = TOKEN,
                                country_code = "US",
                                q="Cincinnati")
   
-  city_df <- get_fb_parameters(type = "city",
+  city_df <- get_fb_parameter_ids(type = "city",
                                version = VERSION,
                                token = TOKEN,
                                country_code = "US",
@@ -62,7 +74,7 @@ if(F){
                                region_id = 3878)
   
   # NYC and all locations within NYC (boroughs, neighborhoods, etc)
-  nyc_df <- get_fb_parameters(type = "city",
+  nyc_df <- get_fb_parameter_ids(type = "city",
                               version = VERSION,
                               token = TOKEN,
                               country_code = "US",
@@ -70,7 +82,7 @@ if(F){
                               region_id = 3875,
                               key = 2490299)
   
-  nyc_subcity_df <- get_fb_parameters(type = "subcity",
+  nyc_subcity_df <- get_fb_parameter_ids(type = "subcity",
                                       version = VERSION,
                                       token = TOKEN,
                                       country_code = "US",
@@ -86,14 +98,14 @@ if(F){
                                     region_id = 3875,
                                     key = 2490299)
   
-  zip_df <- get_fb_parameters(type = "zip",
+  zip_df <- get_fb_parameter_ids(type = "zip",
                               version = VERSION,
                               token = TOKEN,
                               country_code = "US",
                               q="1",
                               region_id = 3875)
   
-  zip_nyc_df <- get_fb_parameters(type = "zip",
+  zip_nyc_df <- get_fb_parameter_ids(type = "zip",
                                   version = VERSION,
                                   token = TOKEN,
                                   country_code = "US",
@@ -102,28 +114,16 @@ if(F){
                                   key = 2490299)
   
   # US ONLY
-  dma_market <- get_fb_parameters(type = "geo_market",
+  dma_market <- get_fb_parameter_ids(type = "geo_market",
                                   version = VERSION,
                                   token = TOKEN)
   
-  elec_dist_df <- get_fb_parameters(type = "electoral_district",
+  elec_dist_df <- get_fb_parameter_ids(type = "electoral_district",
                                     version = VERSION,
                                     token = TOKEN,
                                     q = 'Ohio')
-  elec_dist_df
-  
-  ## Parameters
-  demog_df <- get_fb_parameters(type = "demographics",
-                                version = VERSION,
-                                token = TOKEN)
-  
-  interests_df <- get_fb_parameters(type = "interests",
-                                    version = VERSION,
-                                    token = TOKEN)
-  
-  behaviors_df <- get_fb_parameters(type = "behaviors",
-                                    version = VERSION,
-                                    token = TOKEN)
+
+
   
   
   
