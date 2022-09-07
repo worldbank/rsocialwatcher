@@ -149,8 +149,6 @@ query_fb_marketing_api_1call <- function(location_type,
                                          lat_lon = NULL,
                                          radius = NULL,
                                          radius_unit = NULL,
-                                         country_code = NULL,
-                                         country_group = NULL,
                                          location_keys = NULL,
                                          locales = NULL,
                                          behavior = NULL,
@@ -190,7 +188,7 @@ query_fb_marketing_api_1call <- function(location_type,
     stop("'location_type' required. Must be either 'coordinates' or 'country'")
   }
   
-  if(!(location_type %in% c("coordinates", "country"))){
+  if(!(location_type %in% c("coordinates", "countries"))){
     # stop("'location_type' must be either 'coordinates' or 'country'")
   }
   
@@ -203,8 +201,8 @@ query_fb_marketing_api_1call <- function(location_type,
     if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
   
-  if(location_type == "countries"){
-    if(is.null(country_code)) stop("Must enter value for 'country_code'")
+  if(location_type != "coordinates"){
+    if(is.null(location_keys)) stop("Must enter value for 'location_keys'")
   }
   
   if(!is.null(radius_unit)){
@@ -333,7 +331,7 @@ query_fb_marketing_api_1call <- function(location_type,
                              "'distance_unit':'",radius_unit,"'}]},")
   } else if (location_type %in% c("countries", "country_groups")){
     query_location <- paste0("'geo_locations':{'",location_type,"':[",
-                             paste0("'",country_code,"'") %>% paste(collapse = ","),
+                             paste0("'",location_keys,"'") %>% paste(collapse = ","),
                              "]},")
   } else if (location_type %in% c("regions","electoral_districts","zips","geo_markets")){
     query_location <- paste0("'geo_locations':{'",location_type,"':[",
@@ -383,6 +381,7 @@ query_fb_marketing_api_1call <- function(location_type,
   
   # Make query and prep dataframe with results and parameter
   try_api_call <- TRUE
+  
   while(try_api_call){
     try_api_call <- FALSE
     
@@ -416,8 +415,6 @@ query_fb_marketing_api_1call <- function(location_type,
         query_val_df$location_type         <- location_type
         query_val_df$radius                <- radius
         query_val_df$radius_unit           <- radius_unit
-        query_val_df$country_code          <- country_code  %>% paste(collapse = ",")
-        query_val_df$country_group         <- country_group  %>% paste(collapse = ",")
         query_val_df$location_keys         <- location_keys %>% paste(collapse = ",")
         
         if(location_type == "coordinates"){
@@ -537,8 +534,6 @@ query_fb_marketing_api <- function(location_type,
                                    lat_lon = NULL,
                                    radius = NULL,
                                    radius_unit = NULL,
-                                   country_code = NULL,
-                                   country_group = NULL,
                                    location_keys = NULL,
                                    locales = NULL,
                                    behavior = NULL,
@@ -575,8 +570,6 @@ query_fb_marketing_api <- function(location_type,
   lat_lon               <- lat_lon               %>% convert_to_list()
   radius                <- radius                %>% convert_to_list()
   radius_unit           <- radius_unit           %>% convert_to_list()
-  country_code          <- country_code          %>% convert_to_list()
-  country_group         <- country_group         %>% convert_to_list()
   location_keys         <- location_keys         %>% convert_to_list()
   locales               <- locales               %>% convert_to_list()
   behavior              <- behavior              %>% convert_to_list()
@@ -594,31 +587,7 @@ query_fb_marketing_api <- function(location_type,
   age_max               <- age_max               %>% convert_to_list()
   
   # Length parameter inputs to same length ---------------------------------------
-  # n_param_combn <- length(lat_lon) * 
-  #   length(radius) *
-  #   length(radius_unit) *
-  #   length(country_code) *
-  #   length(country_group) *
-  #   length(location_keys) *
-  #   length(locales) *
-  #   length(behavior) *
-  #   length(interest) *
-  #   length(relationship_statuses) *
-  #   length(life_events) *
-  #   length(industries) *
-  #   length(income) *
-  #   length(family_statuses) *
-  #   length(education_statuses) *
-  #   length(user_os) *
-  #   length(wireless_carrier) *
-  #   length(gender) *
-  #   length(age_min) *
-  #   length(age_max)
-  
-  
   param_grid_df <- expand.grid(lat_lon               = lat_lon,
-                               country_code          = country_code,
-                               country_group         = country_group,
                                location_keys         = location_keys,
                                radius                = radius,
                                radius_unit           = radius_unit,
@@ -642,8 +611,6 @@ query_fb_marketing_api <- function(location_type,
                    lat_lon               = param_grid_df$lat_lon,
                    radius                = param_grid_df$radius,
                    radius_unit           = param_grid_df$radius_unit,
-                   country_code          = param_grid_df$country_code,
-                   country_group         = param_grid_df$country_group,
                    location_keys         = param_grid_df$location_keys,
                    locales               = param_grid_df$locales,
                    behavior              = param_grid_df$behavior,

@@ -11,8 +11,6 @@ query_fb_marketing_api(
   lat_lon = NULL,
   radius = NULL,
   radius_unit = NULL,
-  country_code = NULL,
-  country_group = NULL,
   location_keys = NULL,
   locales = NULL,
   behavior = NULL,
@@ -48,10 +46,6 @@ query_fb_marketing_api(
 
 \item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}
 \subsection{If location_type = "country"}{
-}}
-
-\item{country_code}{Country ISO2; for example, \code{"US"}.
-\subsection{Other location??}{
 }}
 
 \item{locales}{Words
@@ -103,6 +97,10 @@ query_fb_marketing_api(
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
 
 \item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is \code{TRUE}), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
+
+\item{country_code}{Country ISO2; for example, \code{"US"}.
+\subsection{Other location??}{
+}}
 }
 \value{
 Dataframe that includes (1) daily and monthly active users and (2) parameter values
