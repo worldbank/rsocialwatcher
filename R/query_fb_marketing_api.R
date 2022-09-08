@@ -1,16 +1,8 @@
-
-# TODO:
-# 1. Add required packages as "depends"
-# 2. And/Or
-# 3. More geolocation options; other types (region, etc etc -- implement all)
-#   -- Allow searching...
-#   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
-# 4. locales
-# 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
-# 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
-# 7. Allow entering multiple keys (token, version, creation_act must be same length). Here, we just iterate through them??
-# -- Or maybe just give an example? For example, loop over location?
-# 8. Add examples
+#' @import dplyr
+#' @import lubridate
+#' @import jsonlite
+#' @import httr
+#' @import stringr
 
 library(dplyr)
 library(lubridate)
@@ -20,6 +12,18 @@ library(stringr)
 if(F){
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
 }
+
+# TODO:
+# 2. And/Or
+# 3. More geolocation options; other types (region, etc etc -- implement all)
+#   -- Allow searching...
+#   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
+# 4. locales
+# 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
+# 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
+# 8. Add examples
+# 9. Function to add names, from IDs (don't do for location?)
+
 
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
@@ -36,120 +40,12 @@ is_null_or_na <- function(x){
   return(out)
 }
 
-# Main functions ---------------------------------------------------------------
-
-#' Get Facebook Parameter IDs
-#'
-#' This function returns dataframes of Facebook parameters and their associated
-#' IDs for different categories of information. Categories include behaviors,
-#' demographics, interests, locales, job titles, education major, and location 
-#' (e.g., country, city, zip code, etc). The returned dataframe contains ids 
-#' that can be used in the query_fb_marketing_api function.
-#'
-#' @param type Type of data; either "behaviors", "demographics", "interests", or "locales"
-#' @param version Facebook Marketing API version; for example, "v14.0"
-#' @param token Facebook Marketing API token
-#' 
-#' @return Dataframe with parameter IDs and descriptions.
-#' @export
-get_fb_parameter_ids <- function(type,
-                                 version,
-                                 token,
-                                 q = NULL,
-                                 country_code = NULL,
-                                 region_id = NULL,
-                                 key=NULL){
-  
-  # Checks ---------------------------------------------------------------------
-  #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
-  
-  # Call API -----------------------------------------------------------------
-  if(type %in% c("behaviors", "demographics", "interests")){
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        type='adTargetingCategory',
-        class=type,
-        access_token=token,
-        limit=2000
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% "locales"){
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        type='adlocale',
-        access_token=token,
-        limit=2000
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% "job_titles"){
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        type='adworkposition',
-        q=q,
-        access_token=token,
-        limit=5000
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% "education_major"){
-    if(is.null(q)) stop("'q' required")
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        type='adeducationmajor',
-        q=q,
-        access_token=token,
-        limit=5000
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% c("country", "country_group")){
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        location_types=type,
-        type='adgeolocation',
-        access_token=token,
-        limit=300
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% c("region",
-                         "large_geo_area",
-                         "medium_geo_area",
-                         "small_geo_area",
-                         "metro_area",
-                         "city",
-                         "subcity",
-                         "neighborhood",
-                         "subneighborhood",
-                         "zip",
-                         "geo_market",
-                         "electoral_district")){
-    
-    if(type %in% c("zip")){
-      if(is.null(q)){
-        #stop("Parameter 'q' required")
-      }
-    }
-    
-    out_df <- GET(
-      paste0("https://graph.facebook.com/",version,"/search"),
-      query=list(
-        location_types=type,
-        type='adgeolocation',
-        q=q,
-        region_id=region_id,
-        country_code=country_code,
-        key=key,
-        access_token=token,
-        limit=3000
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } 
-  
-  return(out_df)
-}
-
-query_fb_marketing_api_1call <- function(location_type,
+query_fb_marketing_api_1call <- function(location_unit_type,
                                          lat_lon = NULL,
                                          radius = NULL,
                                          radius_unit = NULL,
                                          location_keys = NULL,
+                                         location_types = "home",
                                          locales = NULL,
                                          behavior = NULL,
                                          interest = NULL,
@@ -172,27 +68,16 @@ query_fb_marketing_api_1call <- function(location_type,
                                          add_query = F,
                                          add_query_hide_credentials = T){
   
-  # Query Facebook Marketing API
-  # ARGs:
-  # location_type: "coordinates" or "country"
-  
-  # --loc_i: Numeric id of which row to use from `coords_df`
-  # --coords_df: Dataframe with latitude and longitude variables
-  # --parameters_df_i: Dataframe with parameters
-  # --version: Facebook marketing API verion
-  # --creation_act: Creation act (associated with API key/account)
-  # --token: API token/key
-  
   # Checks ---------------------------------------------------------------------
-  if(is.null(location_type)){
-    stop("'location_type' required. Must be either 'coordinates' or 'country'")
+  if(is.null(location_unit_type)){
+    stop("'location_unit_type' required. Must be either 'coordinates' or 'country'")
   }
   
-  if(!(location_type %in% c("coordinates", "countries"))){
-    # stop("'location_type' must be either 'coordinates' or 'country'")
+  if(!(location_unit_type %in% c("coordinates", "countries"))){
+    # stop("'location_unit_type' must be either 'coordinates' or 'country'")
   }
   
-  if(location_type == "coordinates"){
+  if(location_unit_type == "coordinates"){
     
     if(length(lat_lon) != 2 ) stop("'lat_lon' must be a vector of length 2, with latitude then longitude")
     #if(is.null(latitude))    stop("Must enter numeric value for 'latitude'")
@@ -201,13 +86,19 @@ query_fb_marketing_api_1call <- function(location_type,
     if(is.null(radius_unit)) stop("Must enter 'kilometer' or 'mile' for 'radius_unit'")
   }
   
-  if(location_type != "coordinates"){
+  if(location_unit_type != "coordinates"){
     if(is.null(location_keys)) stop("Must enter value for 'location_keys'")
   }
   
   if(!is.null(radius_unit)){
     if(!(radius_unit %in% c("mile", "kilometer"))) stop("Invalid 'radius_unit'; if specify radius_unit, must be either 'mile' or 'kilometer'")
   }
+  
+  # Check location_types
+  # if( (location_types %in% c("home", "recent")) |
+  #     (location_types %in% c("home", "recent")) ){
+  #   
+  # }
   
   # Check internet -------------------------------------------------------------
   # Stall if not connected to internet
@@ -262,6 +153,15 @@ query_fb_marketing_api_1call <- function(location_type,
     education_statuses_param <- education_statuses %>% paste(collapse = ",")
   }
   
+  if(is_null_or_na(locales)){
+    locales_param <- NULL
+  } else{
+    locales_param <- locales %>% paste(collapse = ",")
+  }
+  
+  # Can't be NULL
+  location_types_param <- location_types %>% paste(collapse = ",")
+  
   if(is_null_or_na(user_os)){
     user_os_param <- NULL
   } else{
@@ -276,40 +176,40 @@ query_fb_marketing_api_1call <- function(location_type,
     wireless_carrier_param <- paste0("'", wireless_carrier, "'")
   }
   
-  if(location_type == "places"){
-    if(is.null(radius))      stop("'radius' not spacified. When location_type = 'places', must specify radius (and radius_unit).")
-    if(is.null(radius_unit)) stop("'radius_unit' not spacified. When location_type = 'places', must specify radius_unit (and radius).")
+  if(location_unit_type == "places"){
+    if(is.null(radius))      stop("'radius' not spacified. When location_unit_type = 'places', must specify radius (and radius_unit).")
+    if(is.null(radius_unit)) stop("'radius_unit' not spacified. When location_unit_type = 'places', must specify radius_unit (and radius).")
   }
   
-  if(location_type %in% c("countries","regions","zips","geo_markets","electoral_district","country_groups")){
-    if(!is.null(radius))      stop(paste0("'radius' parameter not allowed when location_type = '", location_type, "'"))
-    if(!is.null(radius_unit)) stop(paste0("'radius_unit' parameter not allowed when location_type = '", location_type, "'"))
+  if(location_unit_type %in% c("countries","regions","zips","geo_markets","electoral_district","country_groups")){
+    if(!is.null(radius))      stop(paste0("'radius' parameter not allowed when location_unit_type = '", location_unit_type, "'"))
+    if(!is.null(radius_unit)) stop(paste0("'radius_unit' parameter not allowed when location_unit_type = '", location_unit_type, "'"))
   }
   
-  if(location_type %in% c("coordinates","places")){
+  if(location_unit_type %in% c("coordinates","places")){
     
     if(radius_unit == "mile"){
-      if(radius > 50)   stop("Radius too large; radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
-      if(radius < 0.63) stop("Radius too small; radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+      if(radius > 50)   stop("Radius too large; radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 0.63) stop("Radius too small; radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
     }
     
     if(radius_unit == "kilometer"){
-      if(radius > 80) stop("Radius too large; radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
-      if(radius < 1)  stop("Radius too small; radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+      if(radius > 80) stop("Radius too large; radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 1)  stop("Radius too small; radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
     }
     
   }
   
-  if(location_type %in% c("cities")){
+  if(location_unit_type %in% c("cities")){
     
     if(radius_unit == "mile"){
-      if(radius > 50) stop("Radius too large; if specify radius, radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
-      if(radius < 10) stop("Radius too small; if specify radius, radius must be between 0.63 and 50 miles when location_type = '",location_type,"'.")
+      if(radius > 50) stop("Radius too large; if specify radius, radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 10) stop("Radius too small; if specify radius, radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
     }
     
     if(radius_unit == "kilometer"){
-      if(radius > 80) stop("Radius too large; if specify radius, radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
-      if(radius < 17) stop("Radius too small; if specify radius, radius must be between 1 and 80 kilometers when location_type = '",location_type,"'.")
+      if(radius > 80) stop("Radius too large; if specify radius, radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 17) stop("Radius too small; if specify radius, radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
     }
     
   }
@@ -317,36 +217,35 @@ query_fb_marketing_api_1call <- function(location_type,
   gender_param <- gender %>% paste(collapse = ",")
   
   # Make Query -----------------------------------------------------------------
-  if(location_type == "coordinates"){
+  if(location_unit_type == "coordinates"){
     latitude  <- lat_lon[1]
     longitude <- lat_lon[2]
     
-    # TODO: Maybe location_type doesn't need to be here?? As should be another parameter? Or put in all?
-    query_location <- paste0("'geo_locations':{'location_types':['home'],'custom_locations':[{'latitude':",
+    query_location <- paste0("'geo_locations':{'location_types':['",location_types_param,"'],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
                              longitude %>% substring(1,7),",",
                              "'radius':",
                              radius,",",
                              "'distance_unit':'",radius_unit,"'}]},")
-  } else if (location_type %in% c("countries", "country_groups")){
-    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+  } else if (location_unit_type %in% c("countries", "country_groups")){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("'",location_keys,"'") %>% paste(collapse = ","),
-                             "]},")
-  } else if (location_type %in% c("regions","electoral_districts","zips","geo_markets")){
-    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             "],'location_types':['",location_types_param,"']},")
+  } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets")){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
-                             "]},")
-  } else if ( (location_type %in% c("cities")) & is.null(radius)){
-    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             "],'location_types':['",location_types_param,"']},")
+  } else if ( (location_unit_type %in% c("cities")) & is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% 
                                paste(collapse = ","),
-                             "]},")
-  } else if ( (location_type %in% c("cities", "places")) & !is.null(radius)){
-    query_location <- paste0("'geo_locations':{'",location_type,"':[",
+                             "],'location_types':['",location_types_param,"']},")
+  } else if ( (location_unit_type %in% c("cities", "places")) & !is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"','radius':",radius,",'distance_unit':'",radius_unit,"'}") %>% 
                                paste(collapse = ","),
-                             "]},")
+                             "],'location_types':['",location_types_param,"']},")
   }
   
   query <- paste0("https://graph.facebook.com/",version,
@@ -354,6 +253,8 @@ query_fb_marketing_api_1call <- function(location_type,
                   "/delivery_estimate?access_token=",token,
                   "&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
                   query_location,
+                  ifelse(is.null(locales_param), "", 
+                         paste0("'locales':[", locales_param, "],")), 
                   ifelse(is.null(behavior_param), "", 
                          paste0("'behaviors':[", behavior_param, "],")), 
                   ifelse(is.null(interest_param), "", 
@@ -398,7 +299,8 @@ query_fb_marketing_api_1call <- function(location_type,
         
         ## Add parameter info
         # TODO: If "", NA or NULL, remove variable
-        query_val_df$location_type         <- location_type
+        query_val_df$location_unit_type    <- location_unit_type
+        query_val_df$location_types        <- location_types        %>% paste(collapse = ",")
         query_val_df$behavior              <- behavior              %>% paste(collapse = ",")
         query_val_df$interest              <- interest              %>% paste(collapse = ",")
         query_val_df$relationship_statuses <- relationship_statuses %>% paste(collapse = ",")
@@ -407,17 +309,17 @@ query_fb_marketing_api_1call <- function(location_type,
         query_val_df$income                <- income                %>% paste(collapse = ",")
         query_val_df$family_statuses       <- family_statuses       %>% paste(collapse = ",")
         query_val_df$education_statuses    <- education_statuses    %>% paste(collapse = ",")
+        query_val_df$locales               <- locales               %>% paste(collapse = ",")
         query_val_df$user_os               <- user_os               %>% paste(collapse = ",")
         query_val_df$wireless_carrier      <- wireless_carrier      %>% paste(collapse = ",")
         query_val_df$gender                <- gender                %>% paste(collapse = ",")
         query_val_df$age_min               <- age_min
         query_val_df$age_max               <- age_max
-        query_val_df$location_type         <- location_type
         query_val_df$radius                <- radius
         query_val_df$radius_unit           <- radius_unit
         query_val_df$location_keys         <- location_keys %>% paste(collapse = ",")
         
-        if(location_type == "coordinates"){
+        if(location_unit_type == "coordinates"){
           query_val_df$latitude  <- latitude
           query_val_df$longitude <- longitude
         }
@@ -491,14 +393,15 @@ query_fb_marketing_api_1call <- function(location_type,
 
 #' Query Facebook Marketing API
 #' ## Location
-#' @param location_type Either `"coordinates"` (for buffer around single point) or `"country"`
-#' ### If location_Type = "coordinates"
+#' @param location_unit_type Either `"coordinates"` (for buffer around single point) or `"country"`
+#' ### If location_unit_type = "coordinates"
 #' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
-#' ### If location_type = "country" 
+#' ### If location_unit_type = "country" 
 #' @param country_code Country ISO2; for example, `"US"`.
 #' ## Other location??
+#' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
 #' @param locales Words
 #' ## Parameters. These are optional. If nothing specified, then searches for all users.
 #' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `behavior = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors")` to get dataframe with IDs and descriptions. 
@@ -509,6 +412,7 @@ query_fb_marketing_api_1call <- function(location_type,
 #' @param income Vector of income IDs. If multiple, uses `OR` condition; for example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
 #' @param family_statuses Vector of family status IDs. If multiple, uses `OR` condition; for example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
 #' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `education_statuses = c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see education status options. 
+#' @param locales Locales ID. 
 #' @param user_os User operating systems. If multiple, uses `OR` condition; for example `user_os = ['iOS', 'Android']` targets those that use either an iOS or Android OS. See `user_os` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
 #' @param wireless_carrier Wireless carriet. If set to `Wifi`, then targets those connecting via a Wifi network. See `wireless_carrier` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
 #' @param gender Genders to target; 1 targets males and 2 targets females Default is both. See `gender` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
@@ -530,11 +434,12 @@ query_fb_marketing_api_1call <- function(location_type,
 #' @details FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
 #' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales.
 #' @export
-query_fb_marketing_api <- function(location_type,
+query_fb_marketing_api <- function(location_unit_type,
                                    lat_lon = NULL,
                                    radius = NULL,
                                    radius_unit = NULL,
                                    location_keys = NULL,
+                                   location_types = "home",
                                    locales = NULL,
                                    behavior = NULL,
                                    interest = NULL,
@@ -553,12 +458,12 @@ query_fb_marketing_api <- function(location_type,
                                    creation_act, 
                                    token,
                                    sleep_time = 1,
-                                   show_result = T,
+                                   show_result = F,
                                    add_query = F,
                                    add_query_hide_credentials = T){
   
   # Checks -----------------------------------------------------------------------
-  if(length(location_type) != 1) stop("'location_type' must be a vector of length one, either 'coordinates' or 'country'; only one option allowed")
+  if(length(location_unit_type) != 1) stop("'location_unit_type' must be a vector of length one, either 'coordinates' or 'country'; only one option allowed")
   
   # Convert param inputs to list -------------------------------------------------
   convert_to_list <- function(x){
@@ -612,6 +517,7 @@ query_fb_marketing_api <- function(location_type,
                    radius                = param_grid_df$radius,
                    radius_unit           = param_grid_df$radius_unit,
                    location_keys         = param_grid_df$location_keys,
+                   location_types        = param_grid_df$location_types,
                    locales               = param_grid_df$locales,
                    behavior              = param_grid_df$behavior,
                    interest              = param_grid_df$interest,
@@ -626,9 +532,11 @@ query_fb_marketing_api <- function(location_type,
                    gender                = param_grid_df$gender,
                    age_min               = param_grid_df$age_min,
                    age_max               = param_grid_df$age_max,
-                   MoreArgs = list(location_type = location_type,
+                   MoreArgs = list(location_unit_type = location_unit_type,
                                    sleep_time    = sleep_time,
                                    show_result   = show_result,
+                                   add_query     = add_query, 
+                                   add_query_hide_credentials = add_query_hide_credentials,
                                    version       = version,
                                    creation_act  = creation_act,
                                    token         = token),

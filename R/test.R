@@ -38,6 +38,10 @@ if(F){
                                        version = VERSION,
                                        token = TOKEN)
   
+  locales_df <- get_fb_parameter_ids(type = "locales",
+                                       version = VERSION,
+                                       token = TOKEN)
+  
   ## Geolocation keys
   country_group_df <- get_fb_parameter_ids(type = "country_group",
                                            version = VERSION,
@@ -173,14 +177,29 @@ if(F){
                                     token = TOKEN,
                                     country_code = "US")
   
-  df_out <- query_fb_marketing_api_1call(location_type = "electoral_districts",
+  df_out <- query_fb_marketing_api(location_type = "electoral_districts",
                                          location_keys = "US:OH12",
                                          version = VERSION, 
                                          creation_act = CREATION_ACT, 
-                                         token = TOKEN)
+                                         token = TOKEN,
+                                   add_query = T,
+                                   add_query_hide_credentials = F)
   
+  df_out$query
   
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAKw3Yj84gRs707fbzcWEsjcFkhQ0zzOnb7QSrZB3lh6ydg7XEfgMMyvygpZC1ZBTQbozWXZBMZB4EdDNrQuky0y9UxP5vnN2L6razC6oA66zo86Xo3PTCpOPSbCNEHT78KZA0Avha5bQLZA8mo1VYwQrhwp8UuzYrA5LOu9T0DZC&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'electoral_districts':[{'key':'US:OH12'}], 'location_types':['home']},'genders':[1,2],'age_min':18,'age_max':65}
   
+  # Test -----------------------------------------------------------------------
+  df_out <- query_fb_marketing_api_1call(location_type = "countries",
+                                         location_keys = "US",
+                                         interest = 6002839660079,
+                                         locales = c(1,6),
+                                         version = VERSION, 
+                                         creation_act = CREATION_ACT, 
+                                         token = TOKEN,
+                                         add_query = T,
+                                         add_query_hide_credentials = F)
   
-  
+
+
 }

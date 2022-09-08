@@ -1,5 +1,5 @@
 ---
-title: "Google Traffic"
+title: "rSocialWatcher"
 author: "Rob Marty"
 date: "`r Sys.Date()`"
 #output: rmarkdown::html_vignette
@@ -21,7 +21,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Setup
+# Setup
+
+First, we load relevant packages and create variables for our Facebook API keys.
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE}
 ## Load Google Traffic package
@@ -30,15 +32,25 @@ library(rSocialWatcher)
 ## Load packages for working with and visualizing data
 library(tidyverse)
 
+library(dplyr)
+library(lubridate)
+library(jsonlite)
+library(httr)
+library(stringr)
+
+library(knitr)
+library(kableExtra)
+
 ## Set Facebook Keys
-google_key <- "GOOGLE-API-KEY-HERE"
+TOKEN        <- "TOKEN-HERE"
+CREATION_ACT <- "CREATION-ACT-HERE"
+VERSION      <- "VERSION-HERE"
 ```
 
 ```{r loadkey, include=FALSE}
 ## Load keys
 api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
                      stringsAsFactors = F)
-
 
 api_keys <- api_keys %>%
   dplyr::filter(Service == "facebook_marketing_ad",
@@ -53,21 +65,43 @@ CREATION_ACT <- api_keys %>%
   pull(Key) %>% 
   str_replace_all("ACT_", "") 
 
-VERSION      <- api_keys %>% 
-  plyr::filter(Account == "version") %>% 
+VERSION <- api_keys %>% 
+  dplyr::filter(Account == "version") %>% 
   pull(Key)
 ```
 
-## Quickstart
-```{r setup, include=TRUE, warning=FALSE, message=FALSE}
+# Setting geolocation
+
+## Around a coordinate
+
+```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
 
 df_out <- query_fb_marketing_api(location_type = "coordinates",
-                                 lat_lon = c(38.90, -77.01),
-                                 radius = 10,
-                                 radius_unit = "kilometer",
-                                 version = VERSION, 
-                                 creation_act = CREATION_ACT, 
-                                 token = TOKEN)
+                                 lat_lon       = c(38.90, -77.01),
+                                 radius        = 10,
+                                 radius_unit   = "kilometer",
+                                 version       = VERSION, 
+                                 creation_act  = CREATION_ACT, 
+                                 token         = TOKEN)
 
+df_out %>% kable() %>% kable_styling() %>% scroll_box(width = "100%")
 ```
 
+## Using a location type/key
+
+We can also query using a 
+
+```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
+
+df_out <- query_fb_marketing_api(location_type = "coordinates",
+                                 lat_lon       = c(38.90, -77.01),
+                                 radius        = 10,
+                                 radius_unit   = "kilometer",
+                                 version       = VERSION, 
+                                 creation_act  = CREATION_ACT, 
+                                 token         = TOKEN)
+
+df_out %>% kable() %>% kable_styling() %>% scroll_box(width = "100%")
+```
+
+SHOW HOW TO QUEEY
