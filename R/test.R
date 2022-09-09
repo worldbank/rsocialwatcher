@@ -1,5 +1,8 @@
 # Load data
 
+# TODO
+# 1. location types -- all plural or singular 
+
 if(F){
   
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
@@ -39,8 +42,8 @@ if(F){
                                        token = TOKEN)
   
   locales_df <- get_fb_parameter_ids(type = "locales",
-                                       version = VERSION,
-                                       token = TOKEN)
+                                     version = VERSION,
+                                     token = TOKEN)
   
   ## Geolocation keys
   country_group_df <- get_fb_parameter_ids(type = "country_group",
@@ -178,10 +181,10 @@ if(F){
                                     country_code = "US")
   
   df_out <- query_fb_marketing_api(location_type = "electoral_districts",
-                                         location_keys = "US:OH12",
-                                         version = VERSION, 
-                                         creation_act = CREATION_ACT, 
-                                         token = TOKEN,
+                                   location_keys = "US:OH12",
+                                   version = VERSION, 
+                                   creation_act = CREATION_ACT, 
+                                   token = TOKEN,
                                    add_query = T,
                                    add_query_hide_credentials = F)
   
@@ -196,6 +199,29 @@ if(F){
                                          add_query = T,
                                          add_query_hide_credentials = F)
   
-
-
+  
+  get_fb_parameter_ids(type    = "city",
+                       country_code = "US",
+                       q = "LA",
+                       version = VERSION,
+                       token   = TOKEN) %>%
+    head()
+  
+  
+  
+  | region             |
+    | large_geo_area     |
+    | medium_geo_area    |
+    | small_geo_area     |
+    | metro_area         |
+    | city               |
+    | subcity            |
+    | neighborhood       |
+    | subneighborhood    |
+    | zip                |
+    | geo_market         |
+    | electoral_district |
+    
+    
+    
 }

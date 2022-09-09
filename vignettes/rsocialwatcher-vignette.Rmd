@@ -70,7 +70,11 @@ VERSION <- api_keys %>%
   pull(Key)
 ```
 
+---
+
 # Querying Location Data using Different Units
+
+Locations can either be specified around a specific coordinate, or using a location type (e.g., country, city, etc.)
 
 ## Around a coordinate
 
@@ -89,11 +93,34 @@ df_out %>%
   scroll_box(width = "100%")
 ```
 
+---
+
 ## Using a location type/key
 
-We can also query using 
+We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
 
-```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
+* __Location Type:__ This is specified (1) in the `type` parameter in the `get_fb_parameter_ids()` function and in the `location_unit_type` parameter in the `query_fb_marketing_api()` function
+* __Radius Can be Specified:__ For these location types, a radius can optionally be specified; for example, to specify a location and it's surrounding area.
+* __US Only:__ These location types can only be used for the US
+
+| Location Type      | Radius Can be Specified | US Only |
+| -----------------  | ----------------------  | ------- |
+| country_group      | No                      | No      |
+| country            | No
+| region             |
+| large_geo_area     |
+| medium_geo_area    |
+| small_geo_area     |
+| metro_area         |
+| city               |
+| subcity            |
+| neighborhood       |
+| subneighborhood    |
+| zip                |
+| geo_market         |
+| electoral_district |
+
+```{r lockey_1, include=TRUE, warning=FALSE, message=FALSE}
 
 country_df <- get_fb_parameter_ids(type    = "country",
                                    version = VERSION,
@@ -106,7 +133,7 @@ country_df %>%
   scroll_box(width = "100%")
 
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                     location_keys  = "US",
+                                     location_keys  = "AD",
                                      version        = VERSION, 
                                      creation_act   = CREATION_ACT, 
                                      token          = TOKEN)
@@ -117,3 +144,6 @@ df_out %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 ```
+
+
+

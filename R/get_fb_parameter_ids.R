@@ -18,7 +18,8 @@ get_fb_parameter_ids <- function(type,
                                  q = NULL,
                                  country_code = NULL,
                                  region_id = NULL,
-                                 key=NULL){
+                                 key=NULL,
+                                 limit = 5000){
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
