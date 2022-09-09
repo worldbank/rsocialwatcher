@@ -18,8 +18,6 @@ if(F){
 # 3. More geolocation options; other types (region, etc etc -- implement all)
 #   -- Allow searching...
 #   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
-# 4. locales
-# 5. Function for -- get suggested radius: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#locale
 # 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
 # 8. Add examples
 # 9. Function to add names, from IDs (don't do for location?)

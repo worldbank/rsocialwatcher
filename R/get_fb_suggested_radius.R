@@ -3,9 +3,9 @@
 #' When targeting around a specific location, returns a suggested radius to reach enough people
 #' 
 #' @param location Vector of latitude and longitude (`c(lat, lon)`).
+#' @param distance_unit Either `"kilometer"` or "`mile`"; defaults to "`kilometer`"
 #' @param version Facebook Marketing API version; for example, "v14.0"
 #' @param token Facebook Marketing API token
-#' @param distance_unit Either `"kilometer"` or "`mile`"; defaults to "`kilometer`"
 #' 
 #' @return Dataframe with suggested radius and distance unit
 #' 
@@ -18,12 +18,12 @@
 #' 
 #' @export
 get_fb_suggested_radius <- function(location,
+                                    distance_unit = "kilometer",
                                     version,
-                                    token,
-                                    distance_unit = "kilometer"){
+                                    token){
   
   latitude  <- location[1]
-  longitude <- location[1]
+  longitude <- location[2]
   
   out_df <- GET(
     paste0("https://graph.facebook.com/",version,"/search"),

@@ -1,7 +1,7 @@
 ---
 title: "rSocialWatcher"
-author: "Rob Marty"
-date: "`r Sys.Date()`"
+#author: "Rob Marty"
+#date: "`r Sys.Date()`"
 #output: rmarkdown::html_vignette
 output:
   html_document:
@@ -70,7 +70,7 @@ VERSION <- api_keys %>%
   pull(Key)
 ```
 
-# Setting geolocation
+# Querying Location Data using Different Units
 
 ## Around a coordinate
 
@@ -84,24 +84,37 @@ df_out <- query_fb_marketing_api(location_type = "coordinates",
                                  creation_act  = CREATION_ACT, 
                                  token         = TOKEN)
 
-df_out %>% kable() %>% kable_styling() %>% scroll_box(width = "100%")
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
 ```
 
 ## Using a location type/key
 
-We can also query using a 
+We can also query using 
 
 ```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
 
-df_out <- query_fb_marketing_api(location_type = "coordinates",
-                                 lat_lon       = c(38.90, -77.01),
-                                 radius        = 10,
-                                 radius_unit   = "kilometer",
-                                 version       = VERSION, 
-                                 creation_act  = CREATION_ACT, 
-                                 token         = TOKEN)
+country_df <- get_fb_parameter_ids(type = "country",
+                                   version = VERSION,
+                                   token = TOKEN)
 
-df_out %>% kable() %>% kable_styling() %>% scroll_box(width = "100%")
+country_df %>%
+  head() %>%
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+
+df_out <- query_fb_marketing_api(location_type = "country_groups",
+                                     location_keys = "US",
+                                     version = VERSION, 
+                                     creation_act = CREATION_ACT, 
+                                     token = TOKEN)
+
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
 ```
-
-SHOW HOW TO QUEEY
