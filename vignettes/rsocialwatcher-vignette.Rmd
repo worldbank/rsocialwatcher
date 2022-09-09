@@ -75,14 +75,13 @@ VERSION <- api_keys %>%
 ## Around a coordinate
 
 ```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
-
-df_out <- query_fb_marketing_api(location_type = "coordinates",
-                                 lat_lon       = c(38.90, -77.01),
-                                 radius        = 10,
-                                 radius_unit   = "kilometer",
-                                 version       = VERSION, 
-                                 creation_act  = CREATION_ACT, 
-                                 token         = TOKEN)
+df_out <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                 lat_lon            = c(38.90, -77.01),
+                                 radius             = 10,
+                                 radius_unit        = "kilometer",
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
 
 df_out %>% 
   kable() %>% 
@@ -96,9 +95,9 @@ We can also query using
 
 ```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
 
-country_df <- get_fb_parameter_ids(type = "country",
+country_df <- get_fb_parameter_ids(type    = "country",
                                    version = VERSION,
-                                   token = TOKEN)
+                                   token   = TOKEN)
 
 country_df %>%
   head() %>%
@@ -106,11 +105,11 @@ country_df %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 
-df_out <- query_fb_marketing_api(location_type = "country_groups",
-                                     location_keys = "US",
-                                     version = VERSION, 
-                                     creation_act = CREATION_ACT, 
-                                     token = TOKEN)
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                     location_keys  = "US",
+                                     version        = VERSION, 
+                                     creation_act   = CREATION_ACT, 
+                                     token          = TOKEN)
 
 
 df_out %>% 

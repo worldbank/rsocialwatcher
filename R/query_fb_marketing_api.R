@@ -492,6 +492,7 @@ query_fb_marketing_api <- function(location_unit_type,
   # Length parameter inputs to same length ---------------------------------------
   param_grid_df <- expand.grid(lat_lon               = lat_lon,
                                location_keys         = location_keys,
+                               location_types        = location_types,
                                radius                = radius,
                                radius_unit           = radius_unit,
                                locales               = locales,
