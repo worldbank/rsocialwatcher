@@ -72,6 +72,106 @@ VERSION <- api_keys %>%
 
 ---
 
+# Quickstart
+
+## Example Simple Example
+
+The below example queries the number of Facebook users in the US.
+
+```{r simp_ex, include=TRUE, warning=FALSE, message=FALSE}
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = "US",
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
+
+## Vector as OR; List as Separate Query
+The function allows (1). For parameters:.....
+
+* When parameters are in a __vector__, the function treats the parameters as an OR condition. For example, `location_keys = c("US", "MX")` will return the number of Facebook users in the US or Mexico.
+* When parameters are in a __list__, the function will loop over the parameters, making separate API calls. For examples, `location_keys = list("US", "MX")` will return a dataframe with two observations; one for the number of Facebook users in the US, then the number of users in Mexico.
+
+__This "vector as OR condition" and "list as separate queries" pattern works across all parameter inputs.__
+
+However, the following parameters can only except one input (a list or vector is not allowed).
+* `location_unit_type`
+* `radius`
+* `radius_unit`
+
+```{r vec_list_1, include=TRUE, warning=FALSE, message=FALSE}
+## Number of Users in US or Mexico, as separate queries
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = c("US", "MX"),
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+
+## Separate query for number of users in US and Mexico
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = list("US", "MX"),
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
+
+## Example Advanced Query
+
+We want to find the number of Facebook users according to different interests. To grab interest IDs, we use the `get_fb_parameter_ids()` function.
+
+```{r adv_1, include=TRUE, warning=FALSE, message=FALSE}
+interests_df <- get_fb_parameter_ids(type = "interests",
+                                     version = VERSION,
+                                     token = TOKEN) %>%
+  arrange(-audience_size_upper_bound) %>%
+  dplyr::select(id, name, audience_size_upper_bound)
+
+interests_df %>% 
+  head() %>%
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
+
+We are interested in the number of Facebook users interested in:
+
+* Entertainment (id = 6003349442621)
+* Music (id = 6003020834693)
+* Entertainment or music
+
+And we are interested in the above information for both the US and Mexico
+
+```{r adv_2, include=TRUE, warning=FALSE, message=FALSE}
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = list("US", "MX"),
+                                 interest = list(6003349442621, 6003020834693, 
+                                                  c(6003349442621, 6003020834693)),
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
+
+
 # Querying Location Data using Different Units
 
 Locations can either be specified around a specific coordinate, or using a location type (e.g., country, city, etc.)
@@ -97,6 +197,8 @@ df_out %>%
 
 ## Using a location type/key
 
+### Description of Location Types
+
 We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
 
 * __Location Type:__ This is specified (1) in the `type` parameter in the `get_fb_parameter_ids()` function and in the `location_unit_type` parameter in the `query_fb_marketing_api()` function
@@ -120,6 +222,8 @@ We can also query using different location types, including countries, cities, e
 | geo_market         |
 | electoral_district |
 
+### Example Querying Marketing Data
+
 ```{r lockey_1, include=TRUE, warning=FALSE, message=FALSE}
 
 country_df <- get_fb_parameter_ids(type    = "country",
@@ -133,10 +237,10 @@ country_df %>%
   scroll_box(width = "100%")
 
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                     location_keys  = "AD",
-                                     version        = VERSION, 
-                                     creation_act   = CREATION_ACT, 
-                                     token          = TOKEN)
+                                 location_keys  = "AD",
+                                 version        = VERSION, 
+                                 creation_act   = CREATION_ACT, 
+                                 token          = TOKEN)
 
 
 df_out %>% 
@@ -144,6 +248,14 @@ df_out %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 ```
+
+### Examples Querying Location Keys
+
+#### Country Group
+
+#### Country
+
+# Parameter Descriptions
 
 
 

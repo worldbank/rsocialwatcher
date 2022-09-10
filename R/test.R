@@ -2,6 +2,7 @@
 
 # TODO
 # 1. location types -- all plural or singular 
+# 2. And condition
 
 if(F){
   
@@ -189,15 +190,34 @@ if(F){
                                    add_query_hide_credentials = F)
   
   # Test -----------------------------------------------------------------------
-  df_out <- query_fb_marketing_api_1call(location_type = "countries",
+  df_out <- query_fb_marketing_api(location_unit_type = "countries",
                                          location_keys = "US",
-                                         interest = 6002839660079,
-                                         locales = c(1,6),
+                                         interest = c(6002839660079,
+                                                      6002884511422),
                                          version = VERSION, 
                                          creation_act = CREATION_ACT, 
                                          token = TOKEN,
                                          add_query = T,
                                          add_query_hide_credentials = F)
+  
+  df_out$query
+  
+  interests_df %>% 
+    head()
+  
+  Facebook Marketing API - And vs OR Condition
+  
+  https://graph.facebook.com/v14.0/<ACT>/delivery_estimate?access_token=<TOKEN>&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US']},'interests':[{'id':6002839660079},{'id':6002884511422},{'id':6002867432822}]}
+
+  
+  
+    
+  
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US']},'interests':[{'id':6002839660079},{'id':6002884511422},{'id':6002867432822}]}
+  
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002839660079}],'interests':[{'id':6002884511422}],'interests':[{'id':6002867432822}],'genders':[1,2],'age_min':18,'age_max':65}
+  
+  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002884511422}],'interests':[{'id':6002839660079}],'genders':[1,2],'age_min':18,'age_max':65}
   
   
   get_fb_parameter_ids(type    = "city",
