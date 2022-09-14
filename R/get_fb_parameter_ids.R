@@ -1,3 +1,19 @@
+n_embedded_lists <- function(obj){
+  # Count number of embedded lists in a list
+  
+  counter <- 0
+  is_list <- T
+  
+  while(is_list){
+    obj <- obj[[1]]
+    
+    counter <- counter + 1
+    is_list <- is.list(obj)
+  }
+  
+  return(counter)
+}
+
 #' Get Facebook Parameter IDs
 #'
 #' This function returns dataframes of Facebook parameters and their associated
@@ -25,7 +41,7 @@ get_fb_parameter_ids <- function(type,
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
   
   # Call API -----------------------------------------------------------------
-  if(type %in% c("behaviors", "demographics", "interests")){
+  if(type %in% c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses")){
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
       query=list(
@@ -51,6 +67,24 @@ get_fb_parameter_ids <- function(type,
         access_token=token,
         limit=5000
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "education_statuses"){
+    
+    data.frame(id = 1, name = "HIGH_SCHOOL")
+    
+    out_df <- bind_rows(data.frame(id = 1, name = "HIGH_SCHOOL"),
+                        data.frame(id = 2, name = "UNDERGRAD"),
+                        data.frame(id = 3, name = "ALUM"),
+                        data.frame(id = 4, name = "HIGH_SCHOOL_GRAD"),
+                        data.frame(id = 5, name = "SOME_COLLEGE"),
+                        data.frame(id = 6, name = "ASSOCIATE_DEGREE"),
+                        data.frame(id = 7, name = "IN_GRAD_SCHOOL"),
+                        data.frame(id = 8, name = "SOME_GRAD_SCHOOL"),
+                        data.frame(id = 9, name = "MASTER_DEGREE"),
+                        data.frame(id = 10, name = "PROFESSIONAL_DEGREE"),
+                        data.frame(id = 11, name = "DOCTORATE_DEGREE"),
+                        data.frame(id = 12, name = "UNSPECIFIED"),
+                        data.frame(id = 13, name = "SOME_HIGH_SCHOOL"))
+    
   } else if (type %in% "education_major"){
     if(is.null(q)) stop("'q' required")
     out_df <- GET(

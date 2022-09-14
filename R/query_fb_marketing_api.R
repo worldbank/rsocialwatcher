@@ -3,12 +3,15 @@
 #' @import jsonlite
 #' @import httr
 #' @import stringr
+#' @import splitstackshape
 
 library(dplyr)
 library(lubridate)
 library(jsonlite)
 library(httr)
 library(stringr)
+library(splitstackshape) 
+
 if(F){
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
 }
@@ -21,7 +24,6 @@ if(F){
 # 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
 # 8. Add examples
 # 9. Function to add names, from IDs (don't do for location?)
-
 
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
@@ -38,6 +40,204 @@ is_null_or_na <- function(x){
   return(out)
 }
 
+map_param <- function(...){
+  # Function will create a separate query for each item. 
+  # Creates a list, where the first element in the list is "map_param", where the
+  # function then interprets each element of the list as a separate query.
+  # Complex queries can still be made:
+  # map_param
+  
+  l <- as.list(c(...))
+  l <- as.list(c("map_param", l))
+  return(l)
+}
+
+group <- function(...){
+  list(...)
+}
+
+# Make Query -------------------------------------------------------------------
+make_query_nonflex_params <- function(location_unit_type = NULL,
+                                      lat_lon = NULL,
+                                      location_types_param = NULL,
+                                      radius = NULL,
+                                      radius_unit = NULL,
+                                      location_keys = NULL,
+                                      gender_param = NULL,
+                                      age_min = NULL,
+                                      age_max = NULL,
+                                      version = NULL,
+                                      creation_act = NULL,
+                                      token = NULL){
+  
+  #### Build location query
+  if(location_unit_type == "coordinates"){
+    latitude  <- lat_lon[1]
+    longitude <- lat_lon[2]
+    
+    query_location <- paste0("'geo_locations':{'location_types':['",location_types_param,"'],'custom_locations':[{'latitude':",
+                             latitude %>% substring(1,7),",",
+                             "'longitude':",
+                             longitude %>% substring(1,7),",",
+                             "'radius':",
+                             radius,",",
+                             "'distance_unit':'",radius_unit,"'}]},")
+  } else if (location_unit_type %in% c("countries", "country_groups")){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                             paste0("'",location_keys,"'") %>% paste(collapse = ","),
+                             "],'location_types':['",location_types_param,"']},")
+  } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets")){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                             paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
+                             "],'location_types':['",location_types_param,"']},")
+  } else if ( (location_unit_type %in% c("cities")) & is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                             paste0("{'key':'",location_keys,"'}") %>% 
+                               paste(collapse = ","),
+                             "],'location_types':['",location_types_param,"']},")
+  } else if ( (location_unit_type %in% c("cities", "places")) & !is.null(radius)){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                             paste0("{'key':'",location_keys,"','radius':",radius,",'distance_unit':'",radius_unit,"'}") %>% 
+                               paste(collapse = ","),
+                             "],'location_types':['",location_types_param,"']},")
+  }
+  
+  #### Add non-flexible parameters
+  query <- paste0("https://graph.facebook.com/",version,
+                  "/act_",creation_act,
+                  "/delivery_estimate?access_token=",token,
+                  "&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
+                  query_location,
+                  "'genders':[",gender_param,"],", 
+                  "'age_min':",age_min,",",
+                  "'age_max':",age_max)
+  
+  return(query)
+}
+
+prep_param <- function(param,
+                       add_id){
+  
+  if(is_null_or_na(param)){
+    param <- NULL
+  } else if (add_id == T){
+    param <- paste0("{'id':", param, "}") %>% paste(collapse = ",")
+  } else if (add_id == F){
+    param <- param %>% paste(collapse = ",")
+  }
+  
+  return(param)
+}
+
+rm_blank <- function(x){
+  x[x != ""]
+}
+
+add_comma_if_not_blank <- function(x){
+  if(x != ""){
+    x <- paste0(x, ",")
+  }
+  
+  return(x)
+}
+
+make_flex_spec_or <- function(param,
+                              name,
+                              add_id){
+  
+  param_clean <- prep_param(param, add_id = add_id)
+  
+  out <- ifelse(is.null(param_clean), "", 
+                paste0("'",name,"':[", param_clean, "]")) 
+  
+  return(out)
+}
+
+make_flex_spec <- function(param, 
+                           name,
+                           add_id){
+  
+  # If not a list, make a list. If not a list, then just a vector -- so don't need
+  # apply over multiple entries; just need to apply once
+  if(!is.list(param)){
+    param <- list(param)
+  }
+  
+  out <- lapply(param, make_flex_spec_or, name, add_id) %>% 
+    rm_blank() %>% 
+    paste(collapse = ",") %>%
+    add_comma_if_not_blank()
+  
+  return(out)
+}
+
+## INPUTS
+location_unit_type <- "countries"
+location_keys <- c("US")
+
+behaviors <- list(6002714895372, 6002714898572)
+interests <- c(6002839660079, 6002866718622)
+excl_interests <- c(6002868910910, 6002884511422)
+excl_behaviors <- c(6003986707172, 6003966451572)
+
+## Make query with nonflexible parameters
+query_all <- make_query_nonflex_params(location_unit_type = "countries",
+                                       location_keys = "US",
+                                       location_types_param = "home",
+                                       gender_param = "1,2",
+                                       age_min = 18,
+                                       age_max = 64,
+                                       version = VERSION, 
+                                       creation_act = CREATION_ACT, 
+                                       token = TOKEN)
+
+#### Flex parameters
+## Add flexible parameters from parameter inputs
+query_flex <- paste0(make_flex_spec(behaviors, "behaviors", T),
+                     make_flex_spec(interests, "interests", T)) %>%
+  str_replace_all(",$", "")
+
+## Add flexible parameters from flex_input
+# TODO
+
+if(query_flex != ""){
+  query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+  query_all <- paste0(query_all, ",", query_flex)
+}
+
+#### Exclusion parameters
+## Add exclusion parameters
+query_exclude <- paste0(make_flex_spec(excl_behaviors, "behaviors", T),
+                        make_flex_spec(excl_interests, "interests", T)) %>%
+  str_replace_all(",$", "")
+
+if(query_exclude != ""){
+  query_exclude <- paste0("'exclusions':{", query_exclude, "}")
+  query_all <- paste0(query_all, ",", query_exclude)
+}
+
+## Add ending semicolon
+query_all <- query_all %>% paste0("}")
+
+query_all
+
+
+make_flex_spec
+
+behaviors_df <- get_fb_parameter_ids(type = "behaviors",
+                                     version = VERSION,
+                                     token = TOKEN)
+
+interests_df <- get_fb_parameter_ids(type = "interests",
+                                     version = VERSION,
+                                     token = TOKEN)
+
+behaviors_df$id %>% head()
+interests_df$id %>% head()
+
+
+
+
 query_fb_marketing_api_1call <- function(location_unit_type,
                                          lat_lon = NULL,
                                          radius = NULL,
@@ -45,24 +245,56 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          location_keys = NULL,
                                          location_types = "home",
                                          locales = NULL,
-                                         behavior = NULL,
-                                         interest = NULL,
+                                         
+                                         #### Specify here or in flex_targeting
+                                         interests = NULL,
+                                         behaviors = NULL,
+                                         college_years = NULL,
+                                         education_majors = NULL,
+                                         education_schools = NULL,
+                                         education_statuses = NULL,
+                                         family_statuses = NULL,
+                                         income = NULL,
+                                         industries = NULL,
+                                         work_positions = NULL,
+                                         work_employers = NULL,
+                                         
+                                         ## Exclude 
+                                         excl_interests = NULL,
+                                         excl_behaviors = NULL,
+                                         excl_college_years = NULL,
+                                         excl_education_majors = NULL,
+                                         excl_education_schools = NULL,
+                                         excl_education_statuses = NULL,
+                                         excl_family_statuses = NULL,
+                                         excl_income = NULL,
+                                         excl_industries = NULL,
+                                         excl_work_positions = NULL,
+                                         excl_work_employers = NULL,
+                                         
+                                         ## Non Flex Targetting Parameters
                                          relationship_statuses = NULL, 
                                          life_events = NULL, 
                                          industries = NULL, 
-                                         income = NULL, 
-                                         family_statuses = NULL,
-                                         education_statuses = NULL,
                                          user_os = NULL,
                                          wireless_carrier = NULL,
                                          gender = c(1,2),
                                          age_min = 18,
                                          age_max = 65,
+                                         
+                                         flex_target = NULL,
+                                         
+                                         ## API Keys/Info
                                          version, 
                                          creation_act, 
                                          token,
+                                         
+                                         ## Query info
                                          sleep_time = 20,
                                          show_result = T,
+                                         
+                                         ## Add to dataframe
+                                         add_param_id_name_vars = F,
                                          add_query = F,
                                          add_query_hide_credentials = T){
   
@@ -92,70 +324,38 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     if(!(radius_unit %in% c("mile", "kilometer"))) stop("Invalid 'radius_unit'; if specify radius_unit, must be either 'mile' or 'kilometer'")
   }
   
-  # Check location_types
-  # if( (location_types %in% c("home", "recent")) |
-  #     (location_types %in% c("home", "recent")) ){
-  #   
-  # }
-  
   # Check internet -------------------------------------------------------------
   # Stall if not connected to internet
   while(!curl::has_internet()){ Sys.sleep(5); print("Looking for internet")}
   
   # Prep parameters ------------------------------------------------------------
-  if(is_null_or_na(behavior)){
-    behavior_param <- NULL
-  } else{
-    behavior_param <- paste0("{'id':", behavior, "}") %>% paste(collapse = ",")
+  prep_param <- function(param,
+                         add_id){
+    
+    if(is_null_or_na(param)){
+      param <- NULL
+    } else if (add_id == T){
+      param <- paste0("{'id':", param, "}") %>% paste(collapse = ",")
+    } else if (add_id == F){
+      param <- param %>% paste(collapse = ",")
+    }
+    
+    return(param)
   }
   
-  if(is_null_or_na(interest)){
-    interest_param <- NULL
-  } else{
-    interest_param <- paste0("{'id':", interest, "}") %>% paste(collapse = ",")
-  }
+  behavior_param        <- prep_param(behavior, add_id = T)
+  interest_param        <- prep_param(interest, add_id = T)
+  life_events_param     <- prep_param(life_events, add_id = T)
+  industries_param      <- prep_param(industries, add_id = T)
+  income_param          <- prep_param(income, add_id = T)
+  family_statuses_param <- prep_param(family_statuses, add_id = T)
   
-  if(is_null_or_na(relationship_statuses)){
-    relationship_statuses_param <- NULL
-  } else{
-    relationship_statuses_param <- relationship_statuses %>% paste(collapse = ",")
-  }
+  relationship_statuses_param <- prep_param(relationship_statuses, add_id = F)
+  education_statuses_param    <- prep_param(education_statuses, add_id = F)
+  locales_param               <- prep_param(locales, add_id = F)
   
-  if(is_null_or_na(life_events)){
-    life_events_param <- NULL
-  } else{
-    life_events_param <- paste0("{'id':", life_events, "}") %>% paste(collapse = ",")
-  }
   
-  if(is_null_or_na(industries)){
-    industries_param <- NULL
-  } else{
-    industries_param <- paste0("{'id':", industries, "}") %>% paste(collapse = ",")
-  }
   
-  if(is_null_or_na(income)){
-    income_param <- NULL
-  } else{
-    income_param <- paste0("{'id':", income, "}") %>% paste(collapse = ",")
-  }
-  
-  if(is_null_or_na(family_statuses)){
-    family_statuses_param <- NULL
-  } else{
-    family_statuses_param <- paste0("{'id':", family_statuses, "}") %>% paste(collapse = ",")
-  }
-  
-  if(is_null_or_na(education_statuses)){
-    education_statuses_param <- NULL
-  } else{
-    education_statuses_param <- education_statuses %>% paste(collapse = ",")
-  }
-  
-  if(is_null_or_na(locales)){
-    locales_param <- NULL
-  } else{
-    locales_param <- locales %>% paste(collapse = ",")
-  }
   
   # Can't be NULL
   location_types_param <- location_types %>% paste(collapse = ",")
@@ -325,6 +525,13 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         ## Add time
         query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
         
+        ## Add ID names
+        if(add_param_id_name_vars){
+          query_val_df <- fill_fb_id_names(query_val_df,
+                                           version = version,
+                                           token = token)
+        }
+        
         if(add_query){
           query_val_df$query <- query
           if(add_query_hide_credentials){
@@ -441,6 +648,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                    locales = NULL,
                                    behavior = NULL,
                                    interest = NULL,
+                                   excl_interest = NULL,
                                    relationship_statuses = NULL, 
                                    life_events = NULL, 
                                    industries = NULL, 
@@ -452,6 +660,8 @@ query_fb_marketing_api <- function(location_unit_type,
                                    gender = c(1,2),
                                    age_min = 18,
                                    age_max = 65,
+                                   flex_target = NULL,
+                                   add_param_id_name_vars = F,
                                    version, 
                                    creation_act, 
                                    token,
@@ -532,6 +742,7 @@ query_fb_marketing_api <- function(location_unit_type,
                    age_min               = param_grid_df$age_min,
                    age_max               = param_grid_df$age_max,
                    MoreArgs = list(location_unit_type = location_unit_type,
+                                   add_param_id_name_vars = add_param_id_name_vars,
                                    sleep_time    = sleep_time,
                                    show_result   = show_result,
                                    add_query     = add_query, 
