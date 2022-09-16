@@ -69,8 +69,6 @@ get_fb_parameter_ids <- function(type,
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% "education_statuses"){
     
-    data.frame(id = 1, name = "HIGH_SCHOOL")
-    
     out_df <- bind_rows(data.frame(id = 1, name = "HIGH_SCHOOL"),
                         data.frame(id = 2, name = "UNDERGRAD"),
                         data.frame(id = 3, name = "ALUM"),
@@ -84,6 +82,21 @@ get_fb_parameter_ids <- function(type,
                         data.frame(id = 11, name = "DOCTORATE_DEGREE"),
                         data.frame(id = 12, name = "UNSPECIFIED"),
                         data.frame(id = 13, name = "SOME_HIGH_SCHOOL"))
+    
+  } else if (type %in% "relationship_statuses"){
+    
+    out_df <- bind_rows(data.frame(id = 1, name = "single"),
+                        data.frame(id = 2, name = "in_relationship"),
+                        data.frame(id = 3, name = "married"),
+                        data.frame(id = 4, name = "engaged"),
+                        data.frame(id = 6, name = "not specified"),
+                        data.frame(id = 7, name = "in a civil union"),
+                        data.frame(id = 8, name = "in a domestic partnership"),
+                        data.frame(id = 9, name = "In an open relationship"),
+                        data.frame(id = 10, name = "It's complicated"),
+                        data.frame(id = 11, name = "Separated"),
+                        data.frame(id = 12, name = "Divorced"),
+                        data.frame(id = 13, name = "Widowed"))
     
   } else if (type %in% "education_major"){
     if(is.null(q)) stop("'q' required")

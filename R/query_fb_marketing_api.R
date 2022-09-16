@@ -53,13 +53,27 @@ map_param <- function(...){
 }
 
 group <- function(...){
-  list(...)
+  list(c(...))
 }
 
-# Make Query -------------------------------------------------------------------
+n_embedded_lists <- function(x){
+  
+  counter <- 0
+  is_list <- T
+  
+  while(is_list){
+    x <- x[[1]]
+    
+    counter <- counter + 1
+    is_list <- is.list(x)
+  }
+  
+  return(counter)
+}
+
 make_query_nonflex_params <- function(location_unit_type = NULL,
                                       lat_lon = NULL,
-                                      location_types_param = NULL,
+                                      location_types = NULL,
                                       radius = NULL,
                                       radius_unit = NULL,
                                       location_keys = NULL,
@@ -75,7 +89,7 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
     latitude  <- lat_lon[1]
     longitude <- lat_lon[2]
     
-    query_location <- paste0("'geo_locations':{'location_types':['",location_types_param,"'],'custom_locations':[{'latitude':",
+    query_location <- paste0("'geo_locations':{'location_types':['",location_types,"'],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
                              longitude %>% substring(1,7),",",
@@ -85,21 +99,21 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
   } else if (location_unit_type %in% c("countries", "country_groups")){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("'",location_keys,"'") %>% paste(collapse = ","),
-                             "],'location_types':['",location_types_param,"']},")
+                             "],'location_types':['",location_types,"']},")
   } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets")){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
-                             "],'location_types':['",location_types_param,"']},")
+                             "],'location_types':['",location_types,"']},")
   } else if ( (location_unit_type %in% c("cities")) & is.null(radius)){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% 
                                paste(collapse = ","),
-                             "],'location_types':['",location_types_param,"']},")
+                             "],'location_types':['",location_types,"']},")
   } else if ( (location_unit_type %in% c("cities", "places")) & !is.null(radius)){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"','radius':",radius,",'distance_unit':'",radius_unit,"'}") %>% 
                                paste(collapse = ","),
-                             "],'location_types':['",location_types_param,"']},")
+                             "],'location_types':['",location_types,"']},")
   }
   
   #### Add non-flexible parameters
@@ -154,8 +168,29 @@ make_flex_spec_or <- function(param,
 }
 
 make_flex_spec <- function(param, 
-                           name,
-                           add_id){
+                           name){
+  
+  if(name == "interests")             add_id <- T
+  if(name == "behaviors")             add_id <- T
+  if(name == "college_years")         add_id <- T # NA ??
+  if(name == "education_majors")      add_id <- T # NA ??
+  if(name == "education_schools")     add_id <- T # NA ??
+  if(name == "education_statuses")    add_id <- F
+  if(name == "family_statuses")       add_id <- T # NA ??
+  if(name == "income")                add_id <- T # NA ??
+  if(name == "industries")            add_id <- T # NA ??
+  if(name == "work_positions")        add_id <- T # NA ??
+  if(name == "work_employers")        add_id <- T # NA ??
+  if(name == "relationship_statuses") add_id <- F
+  
+  # life_events_param     <- prep_param(life_events, add_id = T)
+  # industries_param      <- prep_param(industries, add_id = T)
+  # income_param          <- prep_param(income, add_id = T)
+  # family_statuses_param <- prep_param(family_statuses, add_id = T)
+  # 
+  # relationship_statuses_param <- prep_param(relationship_statuses, add_id = F)
+  # education_statuses_param    <- prep_param(education_statuses, add_id = F)
+  # locales_param               <- prep_param(locales, add_id = F)
   
   # If not a list, make a list. If not a list, then just a vector -- so don't need
   # apply over multiple entries; just need to apply once
@@ -171,6 +206,674 @@ make_flex_spec <- function(param,
   return(out)
 }
 
+make_iterable <- function(x){
+  
+  if(!is.null(x)){
+    
+    if(x[[1]] == "map_param"){
+      # Already an iterable list; take away the "map_param" identifier
+      x <- x[x != "map_param"]
+      
+    } else{
+      # Not an iterable list; put in a list, so just iterate over once
+      x <- list(x)
+      
+    }
+    
+  } else{
+    x <- list(x)
+  }
+  
+  return(x)
+}
+
+# Query: 1 API CAll ------------------------------------------------------------
+query_fb_marketing_api_1call <- function(location_unit_type,
+                                         lat_lon,
+                                         radius,
+                                         radius_unit,
+                                         location_keys,
+                                         location_types,
+                                         locales,
+                                         
+                                         #### Specify here or in flex_targeting
+                                         interests,
+                                         behaviors,
+                                         college_years,
+                                         education_majors,
+                                         education_schools,
+                                         education_statuses,
+                                         family_statuses,
+                                         income,
+                                         industries,
+                                         work_positions,
+                                         work_employers,
+                                         
+                                         ## Exclude 
+                                         excl_interests,
+                                         excl_behaviors,
+                                         excl_college_years,
+                                         excl_education_majors,
+                                         excl_education_schools,
+                                         excl_education_statuses,
+                                         excl_family_statuses,
+                                         excl_income,
+                                         excl_industries,
+                                         excl_work_positions,
+                                         excl_work_employers,
+                                         
+                                         ## Non Flex Targetting Parameters
+                                         relationship_statuses, 
+                                         life_events, 
+                                         user_os,
+                                         wireless_carrier,
+                                         gender,
+                                         age_min,
+                                         age_max,
+                                         
+                                         flex_target,
+                                         
+                                         ## API Keys/Info
+                                         version, 
+                                         creation_act, 
+                                         token,
+                                         
+                                         ## Query info
+                                         sleep_time,
+                                         show_result,
+                                         
+                                         ## Add to dataframe
+                                         add_param_id_name_vars,
+                                         add_query,
+                                         add_query_hide_credentials){
+  
+  # Checks ---------------------------------------------------------------------
+  
+  if(!is.null(lat_lon)){
+    if(is.list(lat_lon)){
+      stop('\"lat_lon\" cannot be a list')
+    }
+  }
+  
+  # Make parameters ------------------------------------------------------------
+  
+  
+  # Make query -----------------------------------------------------------------
+  
+  #### Non-flex params ####
+  query_all <- make_query_nonflex_params(location_unit_type = location_unit_type,
+                                         lat_lon            = lat_lon,
+                                         location_types     = location_types,
+                                         radius             = radius,
+                                         radius_unit        = radius_unit,
+                                         location_keys      = location_keys,
+                                         gender_param       = gender %>% paste(collapse = ","),
+                                         age_min            = age_min,
+                                         age_max            = age_max,
+                                         version            = version, 
+                                         creation_act       = creation_act, 
+                                         token              = token)
+  
+  #### Flex params ####
+  query_flex <- paste0(make_flex_spec(interests,          "interests"),
+                       make_flex_spec(behaviors,          "behaviors"),
+                       make_flex_spec(college_years,      "college_years"),
+                       make_flex_spec(education_majors,   "education_majors"),
+                       make_flex_spec(education_schools,  "education_schools"),
+                       make_flex_spec(education_statuses, "education_statuses"),
+                       make_flex_spec(family_statuses,    "family_statuses"),
+                       make_flex_spec(income,             "income"),
+                       make_flex_spec(industries,         "industries"),
+                       make_flex_spec(work_positions,     "work_positions"),
+                       make_flex_spec(work_employers,     "work_employers")) %>%
+    str_replace_all(",$", "")
+  
+  #### Flex params - adv spec ####
+  if(!is.null(flex_target)){
+    
+    ## Needs to have two list levels
+    if(n_embedded_lists(flex_target) == 1){
+      flex_target <- list(flex_target)
+    }
+    
+    ## Make condition
+    # Loop through list, where list elements separated as "and" condition
+    query_flex_adv <- lapply(flex_target, function(flex_target_i){
+      
+      # Make "or" conditions for items within a list
+      
+      # Can't do lapply(flex_target_i), as that grabs the object using flex_target_i[[i]],
+      # which does not keep the name (eg, $interests) -- where the name is needed. So 
+      # use lapply(1:n), where can then do flex_target_i[i], which keeps the name
+      params_or <- lapply(1:length(flex_target_i), function(i){
+        flex_target_ii <- flex_target_i[i]
+        
+        make_flex_spec(flex_target_ii, 
+                       names(flex_target_ii))
+      }) %>%
+        paste0(collapse = "") %>%
+        str_replace_all(",$", "")
+      
+      # Wrap in curly brackets
+      #params_or <- paste0("{", params_or, "}") # TODO: Delete??
+    }) %>% 
+      paste(collapse = ",")
+    
+    ## Add to query_flex object
+    if(query_flex == ""){
+      query_flex <- query_flex_adv
+    } else{
+      query_flex <- paste(query_flex, query_flex_adv, sep = ",")
+    }
+    
+  }
+  
+  if(query_flex != ""){
+    query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+    query_all <- paste0(query_all, ",", query_flex)
+  }
+  
+  #### Exclusion parameters ####
+  query_exclude <- paste0(make_flex_spec(excl_interests,          "interests"),
+                          make_flex_spec(excl_behaviors,          "behaviors"),
+                          make_flex_spec(excl_college_years,      "college_years"),
+                          make_flex_spec(excl_education_majors,   "education_majors"),
+                          make_flex_spec(excl_education_schools,  "education_schools"),
+                          make_flex_spec(excl_education_statuses, "education_statuses"),
+                          make_flex_spec(excl_family_statuses,    "family_statuses"),
+                          make_flex_spec(excl_income,             "income"),
+                          make_flex_spec(excl_industries,         "industries"),
+                          make_flex_spec(excl_work_positions,     "work_positions"),
+                          make_flex_spec(excl_work_employers,     "work_employers")) %>%
+    str_replace_all(",$", "")
+  
+  if(query_exclude != ""){
+    query_exclude <- paste0("'exclusions':{", query_exclude, "}")
+    query_all <- paste0(query_all, ",", query_exclude)
+  }
+  
+  #### Add ending curly bracket ####
+  query_all <- query_all %>% paste0("}")
+  
+  print(query_all)
+  
+  # Make Query -----------------------------------------------------------------
+  query_val <- url(query_all) %>% fromJSON
+  
+  df_out <- query_val$data
+  df_out$query <- query_all
+  
+  return(df_out)
+}
+
+# Query: ALL CALLS -------------------------------------------------------------
+#' Query Facebook Marketing API
+#' ## Location
+#' @param location_unit_type Either `"coordinates"` (for buffer around single point) or `"country"`
+#' ### If location_unit_type = "coordinates"
+#' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
+#' @param radius Radius around coordinate
+#' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
+#' ### If location_unit_type = "country" 
+#' @param country_code Country ISO2; for example, `"US"`.
+#' ## Other location??
+#' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
+#' @param locales Words
+#' ## Parameters. These are optional. If nothing specified, then searches for all users.
+#' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `behavior = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors")` to get dataframe with IDs and descriptions. 
+#' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `interest = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(type = "interests")` to get dataframe with IDs and descriptions. 
+#' @param relationship_statuses Vector of relationship status IDs. If multiple, uses `OR` condition; for example, `relationship_statuses = c(3,4)` targets those who are married or engaged. See `relationship_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see relationship status ID options with descriptions. 
+#' @param life_events Vector of life event IDs. If multiple, uses `OR` condition; for example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param industries Vector of industries IDs. If multiple, uses `OR` condition; for example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param income Vector of income IDs. If multiple, uses `OR` condition; for example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param family_statuses Vector of family status IDs. If multiple, uses `OR` condition; for example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
+#' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `education_statuses = c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see education status options. 
+#' @param locales Locales ID. 
+#' @param user_os User operating systems. If multiple, uses `OR` condition; for example `user_os = ['iOS', 'Android']` targets those that use either an iOS or Android OS. See `user_os` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
+#' @param wireless_carrier Wireless carriet. If set to `Wifi`, then targets those connecting via a Wifi network. See `wireless_carrier` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
+#' @param gender Genders to target; 1 targets males and 2 targets females Default is both. See `gender` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' ## Credentials
+#' @param version API version. e.g., "v14.0"
+#' @param creation_act Facebook creation act
+#' @param token Facebook API token
+#' ## Scraping parameters
+#' @param sleep_time words
+#' @param show_result words
+#' ## Return query text as variable in returned dataframe
+#' @param add_query If `TRUE`, add query text as variable in returned dataframe 
+#' @param add_query_hide_credentials If `TRUE` (and `add_query` is `TRUE`), hide the `creation_act` and `token` from the query text returned in the dataframe
+#' 
+#' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
+#' 
+#' @details FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
+#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales.
+#' @export
+query_fb_marketing_api <- function(location_unit_type,
+                                   lat_lon = NULL,
+                                   radius = NULL,
+                                   radius_unit = NULL,
+                                   location_keys = NULL,
+                                   location_types = "home",
+                                   locales = NULL,
+                                   
+                                   #### Specify here or in flex_targeting
+                                   interests = NULL,
+                                   behaviors = NULL,
+                                   college_years = NULL,
+                                   education_majors = NULL,
+                                   education_schools = NULL,
+                                   education_statuses = NULL,
+                                   family_statuses = NULL,
+                                   income = NULL,
+                                   industries = NULL,
+                                   work_positions = NULL,
+                                   work_employers = NULL,
+                                   
+                                   ## Exclude 
+                                   excl_interests = NULL,
+                                   excl_behaviors = NULL,
+                                   excl_college_years = NULL,
+                                   excl_education_majors = NULL,
+                                   excl_education_schools = NULL,
+                                   excl_education_statuses = NULL,
+                                   excl_family_statuses = NULL,
+                                   excl_income = NULL,
+                                   excl_industries = NULL,
+                                   excl_work_positions = NULL,
+                                   excl_work_employers = NULL,
+                                   
+                                   ## Non Flex Targetting Parameters
+                                   relationship_statuses = NULL, 
+                                   life_events = NULL, 
+                                   user_os = NULL,
+                                   wireless_carrier = NULL,
+                                   gender = c(1,2),
+                                   age_min = 18,
+                                   age_max = 65,
+                                   
+                                   flex_target = NULL,
+                                   
+                                   ## API Keys/Info
+                                   version, 
+                                   creation_act, 
+                                   token,
+                                   
+                                   ## Query info
+                                   sleep_time = 20,
+                                   show_result = T,
+                                   
+                                   ## Add to dataframe
+                                   add_param_id_name_vars = F,
+                                   add_query = F,
+                                   add_query_hide_credentials = T){
+  
+  # Checks -----------------------------------------------------------------------
+  if(length(location_unit_type) != 1) stop("'location_unit_type' must be a vector of length one, either 'coordinates' or 'country'; only one option allowed")
+  
+  # TODO: Checks for which ones can't have map_param
+  
+  # Convert param inputs to iterable list --------------------------------------
+  ## Latitude/Longitude
+  # Need to treat lat/lon bit differently as the input is a vector of lat/lon
+  
+  if(is.list(lat_lon)){
+    
+    if(lat_lon[[1]] == "map_param"){
+      
+      lat_lon <- lat_lon[lat_lon != "map_param"] %>% unlist()
+      lat_lon <- split(lat_lon, ceiling(seq_along(lat_lon)/2))
+    } else{
+      stop('"lat_lon" cannot be a list')
+    } 
+    
+  } else{
+    lat_lon <- list(lat_lon)
+  }
+  
+  ## Location Parameters
+  radius         <- radius         %>% make_iterable()
+  radius_unit    <- radius_unit    %>% make_iterable()
+  location_keys  <- location_keys  %>% make_iterable()
+  location_types <- location_types %>% make_iterable()
+  locales        <- locales        %>% make_iterable()
+  
+  ## Flex targetting parameters
+  interests          <- interests          %>% make_iterable()
+  behaviors          <- behaviors          %>% make_iterable()
+  college_years      <- college_years      %>% make_iterable()
+  education_majors   <- education_majors   %>% make_iterable()
+  education_schools  <- education_schools  %>% make_iterable()
+  education_statuses <- education_statuses %>% make_iterable()
+  family_statuses    <- family_statuses    %>% make_iterable()
+  income             <- income             %>% make_iterable()
+  industries         <- industries         %>% make_iterable()
+  work_positions     <- work_positions     %>% make_iterable()
+  work_employers     <- work_employers     %>% make_iterable()
+  
+  ## Exclude parameters
+  excl_interests          <- excl_interests          %>% make_iterable()
+  excl_behaviors          <- excl_behaviors          %>% make_iterable()
+  excl_college_years      <- excl_college_years      %>% make_iterable()
+  excl_education_majors   <- excl_education_majors   %>% make_iterable()
+  excl_education_schools  <- excl_education_schools  %>% make_iterable()
+  excl_education_statuses <- excl_education_statuses %>% make_iterable()
+  excl_family_statuses    <- excl_family_statuses    %>% make_iterable()
+  excl_income             <- excl_income             %>% make_iterable()
+  excl_industries         <- excl_industries         %>% make_iterable()
+  excl_work_positions     <- excl_work_positions     %>% make_iterable()
+  excl_work_employers     <- excl_work_employers     %>% make_iterable()
+  
+  ## Non flex targetting parameters
+  relationship_statuses <- relationship_statuses %>% make_iterable() 
+  life_events           <- life_events           %>% make_iterable() 
+  user_os               <- user_os               %>% make_iterable()
+  wireless_carrier      <- wireless_carrier      %>% make_iterable()
+  gender                <- gender                %>% make_iterable()
+  age_min               <- age_min               %>% make_iterable()
+  age_max               <- age_max               %>% make_iterable()
+  
+  ## Flex target, advanced
+  flex_target <- flex_target %>% make_iterable()
+  
+  # Length parameter inputs to same length ---------------------------------------
+  param_grid_df <- expand.grid(lat_lon        = lat_lon, 
+                               radius         = radius, 
+                               radius_unit    = radius_unit, 
+                               location_keys  = location_keys, 
+                               location_types = location_types, 
+                               locales        = locales, 
+                               
+                               ## Flex targetting parameters
+                               interests          = interests, 
+                               behaviors          = behaviors, 
+                               college_years      = college_years, 
+                               education_majors   = education_majors, 
+                               education_schools  = education_schools, 
+                               education_statuses = education_statuses, 
+                               family_statuses    = family_statuses, 
+                               income             = income, 
+                               industries         = industries, 
+                               work_positions     = work_positions, 
+                               work_employers     = work_employers, 
+                               
+                               ## Exclude parameters
+                               excl_interests          = excl_interests,
+                               excl_behaviors          = excl_behaviors,
+                               excl_college_years      = excl_college_years,
+                               excl_education_majors   = excl_education_majors, 
+                               excl_education_schools  = excl_education_schools,
+                               excl_education_statuses = excl_education_statuses, 
+                               excl_family_statuses    = excl_family_statuses,
+                               excl_income             = excl_income, 
+                               excl_industries         = excl_industries, 
+                               excl_work_positions     = excl_work_positions, 
+                               excl_work_employers     = excl_work_employers, 
+                               
+                               ## Non flex targetting parameters
+                               relationship_statuses = relationship_statuses,
+                               life_events           = life_events,
+                               user_os               = user_os,
+                               wireless_carrier      = wireless_carrier,
+                               gender                = gender,
+                               age_min               = age_min, 
+                               age_max               = age_max, 
+                               
+                               ## Flex target, advanced
+                               flex_target = flex_target)
+  
+  # Length parameter inputs to same length -------------------------------------
+  out_df <- mapply(query_fb_marketing_api_1call,
+                   lat_lon        = param_grid_df$lat_lon, 
+                   radius         = param_grid_df$radius, 
+                   radius_unit    = param_grid_df$radius_unit, 
+                   location_keys  = param_grid_df$location_keys, 
+                   location_types = param_grid_df$location_types, 
+                   locales        = param_grid_df$locales, 
+                   
+                   ## Flex targeting parameters
+                   interests          = param_grid_df$interests, 
+                   behaviors          = param_grid_df$behaviors, 
+                   college_years      = param_grid_df$college_years, 
+                   education_majors   = param_grid_df$education_majors, 
+                   education_schools  = param_grid_df$education_schools, 
+                   education_statuses = param_grid_df$education_statuses, 
+                   family_statuses    = param_grid_df$family_statuses, 
+                   income             = param_grid_df$income, 
+                   industries         = param_grid_df$industries, 
+                   work_positions     = param_grid_df$work_positions, 
+                   work_employers     = param_grid_df$work_employers, 
+                   
+                   ## Exclude parameters
+                   excl_interests          = param_grid_df$excl_interests,
+                   excl_behaviors          = param_grid_df$excl_behaviors,
+                   excl_college_years      = param_grid_df$excl_college_years,
+                   excl_education_majors   = param_grid_df$excl_education_majors, 
+                   excl_education_schools  = param_grid_df$excl_education_schools,
+                   excl_education_statuses = param_grid_df$excl_education_statuses, 
+                   excl_family_statuses    = param_grid_df$excl_family_statuses,
+                   excl_income             = param_grid_df$excl_income, 
+                   excl_industries         = param_grid_df$excl_industries, 
+                   excl_work_positions     = param_grid_df$excl_work_positions, 
+                   excl_work_employers     = param_grid_df$excl_work_employers, 
+                   
+                   ## Non flex targetting parameters
+                   relationship_statuses = param_grid_df$relationship_statuses,
+                   life_events           = param_grid_df$life_events,
+                   user_os               = param_grid_df$user_os,
+                   wireless_carrier      = param_grid_df$wireless_carrier,
+                   gender                = param_grid_df$gender,
+                   age_min               = param_grid_df$age_min, 
+                   age_max               = param_grid_df$age_max, 
+                   
+                   ## Flex target, advanced
+                   flex_target = param_grid_df$flex_target,
+                   
+                   MoreArgs = list(location_unit_type         = location_unit_type,
+                                   add_param_id_name_vars     = add_param_id_name_vars,
+                                   sleep_time                 = sleep_time,
+                                   show_result                = show_result,
+                                   add_query                  = add_query, 
+                                   add_query_hide_credentials = add_query_hide_credentials,
+                                   version                    = version,
+                                   creation_act               = creation_act,
+                                   token                      = token),
+                   
+                   SIMPLIFY = F
+  ) %>% 
+    bind_rows()
+  
+  return(out_df)
+}
+
+# Testing ----------------------------------------------------------------------
+#### Default parameters ####
+lat_lon = NULL
+radius = NULL
+radius_unit = NULL
+location_keys = NULL
+location_types = "home"
+locales = NULL
+
+#### Specify here or in flex_targeting
+interests = NULL
+behaviors = NULL
+college_years = NULL
+education_majors = NULL
+education_schools = NULL
+education_statuses = NULL
+family_statuses = NULL
+income = NULL
+industries = NULL
+work_positions = NULL
+work_employers = NULL
+
+## Exclude 
+excl_interests = NULL
+excl_behaviors = NULL
+excl_college_years = NULL
+excl_education_majors = NULL
+excl_education_schools = NULL
+excl_education_statuses = NULL
+excl_family_statuses = NULL
+excl_income = NULL
+excl_industries = NULL
+excl_work_positions = NULL
+excl_work_employers = NULL
+
+## Non Flex Targetting Parameters
+relationship_statuses = NULL
+life_events = NULL 
+#industries = NULL, 
+user_os = NULL
+wireless_carrier = NULL
+gender = c(1,2)
+age_min = 18
+age_max = 65
+
+flex_target = NULL
+
+## API Keys/Info
+version = VERSION 
+creation_act = CREATION_ACT
+token = TOKEN
+
+## Query info
+sleep_time = 20
+show_result = T
+
+## Add to dataframe
+add_param_id_name_vars = F
+add_query = F
+add_query_hide_credentials = T
+
+#### Test Function ####
+a <- query_fb_marketing_api(location_unit_type = "coordinates",
+                            lat_lon = map_param(c(38.913744, -77.040018),
+                                                c(40.913744, -80.040018)),
+                            radius = 10,
+                            radius_unit = "kilometer",
+                            version = VERSION,
+                            creation_act = CREATION_ACT,
+                            token = TOKEN)
+
+
+
+
+max <- 2
+x <- seq_along(lat_lon)
+d1 <- split(lat_lon, ceiling(x/2))
+d1 %>% as.list()
+
+split(a, ceiling(seq_along(a)/2))
+
+a
+
+
+lat_lon        = lat_lon, 
+radius         = radius, 
+radius_unit    = radius_unit, 
+
+
+behaviors <- list(6002714895372, 6002714898572)
+interests <- c(6002839660079, 6002866718622)
+excl_interests <- c(6002868910910, 6002884511422)
+excl_behaviors <- c(6003986707172, 6003966451572)
+
+#### Inputs
+location_unit_type = "countries"
+location_keys = "US"
+
+location_keys = map_param("US", group("US", "FR"), "FR")
+interests = map_param(6002839660079,6002866718622)
+behaviors = list(6002839660079,6002866718622, c(6003986707172, 6003966451572))
+
+version = VERSION
+creation_act = CREATION_ACT
+token = TOKEN
+s
+#### Function
+
+
+
+
+location_keys <- make_iterable(location_keys)
+interests     <- make_iterable(interests)
+behaviors     <- make_iterable(behaviors)
+
+
+
+out_df <- mapply(query_fb_marketing_api_1call,
+                 location_keys = location_keys,
+                 interests = interests,
+                 behaviors = behaviors,
+                 
+                 MoreArgs = list(location_unit_type = location_unit_type,
+                                 version       = version,
+                                 creation_act  = creation_act,
+                                 token         = token),
+                 SIMPLIFY = F
+) %>% 
+  bind_rows()
+
+
+
+
+# Test, single call ------------------------------------------------------------
+
+
+#### Test Query ####
+#behaviors = 6002714895372
+
+flex_target = list(interests = 6002839660079,
+                   behaviors = 6002714895372)
+
+a <- query_fb_marketing_api_1call(location_unit_type = "countries",
+                                  location_keys = "US",
+                                  
+                                  behaviors = 6002714895372,
+                                  
+                                  flex_target = list(interests = 6002839660079),
+                                  
+                                  version = VERSION,
+                                  creation_act = CREATION_ACT,
+                                  token = TOKEN)
+
+a$data
+
+query_fb_marketing_api_1call(location_unit_type = "countries",
+                             location_keys = "US",
+                             
+                             flex_target = list(list("interests" = c(6002839660079, 6002866718622),
+                                                     "behaviors" = 6002714895372),
+                                                list("interests" = c(6002884511422),
+                                                     "behaviors" = c(6003986707172, 6003966451572))),
+                             
+                             version = VERSION,
+                             creation_act = CREATION_ACT,
+                             token = TOKEN)
+
+query_fb_marketing_api_1call(location_unit_type = "countries",
+                             location_keys = "US",
+                             
+                             interests = 6002839660079,
+                             flex_target = c(interests = 6002866718622),
+                             
+                             version = VERSION,
+                             creation_act = CREATION_ACT,
+                             token = TOKEN)
+
+query_fb_marketing_api_1call(location_unit_type = "countries",
+                             location_keys = "US",
+                             
+                             interests = list(6002839660079,6002866718622),
+                             
+                             version = VERSION,
+                             creation_act = CREATION_ACT,
+                             token = TOKEN)
+
+
 ## INPUTS
 location_unit_type <- "countries"
 location_keys <- c("US")
@@ -180,123 +883,81 @@ interests <- c(6002839660079, 6002866718622)
 excl_interests <- c(6002868910910, 6002884511422)
 excl_behaviors <- c(6003986707172, 6003966451572)
 
-## Make query with nonflexible parameters
-query_all <- make_query_nonflex_params(location_unit_type = "countries",
-                                       location_keys = "US",
-                                       location_types_param = "home",
-                                       gender_param = "1,2",
-                                       age_min = 18,
-                                       age_max = 64,
-                                       version = VERSION, 
-                                       creation_act = CREATION_ACT, 
-                                       token = TOKEN)
-
-#### Flex parameters
-## Add flexible parameters from parameter inputs
-query_flex <- paste0(make_flex_spec(behaviors, "behaviors", T),
-                     make_flex_spec(interests, "interests", T)) %>%
-  str_replace_all(",$", "")
-
-## Add flexible parameters from flex_input
-# TODO
-
-if(query_flex != ""){
-  query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
-  query_all <- paste0(query_all, ",", query_flex)
-}
-
-#### Exclusion parameters
-## Add exclusion parameters
-query_exclude <- paste0(make_flex_spec(excl_behaviors, "behaviors", T),
-                        make_flex_spec(excl_interests, "interests", T)) %>%
-  str_replace_all(",$", "")
-
-if(query_exclude != ""){
-  query_exclude <- paste0("'exclusions':{", query_exclude, "}")
-  query_all <- paste0(query_all, ",", query_exclude)
-}
-
-## Add ending semicolon
-query_all <- query_all %>% paste0("}")
-
-query_all
+flex_target <- list(
+  list("interests" = c(6002839660079, 6002866718622),
+       "behaviors" = c(6002714895372)),
+  list("interests" = c(6002868910910),
+       "behaviors" = c(6002714895372, 6003986707172))
+)
 
 
-make_flex_spec
-
-behaviors_df <- get_fb_parameter_ids(type = "behaviors",
-                                     version = VERSION,
-                                     token = TOKEN)
-
-interests_df <- get_fb_parameter_ids(type = "interests",
-                                     version = VERSION,
-                                     token = TOKEN)
-
-behaviors_df$id %>% head()
-interests_df$id %>% head()
+# OLD --------------------------------------------------------------------------
+# OLD --------------------------------------------------------------------------
+# OLD --------------------------------------------------------------------------
+# OLD --------------------------------------------------------------------------
+# OLD --------------------------------------------------------------------------
 
 
 
-
-query_fb_marketing_api_1call <- function(location_unit_type,
-                                         lat_lon = NULL,
-                                         radius = NULL,
-                                         radius_unit = NULL,
-                                         location_keys = NULL,
-                                         location_types = "home",
-                                         locales = NULL,
-                                         
-                                         #### Specify here or in flex_targeting
-                                         interests = NULL,
-                                         behaviors = NULL,
-                                         college_years = NULL,
-                                         education_majors = NULL,
-                                         education_schools = NULL,
-                                         education_statuses = NULL,
-                                         family_statuses = NULL,
-                                         income = NULL,
-                                         industries = NULL,
-                                         work_positions = NULL,
-                                         work_employers = NULL,
-                                         
-                                         ## Exclude 
-                                         excl_interests = NULL,
-                                         excl_behaviors = NULL,
-                                         excl_college_years = NULL,
-                                         excl_education_majors = NULL,
-                                         excl_education_schools = NULL,
-                                         excl_education_statuses = NULL,
-                                         excl_family_statuses = NULL,
-                                         excl_income = NULL,
-                                         excl_industries = NULL,
-                                         excl_work_positions = NULL,
-                                         excl_work_employers = NULL,
-                                         
-                                         ## Non Flex Targetting Parameters
-                                         relationship_statuses = NULL, 
-                                         life_events = NULL, 
-                                         industries = NULL, 
-                                         user_os = NULL,
-                                         wireless_carrier = NULL,
-                                         gender = c(1,2),
-                                         age_min = 18,
-                                         age_max = 65,
-                                         
-                                         flex_target = NULL,
-                                         
-                                         ## API Keys/Info
-                                         version, 
-                                         creation_act, 
-                                         token,
-                                         
-                                         ## Query info
-                                         sleep_time = 20,
-                                         show_result = T,
-                                         
-                                         ## Add to dataframe
-                                         add_param_id_name_vars = F,
-                                         add_query = F,
-                                         add_query_hide_credentials = T){
+query_fb_marketing_api_1call_OLD <- function(location_unit_type,
+                                             lat_lon = NULL,
+                                             radius = NULL,
+                                             radius_unit = NULL,
+                                             location_keys = NULL,
+                                             location_types = "home",
+                                             locales = NULL,
+                                             
+                                             #### Specify here or in flex_targeting
+                                             interests = NULL,
+                                             behaviors = NULL,
+                                             college_years = NULL,
+                                             education_majors = NULL,
+                                             education_schools = NULL,
+                                             education_statuses = NULL,
+                                             family_statuses = NULL,
+                                             income = NULL,
+                                             industries = NULL,
+                                             work_positions = NULL,
+                                             work_employers = NULL,
+                                             
+                                             ## Exclude 
+                                             excl_interests = NULL,
+                                             excl_behaviors = NULL,
+                                             excl_college_years = NULL,
+                                             excl_education_majors = NULL,
+                                             excl_education_schools = NULL,
+                                             excl_education_statuses = NULL,
+                                             excl_family_statuses = NULL,
+                                             excl_income = NULL,
+                                             excl_industries = NULL,
+                                             excl_work_positions = NULL,
+                                             excl_work_employers = NULL,
+                                             
+                                             ## Non Flex Targetting Parameters
+                                             relationship_statuses = NULL, 
+                                             life_events = NULL, 
+                                             industries = NULL, 
+                                             user_os = NULL,
+                                             wireless_carrier = NULL,
+                                             gender = c(1,2),
+                                             age_min = 18,
+                                             age_max = 65,
+                                             
+                                             flex_target = NULL,
+                                             
+                                             ## API Keys/Info
+                                             version, 
+                                             creation_act, 
+                                             token,
+                                             
+                                             ## Query info
+                                             sleep_time = 20,
+                                             show_result = T,
+                                             
+                                             ## Add to dataframe
+                                             add_param_id_name_vars = F,
+                                             add_query = F,
+                                             add_query_hide_credentials = T){
   
   # Checks ---------------------------------------------------------------------
   if(is.null(location_unit_type)){

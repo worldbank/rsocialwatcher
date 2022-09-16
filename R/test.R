@@ -175,7 +175,7 @@ if(F){
   }
   map_param(NA,1,2,3,4:5,group(list(1,2)))
   
-  map_param(1,2,3)
+  map_param(1,2,3,group(1:2))
   
   
   
@@ -271,25 +271,7 @@ if(F){
   
   head(interests_df)
   
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'genders':[1,2],'age_min':18,'age_max':65}
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002867432822}]},'genders':[1,2],'age_min':18,'age_max':65}
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002868021822}]},'genders':[1,2],'age_min':18,'age_max':65}
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'genders':[1,2],'age_min':18,'age_max':65}
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'genders':[1,2],'age_min':18,'age_max':65}
-  
-  
-  
-  # OR - chop off less
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002867432822},{'id':6002868021822}]},'genders':[1,2],'age_min':18,'age_max':65}
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002867432822},{'id':6002868021822},{'id':6002868910910}]},'genders':[1,2],'age_min':18,'age_max':65}
-  
-  # AND - more
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002867432822}],'interests':[{'id':6002868021822}]},'genders':[1,2],'age_min':18,'age_max':65}
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002866718622}]}],'exclusions':{'interests':[{'id':6002867432822}],'interests':[{'id':6002868021822}],'interests':[{'id':6002868910910}]},'genders':[1,2],'age_min':18,'age_max':65}
-  
-  token
+
   
   list(NULL,
        list(list("interest" = c(6002839660079)),
@@ -348,16 +330,16 @@ if(F){
   
   
   
-  n_embedded_lists <- function(obj){
+  n_embedded_lists <- function(x){
     
     counter <- 0
     is_list <- T
     
     while(is_list){
-      obj <- obj[[1]]
+      x <- x[[1]]
       
       counter <- counter + 1
-      is_list <- is.list(obj)
+      is_list <- is.list(x)
     }
     
     return(counter)
@@ -551,12 +533,7 @@ if(F){
                                        token = TOKEN)
   
   df_out$query
-  
-  # https://developers.facebook.com/docs/marketing-api/audiences/reference/flexible-targeting/
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'flexible_spec':[{'interests':[{'id':6002839660079},{'id':6002884511422}]}],'exclusions':{'interests':[{'id':6002866718622},{'id':6002867432822}]},'genders':[1,2],'age_min':18,'age_max':65}
-  
-  
+
   
   
   'exclusions': { 
@@ -579,19 +556,7 @@ if(F){
   
   list("interests" = 1:2,
        "behaviors" = 1:2)
-  
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002839660079},{'id':6002884511422}],'genders':[1,2],'age_min':18,'age_max':65,'exclusions':{'interests':[{'id':6002866718622}]}}
-  
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002839660079},{'id':6002884511422}],'genders':[1,2],'age_min':18,'age_max':65,'exclusions':{'interests':[{'id':6002866718622}]}}
-  
-  
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBAEhYAi3mKsmY6ev80ZA3B6qOyJ5W8lqRxjk43gJbNaS2SJ3PCs8v7u2VOmNcHUqn0WzXYNjuUjwo9BZCRna9rK9DAjEMnO3kifomZCAwPvUpEnzwkVoGSn3A8SopEYndQYk3vZAD7jeote38AdRENJPZBIAtCUoZAkTyw5QWVH&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'genders':[1,2],'age_min':18,'age_max':65,'exclusions':{'interests':[{'id':6002868910910},{'id':6002866718622}]}}
-  
-  
-  head(interests_df)
+
   
   
   
@@ -602,18 +567,9 @@ if(F){
   
   Facebook Marketing API - And vs OR Condition
   
-  https://graph.facebook.com/v14.0/<ACT>/delivery_estimate?access_token=<TOKEN>&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US']},'interests':[{'id':6002839660079},{'id':6002884511422},{'id':6002867432822}]}
+
   
-  
-  
-  
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US']},'interests':[{'id':6002839660079},{'id':6002884511422},{'id':6002867432822}]}
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002839660079}],'interests':[{'id':6002884511422}],'interests':[{'id':6002867432822}],'genders':[1,2],'age_min':18,'age_max':65}
-  
-  https://graph.facebook.com/v14.0/act_10355127/delivery_estimate?access_token=EAAlmckTru5EBABTaZBhK2UjvIMqKZCT6GFvWSvFueC8Fn9M8xTJa4dgWNGjVoXCi7IJv7ruJjRzPRZADMqotokuMHzFqGumvHTQl2F0anOL4chCBsSIauBuZCrgiu7lE1sPTVIWuzyHr2BWXh2semFWMYeyeXGkTFcp200UkZBO6xb0xZC6sez&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home']},'interests':[{'id':6002884511422}],'interests':[{'id':6002839660079}],'genders':[1,2],'age_min':18,'age_max':65}
-  
+
   
   get_fb_parameter_ids(type    = "city",
                        country_code = "US",
