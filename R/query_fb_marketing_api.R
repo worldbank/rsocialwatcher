@@ -5,6 +5,13 @@
 #' @import stringr
 #' @import splitstackshape
 
+# TODO
+# 1. Start documentation (vignette)
+# 2. Test ALL parameter inputs (and illustrate) [including -- which are flex_target? relationship_statuses?]
+# 3. Singular vs plural? Standardize
+# 4. Add parameter names to dataframe
+# 5. Make geojson of locations (see if feasible to add as option, so exports as sf?)
+
 library(dplyr)
 library(lubridate)
 library(jsonlite)
@@ -1113,12 +1120,3 @@ out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
                                add_query = T,
                                add_query_hide_credentials = F)
 
-
-a <- list(
-  list(interests = c(6002839660079, 6002866718622),
-       behaviors = c(6002714895372)),
-  list(interests = c(6002868910910, 6002884511422),
-       behaviors = c(6003986707172, 6003966451572))
-)
-
-a[[1]]
