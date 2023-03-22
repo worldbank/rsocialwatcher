@@ -1001,122 +1001,123 @@ query_fb_marketing_api <- function(location_unit_type,
 
 # Testing ----------------------------------------------------------------------
 #### Default parameters ####
-lat_lon = NULL
-radius = NULL
-radius_unit = NULL
-location_keys = NULL
-location_types = "home"
-locales = NULL
-
-#### Specify here or in flex_targeting
-interests = NULL
-behaviors = NULL
-college_years = NULL
-education_majors = NULL
-education_schools = NULL
-education_statuses = NULL
-family_statuses = NULL
-income = NULL
-industries = NULL
-work_positions = NULL
-work_employers = NULL
-
-## Exclude 
-excl_interests = NULL
-excl_behaviors = NULL
-excl_college_years = NULL
-excl_education_majors = NULL
-excl_education_schools = NULL
-excl_education_statuses = NULL
-excl_family_statuses = NULL
-excl_income = NULL
-excl_industries = NULL
-excl_work_positions = NULL
-excl_work_employers = NULL
-
-## Non Flex Targetting Parameters
-relationship_statuses = NULL
-life_events = NULL 
-#industries = NULL, 
-user_os = NULL
-wireless_carrier = NULL
-gender = c(1,2)
-age_min = 18
-age_max = 65
-
-flex_target = NULL
-
-## API Keys/Info
-version = VERSION 
-creation_act = CREATION_ACT
-token = TOKEN
-
-## Query info
-sleep_time = 20
-show_result = T
-
-## Add to dataframe
-add_param_id_name_vars = F
-add_query = F
-add_query_hide_credentials = T
-
-#### Test Function ####
-out1 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                               lat_lon = c(38.913744, -77.040018),
-                               radius = 10,
-                               radius_unit = "kilometer",
-                               location_types = "home",
-                               behaviors = list(6002714895372, 6002714898572),
-                               interests = c(6002839660079, 6002866718622),
-                               excl_interests = c(6002868910910, 6002884511422),
-                               excl_behaviors = c(6003986707172, 6003966451572),
-                               version = VERSION,
-                               creation_act = CREATION_ACT,
-                               token = TOKEN,
-                               add_query = T,
-                               add_query_hide_credentials = F)
-
-out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                               lat_lon = c(38.913744, -77.040018),
-                               radius = 10,
-                               radius_unit = "kilometer",
-                               location_types = "home",
-                               
-                               flex_target = list(
-                                 list(interests = c(6002839660079, 6002866718622),
-                                      behaviors = c(6002714895372)),
-                                 list(interests = c(6002868910910, 6002884511422),
-                                      behaviors = c(6003986707172, 6003966451572))
-                               ),
-                               
-                               version = VERSION,
-                               creation_act = CREATION_ACT,
-                               token = TOKEN,
-                               add_query = T,
-                               add_query_hide_credentials = F)
-
-out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                               lat_lon = c(38.913744, -77.040018),
-                               radius = 10,
-                               radius_unit = "kilometer",
-                               location_types = "home",
-                               
-                               flex_target = map_param(list(
-                                 list(interests = c(6002839660079, 6002866718622),
-                                      behaviors = c(6002714895372)),
-                                 list(interests = c(6002868910910, 6002884511422),
-                                      behaviors = c(6003986707172, 6003966451572))
-                               ),
-                               list(
-                                 list(interests = c(6002839660079, 6002866718622),
-                                      behaviors = c(6002714895372)),
-                                 list(interests = c(6002868910910, 6002884511422),
-                                      behaviors = c(6003986707172, 6003966451572))
-                               )),
-                               
-                               version = VERSION,
-                               creation_act = CREATION_ACT,
-                               token = TOKEN,
-                               add_query = T,
-                               add_query_hide_credentials = F)
-
+if(F){
+  lat_lon = NULL
+  radius = NULL
+  radius_unit = NULL
+  location_keys = NULL
+  location_types = "home"
+  locales = NULL
+  
+  #### Specify here or in flex_targeting
+  interests = NULL
+  behaviors = NULL
+  college_years = NULL
+  education_majors = NULL
+  education_schools = NULL
+  education_statuses = NULL
+  family_statuses = NULL
+  income = NULL
+  industries = NULL
+  work_positions = NULL
+  work_employers = NULL
+  
+  ## Exclude 
+  excl_interests = NULL
+  excl_behaviors = NULL
+  excl_college_years = NULL
+  excl_education_majors = NULL
+  excl_education_schools = NULL
+  excl_education_statuses = NULL
+  excl_family_statuses = NULL
+  excl_income = NULL
+  excl_industries = NULL
+  excl_work_positions = NULL
+  excl_work_employers = NULL
+  
+  ## Non Flex Targetting Parameters
+  relationship_statuses = NULL
+  life_events = NULL 
+  #industries = NULL, 
+  user_os = NULL
+  wireless_carrier = NULL
+  gender = c(1,2)
+  age_min = 18
+  age_max = 65
+  
+  flex_target = NULL
+  
+  ## API Keys/Info
+  version = VERSION 
+  creation_act = CREATION_ACT
+  token = TOKEN
+  
+  ## Query info
+  sleep_time = 20
+  show_result = T
+  
+  ## Add to dataframe
+  add_param_id_name_vars = F
+  add_query = F
+  add_query_hide_credentials = T
+  
+  #### Test Function ####
+  out1 <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                 lat_lon = c(38.913744, -77.040018),
+                                 radius = 10,
+                                 radius_unit = "kilometer",
+                                 location_types = "home",
+                                 behaviors = list(6002714895372, 6002714898572),
+                                 interests = c(6002839660079, 6002866718622),
+                                 excl_interests = c(6002868910910, 6002884511422),
+                                 excl_behaviors = c(6003986707172, 6003966451572),
+                                 version = VERSION,
+                                 creation_act = CREATION_ACT,
+                                 token = TOKEN,
+                                 add_query = T,
+                                 add_query_hide_credentials = F)
+  
+  out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                 lat_lon = c(38.913744, -77.040018),
+                                 radius = 10,
+                                 radius_unit = "kilometer",
+                                 location_types = "home",
+                                 
+                                 flex_target = list(
+                                   list(interests = c(6002839660079, 6002866718622),
+                                        behaviors = c(6002714895372)),
+                                   list(interests = c(6002868910910, 6002884511422),
+                                        behaviors = c(6003986707172, 6003966451572))
+                                 ),
+                                 
+                                 version = VERSION,
+                                 creation_act = CREATION_ACT,
+                                 token = TOKEN,
+                                 add_query = T,
+                                 add_query_hide_credentials = F)
+  
+  out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                 lat_lon = c(38.913744, -77.040018),
+                                 radius = 10,
+                                 radius_unit = "kilometer",
+                                 location_types = "home",
+                                 
+                                 flex_target = map_param(list(
+                                   list(interests = c(6002839660079, 6002866718622),
+                                        behaviors = c(6002714895372)),
+                                   list(interests = c(6002868910910, 6002884511422),
+                                        behaviors = c(6003986707172, 6003966451572))
+                                 ),
+                                 list(
+                                   list(interests = c(6002839660079, 6002866718622),
+                                        behaviors = c(6002714895372)),
+                                   list(interests = c(6002868910910, 6002884511422),
+                                        behaviors = c(6003986707172, 6003966451572))
+                                 )),
+                                 
+                                 version = VERSION,
+                                 creation_act = CREATION_ACT,
+                                 token = TOKEN,
+                                 add_query = T,
+                                 add_query_hide_credentials = F)
+}
