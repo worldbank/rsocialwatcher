@@ -47,6 +47,9 @@ is_null_or_na <- function(x){
   return(out)
 }
 
+#' Map Parameters
+#' @param ... Vector or list
+#' @export
 map_param <- function(...){
   # Function will create a separate query for each item. 
   # Creates a list, where the first element in the list is "map_param", where the
