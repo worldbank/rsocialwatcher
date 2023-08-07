@@ -81,5 +81,4 @@ fb_1_latlon_df <- query_fb_marketing_api(
   version       = VERSION,
   creation_act  = CREATION_ACT,
   token         = TOKEN)
-
 ```
