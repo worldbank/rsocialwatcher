@@ -72,13 +72,15 @@ VERSION <- api_keys %>%
 
 ---
 
-# Quickstart
+# Querying Parameter IDs
 
-## Example Querying Parameter IDs
-
-### Demographics, Interests, & Behaviors
+## Demographics, Interests, & Behaviors
 
 ```{r simple_dib_ex, include=TRUE, warning=FALSE, message=FALSE}
+behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
+                                     version = VERSION, 
+                                     token   = TOKEN)
+
 demographics_df <- get_fb_parameter_ids(type    = "demographics",
                                         version = VERSION, 
                                         token   = TOKEN)
@@ -87,18 +89,14 @@ interests_df <- get_fb_parameter_ids(type    = "interests",
                                      version = VERSION, 
                                      token   = TOKEN)
 
-behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
-                                     version = VERSION, 
-                                     token   = TOKEN)
-
-demographics_df %>% 
+behaviors_df %>% 
   kable() %>% 
   kable_styling() %>% 
   scroll_box(width = "100%",
              height = "300px")
 ```
 
-### Locations
+## Location IDs
 
 ```{r simple_loc_ex, include=TRUE, warning=FALSE, message=FALSE}
 country_df <- get_fb_parameter_ids(type    = "country",
@@ -128,9 +126,49 @@ country_df %>%
              height = "300px")
 ```
 
-## Example Querying Fb Marketing Data
+# Querying Data
 
-```{r simple_query_ex, include=TRUE, warning=FALSE, message=FALSE}
+## Different Location Types
+
+### Radius around lat/lon
+```{r simple_query_latlon_ex, include=TRUE, warning=FALSE, message=FALSE}
+
+## All Facebook Users by Radius (Near NYC)
+r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                  lat_lon = c(40.712, -74.006),
+                                  radius = 5,
+                                  radius_unit = "kilometer",
+                                  version            = VERSION, 
+                                  creation_act       = CREATION_ACT, 
+                                  token              = TOKEN)
+```
+
+### Location IDs - Country, State, District, City, Neighborhood, etc.
+
+We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
+
+* __Location Type:__ This is specified (1) in the `type` parameter in the `get_fb_parameter_ids()` function and in the `location_unit_type` parameter in the `query_fb_marketing_api()` function
+* __Radius Can be Specified:__ For these location types, a radius can optionally be specified; for example, to specify a location and it's surrounding area.
+* __US Only:__ These location types can only be used for the US
+
+| Location Type      | Radius Can be Specified | US Only |
+| -----------------  | ----------------------  | ------- |
+| country_group      | No                      | No      |
+| country            | No
+| region             |
+| large_geo_area     |
+| medium_geo_area    |
+| small_geo_area     |
+| metro_area         |
+| city               |
+| subcity            |
+| neighborhood       |
+| subneighborhood    |
+| zip                |
+| geo_market         |
+| electoral_district |
+
+```{r simple_query_lockey_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 ## All Facebook Users by Radius (Near NYC)
 r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
@@ -164,22 +202,25 @@ nyc_df %>%
 
 ```
 
+## ID Options
+
+### Options
 ```{r simple_query_params_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 # Likely commute to work in US
-comm_id <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+beh_comm_id <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 comm_us_df <- query_fb_marketing_api(location_unit_type = "countries",
                                      location_keys      = "US",
-                                     behaviors          = comm_id,
+                                     behaviors          = beh_comm_id,
                                      version            = VERSION, 
                                      creation_act       = CREATION_ACT, 
                                      token              = TOKEN)
 
 # Interested in music in US
-music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
+int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
 music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
                                       location_keys      = "US",
-                                      interests          = music_id,
+                                      interests          = int_music_id,
                                       version            = VERSION, 
                                       creation_act       = CREATION_ACT, 
                                       token              = TOKEN)
@@ -187,41 +228,136 @@ music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
 # Likely commute to work OR interested in music in US
 comm_or_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
                                               location_keys      = "US",
-                                              behaviors          = comm_id,
-                                              interests          = music_id,
-                                              version            = VERSION, 
-                                              creation_act       = CREATION_ACT, 
-                                              token              = TOKEN)
-
-# Likely commute to work BUT NOT interested in music in US
-comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                              location_keys      = "US",
-                                              behaviors          = comm_id,
-                                              excl_interests     = music_id,
+                                              behaviors          = beh_comm_id,
+                                              interests          = int_music_id,
                                               version            = VERSION, 
                                               creation_act       = CREATION_ACT, 
                                               token              = TOKEN)
 ```
 
+### And and OR Categories
 
+When using multiple parameters (eg, behavior IDs), the function allows for specifying `and` and `or` condition; for example, identifying Facebook users that are commuters and/or are frequent travelers. Across parameters:
 
-## Vector as OR; List as Separate Query
-The function allows (1). For parameters:.....
-
-* When parameters are in a __vector__, the function treats the parameters as an OR condition. For example, `location_keys = c("US", "MX")` will return the number of Facebook users in the US or Mexico.
-* When parameters are in a __list__, the function will loop over the parameters, making separate API calls. For examples, `location_keys = list("US", "MX")` will return a dataframe with two observations; one for the number of Facebook users in the US, then the number of users in Mexico.
-
-__This "vector as OR condition" and "list as separate queries" pattern works across all parameter inputs.__
+* __Vectors `c()`__ are used to specify OR conditions
+* __Lists `list()`__ are used to specify AND conditions
 
 However, the following parameters can only except one input (a list or vector is not allowed).
 * `location_unit_type`
 * `radius`
 * `radius_unit`
 
+#### Within parameter types
+
+```{r and_or_within, include=TRUE, warning=FALSE, message=FALSE}
+
+beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
+
+# Commuters or Travelers
+comm_or_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                          location_keys      = "US",
+                                          behaviors          = c(beh_comm_id, beh_freqtrvl_id),
+                                          version            = VERSION, 
+                                          creation_act       = CREATION_ACT, 
+                                          token              = TOKEN)
+
+# Users who are (Commuters or Small Business Owners) and Travelers
+comm_and_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                           location_keys      = "US",
+                                           behaviors          = list(c(beh_comm_id,
+                                                                       beh_sb_id), 
+                                                                     beh_freqtrvl_id),
+                                           version            = VERSION, 
+                                           creation_act       = CREATION_ACT, 
+                                           token              = TOKEN)
+```
+
+#### Flexible Targetting: Or and And
+
+Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification. The input for `flex_target` follows the following logic:
+
+* `flex_target` uses named lists to specify the (1) parameter type and (2) parameter ID
+* All parameters within the same list index are grouped using an OR condition
+* All parameter separated across list indices are spearated by an AND condition
+
+The below shows examples using dummy IDs
+
+__Example 1: OR Condition__
+The below shows an example setting an OR condition for interest ID 2 and behavior ID 2. Both interest:1 and behavior:2 are in the same list index, so are grouped using an OR condition (interests:1 OR behavior 2)
+```
+flex_param <- list("interests" = 1, "behaviors" = 2)
+# flex_param[[1]]
+```
+
+__Example 2: AND Condition__
+The below shows an example setting an AND condition for interest ID 2 and behavior ID 2. interest:1 and behavior:2 are separated across list indices, so are separated by an AND condition (interests:1 AND behavior:2)
+```
+flex_param <- list(list("interests" = 1), list("behaviors" = 2))
+# flex_param[[1]] AND flex_param[[2]]
+```
+
+__Example 3: OR and AND Conditions__
+The below shows a more complicated example, which grabs all users that meet EITHER interests:1 or behaviors:3 AND behaviors:2. Everything within `flex_param[[1]]` are grouped within OR conditions, but different indices (`flex_param[[1]]` and `flex_param[[2]]`) are separated by AND conditions.
+```
+flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = 2))
+# flex_param[[1]] AND flex_param[[2]]
+```
+
+```{r and_or_across, include=TRUE, warning=FALSE, message=FALSE}
+
+int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
+beh_comm_id  <- behaviors_df %>% filter(name == "Owns: Galaxy S6") %>% pull(id)
+
+## OR CONDITION
+comm_or_music_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                           location_keys      = "US",
+                                           flex_target        = list("interests" = int_music_id,
+                                                                     "behaviors" = beh_comm_id),
+                                           version            = VERSION, 
+                                           creation_act       = CREATION_ACT, 
+                                           token              = TOKEN)
+
+## AND CONDITION
+comm_and_music_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                            location_keys      = "US",
+                                            flex_target        = list(list("interests" = int_music_id),
+                                                                      list("behaviors" = beh_comm_id)),
+                                            version            = VERSION, 
+                                            creation_act       = CREATION_ACT, 
+                                            token              = TOKEN)
+
+```
+
+### Exlcuding Categories
+
+Many parameters come with an alternate input that starts with `excl_` to exclude types of users. For example, there are both `behaviors` and `interests` parameters, as well as `excl_behaviors` and `excl_interests` parameters. The below code shows an example querying users who likely commute to work and are not tagged as interested in music.
+
+```{r exclude_ex, include=TRUE, warning=FALSE, message=FALSE}
+
+# Likely commute to work BUT NOT interested in music in US
+beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
+
+comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                              location_keys      = "US",
+                                              behaviors          = beh_comm_id,
+                                              excl_interests     = int_music_id,
+                                              version            = VERSION, 
+                                              creation_act       = CREATION_ACT, 
+                                              token              = TOKEN)
+```
+
+
+## Multiple Queries
+
+The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls
+
 ```{r vec_list_1, include=TRUE, warning=FALSE, message=FALSE}
 ## Number of Users in US or Mexico, as separate queries
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_key       = c("US", "MX"),
+                                 location_key       = map_param("US", "MX"),
                                  version            = VERSION, 
                                  creation_act       = CREATION_ACT, 
                                  token              = TOKEN)
@@ -231,9 +367,26 @@ df_out %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 
-## Separate query for number of users in US and Mexico
+## Iterate across countries and across behaviors. Use `NA` for not filtering by behavior. The below call will give users for (1) all US, (2) all Mexico, (3) frequent travelers in US, and (4) frequenty travelers in Mexico.
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_key       = list("US", "MX"),
+                                 location_key       = map_param("US", "MX"),
+                                 behaviors          = map_param(NA, beh_freqtrvl_id),
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+
+## Separate query for number of users in US and Mexico and commuters and frequenty travelers
+beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = map_param("US", "MX"),
+                                 behaviors          = map_param(beh_comm_id, beh_freqtrvl_id),
                                  version            = VERSION, 
                                  creation_act       = CREATION_ACT, 
                                  token              = TOKEN)
@@ -243,71 +396,4 @@ df_out %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 ```
-
-## Example Advanced Query
-
-We are interested in the number of Facebook users interested in:
-
-* Entertainment (id = 6003349442621)
-* Music (id = 6003020834693)
-* Entertainment or music
-
-And we are interested in the above information for both the US and Mexico
-
-```{r adv_2, include=TRUE, warning=FALSE, message=FALSE}
-df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_key       = list("US", "MX"),
-                                 interest = list(6003349442621, 6003020834693, 
-                                                 c(6003349442621, 6003020834693)),
-                                 version            = VERSION, 
-                                 creation_act       = CREATION_ACT, 
-                                 token              = TOKEN)
-
-df_out %>% 
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%")
-```
-
-
-
----
-
-## Using a location type/key
-
-### Description of Location Types
-
-We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
-
-* __Location Type:__ This is specified (1) in the `type` parameter in the `get_fb_parameter_ids()` function and in the `location_unit_type` parameter in the `query_fb_marketing_api()` function
-* __Radius Can be Specified:__ For these location types, a radius can optionally be specified; for example, to specify a location and it's surrounding area.
-* __US Only:__ These location types can only be used for the US
-
-| Location Type      | Radius Can be Specified | US Only |
-| -----------------  | ----------------------  | ------- |
-| country_group      | No                      | No      |
-| country            | No
-| region             |
-| large_geo_area     |
-| medium_geo_area    |
-| small_geo_area     |
-| metro_area         |
-| city               |
-| subcity            |
-| neighborhood       |
-| subneighborhood    |
-| zip                |
-| geo_market         |
-| electoral_district |
-
-
-### Examples Querying Location Keys
-
-#### Country Group
-
-#### Country
-
-# Parameter Descriptions
-
-
 
