@@ -94,7 +94,8 @@ behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
 demographics_df %>% 
   kable() %>% 
   kable_styling() %>% 
-  scroll_box(width = "100%")
+  scroll_box(width = "100%",
+             height = "300px")
 ```
 
 ### Locations
@@ -123,7 +124,8 @@ ny_cities_df <- get_fb_parameter_ids(type    = "city",
 country_df %>% 
   kable() %>% 
   kable_styling() %>% 
-  scroll_box(width = "100%")
+  scroll_box(width = "100%",
+             height = "300px")
 ```
 
 ## Example Querying Fb Marketing Data
@@ -157,7 +159,8 @@ nyc_df <- query_fb_marketing_api(location_unit_type = "cities",
 nyc_df %>% 
   kable() %>% 
   kable_styling() %>% 
-  scroll_box(width = "100%")
+  scroll_box(width = "100%",
+             height = "300px")
 
 ```
 

@@ -819,7 +819,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                    
                                    ## Query info
                                    sleep_time = 0.1,
-                                   show_result = T,
+                                   show_result = F,
                                    
                                    ## Add to dataframe
                                    add_param_id_name_vars = F,
@@ -1076,7 +1076,7 @@ if(F){
   
   ## Query info
   sleep_time = 20
-  show_result = T
+  show_result = F
   
   ## Add to dataframe
   add_param_id_name_vars = F
