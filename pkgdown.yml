@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   rsocialwatcher-vignette: rsocialwatcher-vignette.html
-last_built: 2023-08-08T18:51Z
+last_built: 2023-08-08T18:52Z
 urls:
   reference: https://ramarty.github.io/rSocialWatcher/reference
   article: https://ramarty.github.io/rSocialWatcher/articles
