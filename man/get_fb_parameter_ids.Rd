@@ -12,7 +12,7 @@ get_fb_parameter_ids(
   country_code = NULL,
   region_id = NULL,
   key = NULL,
-  limit = 5000
+  limit = NULL
 )
 }
 \arguments{

@@ -20,6 +20,9 @@ library(stringr)
 library(splitstackshape) 
 
 if(F){
+  remove.packages("rSocialWatcher")
+  devtools::install_github("ramarty/rSocialWatcher")
+  
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
 }
 
@@ -436,7 +439,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
   }
   
-  if(location_unit_type %in% c("cities")){
+  if((location_unit_type %in% c("cities")) & (!is.null(radius))){
     
     if(radius_unit == "mile"){
       if(radius > 50) stop("Radius too large; if specify radius, radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
@@ -583,7 +586,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     try_api_call <- FALSE
     
     query_val_df <- tryCatch({
-      
+
       query_val <- url(query) %>% fromJSON
       
       #### If there is no error
@@ -825,7 +828,23 @@ query_fb_marketing_api <- function(location_unit_type,
   
   # Checks -----------------------------------------------------------------------
   
-  if(length(location_unit_type) != 1) stop("'location_unit_type' must be a vector of length one, either 'coordinates' or 'country'; only one option allowed")
+  if(length(location_unit_type) != 1){
+    stop("'location_unit_type' must be a vector of length one; only one option allowed")
+  } 
+    
+  if(!is.null(location_unit_type)){
+    location_unit_type_valid_options <- c("countries", "country_groups", "regions", 
+                                          "electoral_districts", "zips", "geo_markets", 
+                                          "cities", "places")
+    if(!(location_unit_type %in% location_unit_type_valid_options)){
+      stop(paste0("Invalid `location_unit_type`; `location_unit_type` must be one of the following:\n",
+                  paste(location_unit_type_valid_options, collapse = "\n")))
+    }
+  }
+  
+  
+  
+  
   
   # TODO: Checks for which ones can't have map_param
   

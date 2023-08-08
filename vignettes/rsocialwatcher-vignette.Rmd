@@ -74,22 +74,133 @@ VERSION <- api_keys %>%
 
 # Quickstart
 
-## Example Simple Example
+## Example Querying Parameter IDs
 
-The below example queries the number of Facebook users in the US.
+### Demographics, Interests, & Behaviors
 
-```{r simp_ex, include=TRUE, warning=FALSE, message=FALSE}
-df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_key       = "US",
-                                 version            = VERSION, 
-                                 creation_act       = CREATION_ACT, 
-                                 token              = TOKEN)
+```{r simple_dib_ex, include=TRUE, warning=FALSE, message=FALSE}
+demographics_df <- get_fb_parameter_ids(type    = "demographics",
+                                        version = VERSION, 
+                                        token   = TOKEN)
 
-df_out %>% 
+interests_df <- get_fb_parameter_ids(type    = "interests",
+                                     version = VERSION, 
+                                     token   = TOKEN)
+
+behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
+                                     version = VERSION, 
+                                     token   = TOKEN)
+
+demographics_df %>% 
   kable() %>% 
   kable_styling() %>% 
   scroll_box(width = "100%")
 ```
+
+### Locations
+
+```{r simple_loc_ex, include=TRUE, warning=FALSE, message=FALSE}
+country_df <- get_fb_parameter_ids(type    = "country",
+                                   version = VERSION, 
+                                   token   = TOKEN)
+
+country_group_df <- get_fb_parameter_ids(type    = "country_group",
+                                         version = VERSION, 
+                                         token   = TOKEN)
+
+us_states_df <- get_fb_parameter_ids(type    = "region",
+                                     version = VERSION, 
+                                     token   = TOKEN,
+                                     country_code = "US")
+
+ny_key <- us_states_df %>% filter(name == "New York") %>% pull(key) 
+ny_cities_df <- get_fb_parameter_ids(type    = "city",
+                                     version = VERSION, 
+                                     token   = TOKEN,
+                                     region_id = ny_key,
+                                     q = "New York")
+
+country_df %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
+
+## Example Querying Fb Marketing Data
+
+```{r simple_query_ex, include=TRUE, warning=FALSE, message=FALSE}
+
+## All Facebook Users by Radius (Near NYC)
+r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
+                                  lat_lon = c(40.712, -74.006),
+                                  radius = 5,
+                                  radius_unit = "kilometer",
+                                  version            = VERSION, 
+                                  creation_act       = CREATION_ACT, 
+                                  token              = TOKEN)
+
+## All Facebook Users within US
+us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                location_keys      = "US",
+                                version            = VERSION, 
+                                creation_act       = CREATION_ACT, 
+                                token              = TOKEN)
+
+## All Facebook Users within NYC
+nyc_key <- ny_cities_df %>% filter(name == "New York") %>% pull(key)
+nyc_df <- query_fb_marketing_api(location_unit_type = "cities",
+                                 location_keys      = nyc_key,
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+nyc_df %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+
+```
+
+```{r simple_query_params_ex, include=TRUE, warning=FALSE, message=FALSE}
+
+# Likely commute to work in US
+comm_id <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+comm_us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                     location_keys      = "US",
+                                     behaviors          = comm_id,
+                                     version            = VERSION, 
+                                     creation_act       = CREATION_ACT, 
+                                     token              = TOKEN)
+
+# Interested in music in US
+music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
+music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                      location_keys      = "US",
+                                      interests          = music_id,
+                                      version            = VERSION, 
+                                      creation_act       = CREATION_ACT, 
+                                      token              = TOKEN)
+
+# Likely commute to work OR interested in music in US
+comm_or_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                              location_keys      = "US",
+                                              behaviors          = comm_id,
+                                              interests          = music_id,
+                                              version            = VERSION, 
+                                              creation_act       = CREATION_ACT, 
+                                              token              = TOKEN)
+
+# Likely commute to work BUT NOT interested in music in US
+comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                              location_keys      = "US",
+                                              behaviors          = comm_id,
+                                              excl_interests     = music_id,
+                                              version            = VERSION, 
+                                              creation_act       = CREATION_ACT, 
+                                              token              = TOKEN)
+```
+
+
 
 ## Vector as OR; List as Separate Query
 The function allows (1). For parameters:.....
@@ -132,22 +243,6 @@ df_out %>%
 
 ## Example Advanced Query
 
-We want to find the number of Facebook users according to different interests. To grab interest IDs, we use the `get_fb_parameter_ids()` function.
-
-```{r adv_1, include=TRUE, warning=FALSE, message=FALSE}
-interests_df <- get_fb_parameter_ids(type = "interests",
-                                     version = VERSION,
-                                     token = TOKEN) %>%
-  arrange(-audience_size_upper_bound) %>%
-  dplyr::select(id, name, audience_size_upper_bound)
-
-interests_df %>% 
-  head() %>%
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%")
-```
-
 We are interested in the number of Facebook users interested in:
 
 * Entertainment (id = 6003349442621)
@@ -160,7 +255,7 @@ And we are interested in the above information for both the US and Mexico
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
                                  location_key       = list("US", "MX"),
                                  interest = list(6003349442621, 6003020834693, 
-                                                  c(6003349442621, 6003020834693)),
+                                                 c(6003349442621, 6003020834693)),
                                  version            = VERSION, 
                                  creation_act       = CREATION_ACT, 
                                  token              = TOKEN)
@@ -172,26 +267,6 @@ df_out %>%
 ```
 
 
-# Querying Location Data using Different Units
-
-Locations can either be specified around a specific coordinate, or using a location type (e.g., country, city, etc.)
-
-## Around a coordinate
-
-```{r coord_1, include=TRUE, warning=FALSE, message=FALSE}
-df_out <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                 lat_lon            = c(38.90, -77.01),
-                                 radius             = 10,
-                                 radius_unit        = "kilometer",
-                                 version            = VERSION, 
-                                 creation_act       = CREATION_ACT, 
-                                 token              = TOKEN)
-
-df_out %>% 
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%")
-```
 
 ---
 
@@ -222,32 +297,6 @@ We can also query using different location types, including countries, cities, e
 | geo_market         |
 | electoral_district |
 
-### Example Querying Marketing Data
-
-```{r lockey_1, include=TRUE, warning=FALSE, message=FALSE}
-
-country_df <- get_fb_parameter_ids(type    = "country",
-                                   version = VERSION,
-                                   token   = TOKEN)
-
-country_df %>%
-  head() %>%
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%")
-
-df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_keys  = "AD",
-                                 version        = VERSION, 
-                                 creation_act   = CREATION_ACT, 
-                                 token          = TOKEN)
-
-
-df_out %>% 
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%")
-```
 
 ### Examples Querying Location Keys
 

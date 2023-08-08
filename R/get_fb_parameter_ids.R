@@ -35,7 +35,7 @@ get_fb_parameter_ids <- function(type,
                                  country_code = NULL,
                                  region_id = NULL,
                                  key=NULL,
-                                 limit = 5000){
+                                 limit = NULL){
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
@@ -48,7 +48,7 @@ get_fb_parameter_ids <- function(type,
         type='adTargetingCategory',
         class=type,
         access_token=token,
-        limit=2000
+        limit = ifelse(is.null(limit), 2000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% "locales"){
     out_df <- GET(
@@ -56,7 +56,7 @@ get_fb_parameter_ids <- function(type,
       query=list(
         type='adlocale',
         access_token=token,
-        limit=2000
+        limit = ifelse(is.null(limit), 2000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% "job_titles"){
     out_df <- GET(
@@ -65,7 +65,7 @@ get_fb_parameter_ids <- function(type,
         type='adworkposition',
         q=q,
         access_token=token,
-        limit=5000
+        limit = ifelse(is.null(limit), 5000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% "education_statuses"){
     
@@ -106,7 +106,7 @@ get_fb_parameter_ids <- function(type,
         type='adeducationmajor',
         q=q,
         access_token=token,
-        limit=5000
+        limit = ifelse(is.null(limit), 5000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% c("country", "country_group")){
     out_df <- GET(
@@ -115,7 +115,7 @@ get_fb_parameter_ids <- function(type,
         location_types=type,
         type='adgeolocation',
         access_token=token,
-        limit=300
+        limit = ifelse(is.null(limit), 300, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } else if (type %in% c("region",
                          "large_geo_area",
@@ -146,9 +146,13 @@ get_fb_parameter_ids <- function(type,
         country_code=country_code,
         key=key,
         access_token=token,
-        limit=3000
+        limit = ifelse(is.null(limit), 1000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } 
+  
+  if(is.null(nrow(out_df))){
+    warning("No results; may require `q` parameter")
+  }
   
   return(out_df)
 }
