@@ -48,7 +48,7 @@ query_fb_marketing_api(
   creation_act,
   token,
   sleep_time = 0.1,
-  show_result = T,
+  show_result = F,
   add_param_id_name_vars = F,
   add_query = F,
   add_query_hide_credentials = T

@@ -82,3 +82,6 @@ fb_1_latlon_df <- query_fb_marketing_api(
   creation_act  = CREATION_ACT,
   token         = TOKEN)
 ```
+
+## Usage
+See [this vignette](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package.
