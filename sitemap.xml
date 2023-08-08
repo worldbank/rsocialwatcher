@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/404.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/rsocialwatcher-vignette.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/index.html</loc>
   </url>
   <url>
-    <loc>/reference/fill_fb_id_names.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/fill_fb_id_names.html</loc>
   </url>
   <url>
-    <loc>/reference/get_fb_parameter_ids.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_fb_parameter_ids.html</loc>
   </url>
   <url>
-    <loc>/reference/get_fb_suggested_radius.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/map_param.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/map_param.html</loc>
   </url>
   <url>
-    <loc>/reference/merge_fb_with_param_df.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/merge_fb_with_param_df.html</loc>
   </url>
   <url>
-    <loc>/reference/query_fb_marketing_api.html</loc>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/query_fb_marketing_api.html</loc>
   </url>
 </urlset>
