@@ -53,6 +53,7 @@ is_null_or_na <- function(x){
 #' Map Parameters
 #' @param ... Vector or list
 #' @export
+#' 
 map_param <- function(...){
   # Function will create a separate query for each item. 
   # Creates a list, where the first element in the list is "map_param", where the
@@ -60,16 +61,28 @@ map_param <- function(...){
   # Complex queries can still be made:
   # map_param
   
-  if(is.list(c(...))){
-    l <- list(...)
-  } else{
-    l <- as.list(c(...))
-  }
-  
-  #l <- as.list(c(...))
-  l <- as.list(c("map_param", l))
-  return(l)
+  OUT <- list(...)
+  OUT <- as.list(c("map_param", OUT))
+
+  return(OUT)
 }
+# map_param <- function(...){
+#   # Function will create a separate query for each item. 
+#   # Creates a list, where the first element in the list is "map_param", where the
+#   # function then interprets each element of the list as a separate query.
+#   # Complex queries can still be made:
+#   # map_param
+#   
+#   if(is.list(c(...))){
+#     l <- list(...)
+#   } else{
+#     l <- as.list(c(...))
+#   }
+#   
+#   #l <- as.list(c(...))
+#   l <- as.list(c("map_param", l))
+#   return(l)
+# }
 
 group <- function(...){
   list(c(...))

@@ -6,7 +6,7 @@ title: "rSocialWatcher"
 output:
   html_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 4
     toc_float: true
 vignette: >
   %\VignetteEngine{knitr::knitr}
@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Setup
+# Setup <a name="setup"></a>
 
 First, we load relevant packages and create variables for our Facebook API keys.
 
@@ -82,9 +82,9 @@ VERSION <- api_keys %>%
 
 ---
 
-# Querying Parameter IDs
+# Querying Parameter IDs <a name="query_param"></a>
 
-## Demographics, Interests, & Behaviors
+## Demographics, Interests, & Behaviors <a name="param_dib"></a>
 
 ```{r simple_dib_ex, include=TRUE, warning=FALSE, message=FALSE}
 behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
@@ -106,7 +106,7 @@ behaviors_df %>%
              height = "300px")
 ```
 
-## Location IDs
+## Location IDs <a name="param_locs"></a>
 
 ```{r simple_loc_ex, include=TRUE, warning=FALSE, message=FALSE}
 country_df <- get_fb_parameter_ids(type    = "country",
@@ -136,11 +136,12 @@ country_df %>%
              height = "300px")
 ```
 
-# Querying Data
+# Querying Data <a name="query_data"></a>
 
-## Different Location Types
+## Different Location Types <a name="query_data_loc"></a>
 
-### Radius around lat/lon
+### Radius around lat/lon <a name="query_data_loc_latlon"></a>
+
 ```{r simple_query_latlon_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 ## All Facebook Users by Radius (Near NYC)
@@ -153,7 +154,7 @@ r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
                                   token              = TOKEN)
 ```
 
-### Location IDs - Country, State, District, City, Neighborhood, etc.
+### Location IDs - Country, State, District, City, Neighborhood, etc. <a name="query_data_loc_keys"></a>
 
 We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
 
@@ -212,9 +213,10 @@ nyc_df %>%
 
 ```
 
-## ID Options
+## ID Options <a name="query_data_ids"></a>
 
-### Options
+### Options <a name="query_data_ids_options"></a>
+
 ```{r simple_query_params_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 # Likely commute to work in US
@@ -245,7 +247,7 @@ comm_or_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
                                               token              = TOKEN)
 ```
 
-### And and OR Categories
+### And and OR Categories <a name="query_data_ids_andor"></a>
 
 When using multiple parameters (eg, behavior IDs), the function allows for specifying `and` and `or` condition; for example, identifying Facebook users that are commuters and/or are frequent travelers. Across parameters:
 
@@ -257,7 +259,7 @@ However, the following parameters can only except one input (a list or vector is
 * `radius`
 * `radius_unit`
 
-#### Within parameter types
+#### Within parameter types <a name="query_data_ids_andor_within"></a>
 
 ```{r and_or_within, include=TRUE, warning=FALSE, message=FALSE}
 
@@ -284,9 +286,9 @@ comm_and_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
                                            token              = TOKEN)
 ```
 
-#### Flexible Targetting: Or and And
+#### Flexible Targetting: Or and And <a name="query_data_ids_andor_flex"></a>
 
-Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification. The input for `flex_target` follows the following logic:
+Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification---including AND conditions across parameter types (eg, behavior X and interest Y). The input for `flex_target` follows the following logic:
 
 * `flex_target` uses named lists to specify the (1) parameter type and (2) parameter ID
 * All parameters within the same list index are grouped using an OR condition
@@ -318,7 +320,7 @@ flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = 2)
 ```{r and_or_across, include=TRUE, warning=FALSE, message=FALSE}
 
 int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
-beh_comm_id  <- behaviors_df %>% filter(name == "Owns: Galaxy S6") %>% pull(id)
+beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 
 ## OR CONDITION
 comm_or_music_df <- query_fb_marketing_api(location_unit_type = "countries",
@@ -340,7 +342,7 @@ comm_and_music_df <- query_fb_marketing_api(location_unit_type = "countries",
 
 ```
 
-### Exlcuding Categories
+### Exlcuding Categories <a name="query_data_ids_exclude"></a>
 
 Many parameters come with an alternate input that starts with `excl_` to exclude types of users. For example, there are both `behaviors` and `interests` parameters, as well as `excl_behaviors` and `excl_interests` parameters. The below code shows an example querying users who likely commute to work and are not tagged as interested in music.
 
@@ -360,9 +362,11 @@ comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
 ```
 
 
-## Multiple Queries
+## Multiple Queries <a name="query_data_ids_multquery"></a>
 
 The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls
+
+### Simple Examples <a name="query_data_ids_multquery_simple"></a>
 
 ```{r vec_list_1, include=TRUE, warning=FALSE, message=FALSE}
 ## Number of Users in US or Mexico, as separate queries
@@ -390,13 +394,17 @@ df_out %>%
   kable_styling() %>% 
   scroll_box(width = "100%")
 
-## Separate query for number of users in US and Mexico and commuters and frequenty travelers
+## Separate query for number of users in US and Mexico and commuters and frequent travelers. Parameters not in
+## map_param are applied across all queries. 
 beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
+int_music_id     <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
 
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
                                  location_key       = map_param("US", "MX"),
                                  behaviors          = map_param(beh_comm_id, beh_freqtrvl_id),
+                                 interests          = int_music_id,
                                  version            = VERSION, 
                                  creation_act       = CREATION_ACT, 
                                  token              = TOKEN)
@@ -407,3 +415,41 @@ df_out %>%
   scroll_box(width = "100%")
 ```
 
+### And/Or Conditions <a name="query_data_ids_multquery_andor"></a>
+
+And/or conditions work as before: vectors `c()` specify OR conditions, while lists `list()` specify and conditions
+
+```{r vec_list_1_andor, include=TRUE, warning=FALSE, message=FALSE}
+
+beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
+
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = "US",
+                                 behaviors          = map_param(
+                                   # Commuters
+                                   beh_comm_id, 
+                                   
+                                   # Frequent Travelers
+                                   beh_freqtrvl_id, 
+                                   
+                                   # Commuters OR Frequent Travelers
+                                   c(beh_comm_id, beh_freqtrvl_id),
+                                   
+                                   # Commuters AND Frequent Travelers
+                                   list(beh_comm_id, beh_freqtrvl_id),
+                                   
+                                   # Commuters AND (Frequent Travelers OR Small Business Owners)
+                                   list(beh_comm_id, c(beh_freqtrvl_id, beh_sb_id))
+                                 ),
+                                 
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+```
