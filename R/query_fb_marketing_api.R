@@ -586,7 +586,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     try_api_call <- FALSE
     
     query_val_df <- tryCatch({
-
+      
       query_val <- url(query) %>% fromJSON
       
       #### If there is no error
@@ -831,9 +831,9 @@ query_fb_marketing_api <- function(location_unit_type,
   if(length(location_unit_type) != 1){
     stop("'location_unit_type' must be a vector of length one; only one option allowed")
   } 
-    
+  
   if(!is.null(location_unit_type)){
-    location_unit_type_valid_options <- c("countries", "country_groups", "regions", 
+    location_unit_type_valid_options <- c("coordinates", "countries", "country_groups", "regions", 
                                           "electoral_districts", "zips", "geo_markets", 
                                           "cities", "places")
     if(!(location_unit_type %in% location_unit_type_valid_options)){
