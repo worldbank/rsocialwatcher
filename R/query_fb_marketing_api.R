@@ -63,7 +63,7 @@ map_param <- function(...){
   
   OUT <- list(...)
   OUT <- as.list(c("map_param", OUT))
-
+  
   return(OUT)
 }
 # map_param <- function(...){
@@ -552,7 +552,9 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         str_replace_all(",$", "")
       
       # Wrap in curly brackets
-      #params_or <- paste0("{", params_or, "}") # TODO: Delete??
+      params_or <- paste0("{", params_or, "}") # TODO: Delete??
+      
+      params_or
     }) %>% 
       paste(collapse = ",")
     
@@ -566,7 +568,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   }
   
   if(query_flex != ""){
-    query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+    #query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+    query_flex <- paste0("'flexible_spec':[", query_flex, "]")
     query_all <- paste0(query_all, ",", query_flex)
   }
   
@@ -601,6 +604,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
+      print(query)
       query_val <- url(query) %>% fromJSON
       
       #### If there is no error

@@ -340,6 +340,13 @@ comm_and_music_df <- query_fb_marketing_api(location_unit_type = "countries",
                                             creation_act       = CREATION_ACT, 
                                             token              = TOKEN)
 
+bind_rows(comm_or_music_df,
+          comm_and_music_df) %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%",
+             height = "100%")
+
 ```
 
 ### Exlcuding Categories <a name="query_data_ids_exclude"></a>
@@ -425,28 +432,29 @@ beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pu
 beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
 
-df_out <- query_fb_marketing_api(location_unit_type = "countries",
-                                 location_key       = "US",
-                                 behaviors          = map_param(
-                                   # Commuters
-                                   beh_comm_id, 
-                                   
-                                   # Frequent Travelers
-                                   beh_freqtrvl_id, 
-                                   
-                                   # Commuters OR Frequent Travelers
-                                   c(beh_comm_id, beh_freqtrvl_id),
-                                   
-                                   # Commuters AND Frequent Travelers
-                                   list(beh_comm_id, beh_freqtrvl_id),
-                                   
-                                   # Commuters AND (Frequent Travelers OR Small Business Owners)
-                                   list(beh_comm_id, c(beh_freqtrvl_id, beh_sb_id))
-                                 ),
-                                 
-                                 version            = VERSION, 
-                                 creation_act       = CREATION_ACT, 
-                                 token              = TOKEN)
+df_out <- query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_key       = "US",
+  behaviors          = map_param(
+    # Commuters
+    beh_comm_id, 
+    
+    # Frequent Travelers
+    beh_freqtrvl_id, 
+    
+    # Commuters OR Frequent Travelers
+    c(beh_comm_id, beh_freqtrvl_id),
+    
+    # Commuters AND Frequent Travelers
+    list(beh_comm_id, beh_freqtrvl_id),
+    
+    # Commuters AND (Frequent Travelers OR Small Business Owners)
+    list(beh_comm_id, c(beh_freqtrvl_id, beh_sb_id))
+  ),
+  
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
 
 df_out %>% 
   kable() %>% 
