@@ -97,7 +97,7 @@ us_mac_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 4 [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. Vectors of IDs are used to specify OR conditions
+__Example 4 [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
 ```r
 beh_tech_id <- behaviors_df %>% 
   filter(name == "Technology early adopters") %>% 
@@ -112,7 +112,7 @@ us_mac_or_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 5 [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. Lists of IDs are used to specify AND conditions
+__Example 5 [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. _Lists of IDs are used to specify AND conditions._
 ```r
 us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
@@ -125,7 +125,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
 
 __Example 6 [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
 ```r
-intcomp_id <- interests_df %>% 
+int_comp_id <- interests_df %>% 
   filter(name == "Computers (computers & electronics))") %>% 
   pull(id)
 
@@ -133,7 +133,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = "US",
   behaviors          = list(beh_mac_id, beh_tech_id),
-  interests          = intcomp_id
+  interests          = int_comp_id
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
@@ -153,7 +153,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = map_param("US", "CA", "MX"),
   behaviors          = c(beh_mac_id, beh_tech_id),
-  interests          = intcomp_id
+  interests          = int_comp_id
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
@@ -165,7 +165,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = map_param("US", "CA", "MX"),
   behaviors          = map_param(beh_mac_id, beh_tech_id),
-  interests          = intcomp_id
+  interests          = int_comp_id
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
