@@ -12,6 +12,11 @@ Query data from the Facebook Marketing API using R, with a focus for social scie
 
 This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, [Fatehkia et al 2020](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) show the use of Facebook data for estimating poverty; features such as the proportion of monthly active Facebook users with a high-end phone correlate strongly with ground-truth measures of poverty.
 
+The package provides two functions:
+
+* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including different types and by their location.
+* `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 
+
 ## Installation <a name="installation"></a>
 The package is available via Github and can be install using `devtools`.
 
