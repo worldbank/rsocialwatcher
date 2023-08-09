@@ -63,7 +63,9 @@ country_df <- get_fb_parameter_ids("country", VERSION, TOKEN)
 
 __Example 1:__ Query Facebook users in US
 ```r
-us_key <- country_df %>% filter(name == "United States") %>% pull(key)
+us_key <- country_df %>% 
+  filter(name == "United States") %>% 
+  pull(key)
 
 us_df <- query_fb_marketing_api(
   location_unit_type = "countries",
