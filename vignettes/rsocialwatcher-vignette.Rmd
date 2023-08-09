@@ -12,17 +12,7 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{rSocialWatcher}
   %\VignetteEncoding{UTF-8}
-#vignette: >
-#  %\VignetteEngine{knitr::knitr}
-#  %\VignetteIndexEntry{Title of your vignette}
-#  %\usepackage[UTF-8]{inputenc}
-#vignette: >
-#  %\VignetteIndexEntry{Vignette Title}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
 ---
-
-
 
 ```{r init, include = FALSE}
 knitr::opts_chunk$set(
@@ -82,22 +72,46 @@ VERSION <- api_keys %>%
 
 ---
 
+The `rSocialWatcher` package provides two functions:
+
+* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including different types and by their location.
+* `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 
+
 # Querying Parameter IDs <a name="query_param"></a>
 
-## Demographics, Interests, & Behaviors <a name="param_dib"></a>
+The `get_fb_parameter_ids` function facilitates querying IDs to target specific types of users (e.g., users with specific interests) and to target users in specific locations (eg, countries, cities, etc).
+
+## User Type IDs <a name="param_users"></a>
+
+Targeting specific types of users can be done along a number of categories, including by users' interests, behaviors, job, etc. Using the `get_fb_parameter_ids` function, the `type` parameter is used to query IDs for different types of categories. The `type` parameter allows for the following inputs: 
+
+* __behaviors__
+* __demographics__
+* __interests__
+* __industries__
+* __life_events__
+* __family_statuses__
+* __education_statuses__
+* __relationship_statuses__
+* __education_major__
+* __income__ Only available for using in the United States
+* __job_titles__ When setting `type = "job_titles"`, the `q` parameter is also required. The `q` parameter restricts the search by names. Consequently, setting `q = "data"` will query job titles with "data" in the name, such as "Database Engineer" and "Data Analyst."
+
+IDs can then be used in the `query_fb_marketing_api` function, which queries daily and monthly active Facebook users. For each `type` input, there is a parameter in the `query_fb_marketing_api` function to include the ID for the specific type. For example, `query_fb_marketing_api` has a parameter for `behaviors` to put behavior IDs. 
 
 ```{r simple_dib_ex, include=TRUE, warning=FALSE, message=FALSE}
 behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
                                      version = VERSION, 
                                      token   = TOKEN)
 
-demographics_df <- get_fb_parameter_ids(type    = "demographics",
-                                        version = VERSION, 
-                                        token   = TOKEN)
-
 interests_df <- get_fb_parameter_ids(type    = "interests",
                                      version = VERSION, 
                                      token   = TOKEN)
+
+job_titles_df <- get_fb_parameter_ids(type    = "job_titles",
+                                      version = VERSION, 
+                                      token   = TOKEN,
+                                      q = "data")
 
 behaviors_df %>% 
   kable() %>% 
@@ -106,16 +120,37 @@ behaviors_df %>%
              height = "300px")
 ```
 
-## Location IDs <a name="param_locs"></a>
+## Location Key <a name="param_locs"></a>
+
+Users can be targeted by different types of [locations](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location), including all users within a country, region (e.g., US state), city, neighborhood, etc. The `get_fb_parameter_ids` is used to obtain the location key for different places. The `type` parameter is used to define the type of location (e.g., `"country"`, `"region"`, etc.). 
+
+In addition to `type`, the `country_code`, `region_id`, `key` and `q` parameters can be used to further refine searchers for locations. Providing an input for `country_code`, `region_id`, and `key` (e.g., city key), will search for locations within those larger locations. Providing an input to the `q` parameter limits the search by name. For smaller geographic regions, an input for `q` is required. 
+
+| Location Type      | Radius Can be Specified | US Only |
+| -----------------  | ----------------------  | ------- |
+| country_group      | No                      | No      |
+| country            | No
+| region             |
+| large_geo_area     |
+| medium_geo_area    |
+| small_geo_area     |
+| metro_area         |
+| city               |
+| subcity            |
+| neighborhood       |
+| subneighborhood    |
+| zip                |
+| geo_market         |
+| electoral_district |
 
 ```{r simple_loc_ex, include=TRUE, warning=FALSE, message=FALSE}
-country_df <- get_fb_parameter_ids(type    = "country",
-                                   version = VERSION, 
-                                   token   = TOKEN)
-
 country_group_df <- get_fb_parameter_ids(type    = "country_group",
                                          version = VERSION, 
                                          token   = TOKEN)
+
+country_df <- get_fb_parameter_ids(type    = "country",
+                                   version = VERSION, 
+                                   token   = TOKEN)
 
 us_states_df <- get_fb_parameter_ids(type    = "region",
                                      version = VERSION, 
@@ -129,6 +164,15 @@ ny_cities_df <- get_fb_parameter_ids(type    = "city",
                                      region_id = ny_key,
                                      q = "New York")
 
+ny_cities_df <- get_fb_parameter_ids(type    = "city",
+                                     version = VERSION, 
+                                     token   = TOKEN,
+                                     region_id = ny_key,
+                                     key = ny_cities_df %>% filter(name == "New York") %>% pull(key),
+                                     q = "New York")
+
+
+
 country_df %>% 
   kable() %>% 
   kable_styling() %>% 
@@ -138,7 +182,11 @@ country_df %>%
 
 # Querying Data <a name="query_data"></a>
 
+The `query_fb_marketing_api` function enables querying daily and monthly active users for specific locations and by specific types. Many parameters rely on IDs obtained from the `get_fb_parameter_ids` function. For example, `get_fb_parameter_ids` can be used to obtain the location key for New York City and the interest parameter ID for "Music (entertainment & media)"; these IDs can then be used in `query_fb_marketing_api` to obtain the number of Facebook users interested in music that live in New York City.
+
 ## Different Location Types <a name="query_data_loc"></a>
+
+The number of daily and monthly active Facebook users can be queried (1) around a specific point (setting the latitude and longitude and the radius around this point), and (2) for a specific geographic (e.g., country, region, city, neighborhood, etc.). For small geographies, such as neighborhoods, a radius can also be set. 
 
 ### Radius around lat/lon <a name="query_data_loc_latlon"></a>
 

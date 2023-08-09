@@ -39,6 +39,7 @@ get_fb_parameter_ids <- function(type,
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
+  if( (type == "job_titles") & is.null(q)) stop("When type = 'job_titles', 'q' must be specified.")
   
   # Call API -----------------------------------------------------------------
   if(type %in% c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses")){
