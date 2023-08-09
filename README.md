@@ -134,7 +134,7 @@ int_comp_id <- interests_df %>%
   filter(name == "Computers (computers & electronics))") %>% 
   pull(id)
 
-us_mac_and_tech_df <- query_fb_marketing_api(
+us_mac_and_tech_or_comp_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = "US",
   behaviors          = list(beh_mac_id, beh_tech_id),
@@ -154,7 +154,7 @@ country_df %>%
   filter(name %in% c("United States", "Canada", "Mexico")) %>% 
   pull(key)
 
-us_mac_and_tech_df <- query_fb_marketing_api(
+us_mult_cnt_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = map_param("US", "CA", "MX"),
   behaviors          = c(beh_mac_id, beh_tech_id),
@@ -166,7 +166,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
 
 __Example 8:__ Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).
 ```r
-us_mac_and_tech_df <- query_fb_marketing_api(
+us_mult_cnt_param_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = map_param("US", "CA", "MX"),
   behaviors          = map_param(beh_mac_id, beh_tech_id),
