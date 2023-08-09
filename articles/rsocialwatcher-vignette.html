@@ -78,7 +78,7 @@
     
     
 <div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+<h2 id="setup">Setup <a name="setup"></a><a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <p>First, we load relevant packages and create variables for our
 Facebook API keys.</p>
@@ -105,10 +105,11 @@ Facebook API keys.</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="querying-parameter-ids">Querying Parameter IDs<a class="anchor" aria-label="anchor" href="#querying-parameter-ids"></a>
+<h2 id="querying-parameter-ids">Querying Parameter IDs <a name="query_param"></a><a class="anchor" aria-label="anchor" href="#querying-parameter-ids"></a>
 </h2>
 <div class="section level3">
-<h3 id="demographics-interests-behaviors">Demographics, Interests, &amp; Behaviors<a class="anchor" aria-label="anchor" href="#demographics-interests-behaviors"></a>
+<h3 id="demographics-interests-behaviors">Demographics, Interests, &amp; Behaviors
+<a name="param_dib"></a><a class="anchor" aria-label="anchor" href="#demographics-interests-behaviors"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">behaviors_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_fb_parameter_ids.html">get_fb_parameter_ids</a></span><span class="op">(</span>type    <span class="op">=</span> <span class="st">"behaviors"</span>,</span>
@@ -7837,7 +7838,7 @@ FALSE
 </div>
 </div>
 <div class="section level3">
-<h3 id="location-ids">Location IDs<a class="anchor" aria-label="anchor" href="#location-ids"></a>
+<h3 id="location-ids">Location IDs <a name="param_locs"></a><a class="anchor" aria-label="anchor" href="#location-ids"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">country_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_fb_parameter_ids.html">get_fb_parameter_ids</a></span><span class="op">(</span>type    <span class="op">=</span> <span class="st">"country"</span>,</span>
@@ -12814,13 +12815,13 @@ FALSE
 </div>
 </div>
 <div class="section level2">
-<h2 id="querying-data">Querying Data<a class="anchor" aria-label="anchor" href="#querying-data"></a>
+<h2 id="querying-data">Querying Data <a name="query_data"></a><a class="anchor" aria-label="anchor" href="#querying-data"></a>
 </h2>
 <div class="section level3">
-<h3 id="different-location-types">Different Location Types<a class="anchor" aria-label="anchor" href="#different-location-types"></a>
+<h3 id="different-location-types">Different Location Types <a name="query_data_loc"></a><a class="anchor" aria-label="anchor" href="#different-location-types"></a>
 </h3>
 <div class="section level4">
-<h4 id="radius-around-latlon">Radius around lat/lon<a class="anchor" aria-label="anchor" href="#radius-around-latlon"></a>
+<h4 id="radius-around-latlon">Radius around lat/lon <a name="query_data_loc_latlon"></a><a class="anchor" aria-label="anchor" href="#radius-around-latlon"></a>
 </h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -12834,8 +12835,8 @@ FALSE
 <span>                                  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="location-ids---country-state-district-city-neighborhood-etc-">Location IDs - Country, State, District, City, Neighborhood,
-etc.<a class="anchor" aria-label="anchor" href="#location-ids---country-state-district-city-neighborhood-etc-"></a>
+<h4 id="location-ids---country-state-district-city-neighborhood-etc-">Location IDs - Country, State, District, City, Neighborhood, etc.
+<a name="query_data_loc_keys"></a><a class="anchor" aria-label="anchor" href="#location-ids---country-state-district-city-neighborhood-etc-"></a>
 </h4>
 <p>We can also query using different location types, including
 countries, cities, etc. The <code><a href="../reference/get_fb_parameter_ids.html">get_fb_parameter_ids()</a></code> function
@@ -13030,7 +13031,7 @@ home
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:48
+2023-08-09 02:10:11
 </td>
 </tr></tbody>
 </table>
@@ -13038,10 +13039,10 @@ home
 </div>
 </div>
 <div class="section level3">
-<h3 id="id-options">ID Options<a class="anchor" aria-label="anchor" href="#id-options"></a>
+<h3 id="id-options">ID Options <a name="query_data_ids"></a><a class="anchor" aria-label="anchor" href="#id-options"></a>
 </h3>
 <div class="section level4">
-<h4 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a>
+<h4 id="options">Options <a name="query_data_ids_options"></a><a class="anchor" aria-label="anchor" href="#options"></a>
 </h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -13073,7 +13074,7 @@ home
 <span>                                              token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="and-and-or-categories">And and OR Categories<a class="anchor" aria-label="anchor" href="#and-and-or-categories"></a>
+<h4 id="and-and-or-categories">And and OR Categories <a name="query_data_ids_andor"></a><a class="anchor" aria-label="anchor" href="#and-and-or-categories"></a>
 </h4>
 <p>When using multiple parameters (eg, behavior IDs), the function
 allows for specifying <code>and</code> and <code>or</code> condition;
@@ -13091,7 +13092,8 @@ conditions</li>
 or vector is not allowed). * <code>location_unit_type</code> *
 <code>radius</code> * <code>radius_unit</code></p>
 <div class="section level5">
-<h5 id="within-parameter-types">Within parameter types<a class="anchor" aria-label="anchor" href="#within-parameter-types"></a>
+<h5 id="within-parameter-types">Within parameter types
+<a name="query_data_ids_andor_within"></a><a class="anchor" aria-label="anchor" href="#within-parameter-types"></a>
 </h5>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -13118,11 +13120,13 @@ or vector is not allowed). * <code>location_unit_type</code> *
 <span>                                           token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="flexible-targetting-or-and-and">Flexible Targetting: Or and And<a class="anchor" aria-label="anchor" href="#flexible-targetting-or-and-and"></a>
+<h5 id="flexible-targetting-or-and-and">Flexible Targetting: Or and And
+<a name="query_data_ids_andor_flex"></a><a class="anchor" aria-label="anchor" href="#flexible-targetting-or-and-and"></a>
 </h5>
 <p>Flexible tagetting, using the <code>flex_target</code> parameter,
-allows for more complicated parameter specification. The input for
-<code>flex_target</code> follows the following logic:</p>
+allows for more complicated parameter specification—including AND
+conditions across parameter types (eg, behavior X and interest Y). The
+input for <code>flex_target</code> follows the following logic:</p>
 <ul>
 <li>
 <code>flex_target</code> uses named lists to specify the (1)
@@ -13156,7 +13160,7 @@ different indices (<code>flex_param[[1]]</code> and
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">int_music_id</span> <span class="op">&lt;-</span> <span class="va">interests_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Music (entertainment &amp; media)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
-<span><span class="va">beh_comm_id</span>  <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Owns: Galaxy S6"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">beh_comm_id</span>  <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Commuters"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## OR CONDITION</span></span>
 <span><span class="va">comm_or_music_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span>location_unit_type <span class="op">=</span> <span class="st">"countries"</span>,</span>
@@ -13174,11 +13178,129 @@ different indices (<code>flex_param[[1]]</code> and
 <span>                                                                      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"behaviors"</span> <span class="op">=</span> <span class="va">beh_comm_id</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                            version            <span class="op">=</span> <span class="va">VERSION</span>, </span>
 <span>                                            creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>, </span>
-<span>                                            token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
+<span>                                            token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">comm_or_music_df</span>,</span>
+<span>          <span class="va">comm_and_music_df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span>,</span>
+<span>             height <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:100%; overflow-x: scroll; width:100%; ">
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate_dau
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate_mau_lower_bound
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate_mau_upper_bound
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+location_unit_type
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+location_types
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+location_keys
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+gender
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+age_min
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+age_max
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+flex_target
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+api_call_time_utc
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+177959166
+</td>
+<td style="text-align:right;">
+167300000
+</td>
+<td style="text-align:right;">
+196800000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+(interests:6003020834693 or behaviors:6013516370183)
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:15
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+177959166
+</td>
+<td style="text-align:right;">
+167300000
+</td>
+<td style="text-align:right;">
+196800000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+interests:6003020834693 and behaviors:6013516370183
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="section level4">
-<h4 id="exlcuding-categories">Exlcuding Categories<a class="anchor" aria-label="anchor" href="#exlcuding-categories"></a>
+<h4 id="exlcuding-categories">Exlcuding Categories <a name="query_data_ids_exclude"></a><a class="anchor" aria-label="anchor" href="#exlcuding-categories"></a>
 </h4>
 <p>Many parameters come with an alternate input that starts with
 <code>excl_</code> to exclude types of users. For example, there are
@@ -13202,11 +13324,14 @@ commute to work and are not tagged as interested in music.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="multiple-queries">Multiple Queries<a class="anchor" aria-label="anchor" href="#multiple-queries"></a>
+<h3 id="multiple-queries">Multiple Queries <a name="query_data_ids_multquery"></a><a class="anchor" aria-label="anchor" href="#multiple-queries"></a>
 </h3>
 <p>The function allows making multiple queries within one function call.
 All parameters in the <code>map_param</code> function will be iterated
 as separate calls</p>
+<div class="section level4">
+<h4 id="simple-examples">Simple Examples <a name="query_data_ids_multquery_simple"></a><a class="anchor" aria-label="anchor" href="#simple-examples"></a>
+</h4>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Number of Users in US or Mexico, as separate queries</span></span>
 <span><span class="va">df_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span>location_unit_type <span class="op">=</span> <span class="st">"countries"</span>,</span>
@@ -13283,7 +13408,7 @@ US
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:53
+2023-08-09 02:10:17
 </td>
 </tr>
 <tr>
@@ -13315,7 +13440,7 @@ MX
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:54
+2023-08-09 02:10:18
 </td>
 </tr>
 </tbody>
@@ -13402,7 +13527,7 @@ US
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:54
+2023-08-09 02:10:18
 </td>
 <td style="text-align:left;">
 NA
@@ -13437,7 +13562,7 @@ MX
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:54
+2023-08-09 02:10:19
 </td>
 <td style="text-align:left;">
 NA
@@ -13472,7 +13597,7 @@ US
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:55
+2023-08-09 02:10:20
 </td>
 <td style="text-align:left;">
 6002714895372
@@ -13483,7 +13608,7 @@ US
 61614818
 </td>
 <td style="text-align:right;">
-59500000
+59600000
 </td>
 <td style="text-align:right;">
 70100000
@@ -13507,7 +13632,7 @@ MX
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:55
+2023-08-09 02:10:20
 </td>
 <td style="text-align:left;">
 6002714895372
@@ -13518,16 +13643,256 @@ MX
 </div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="co">## Separate query for number of users in US and Mexico and commuters and frequenty travelers</span></span>
+<span><span class="co">## Separate query for number of users in US and Mexico and commuters and frequent travelers. Parameters not in</span></span>
+<span><span class="co">## map_param are applied across all queries. </span></span>
 <span><span class="va">beh_comm_id</span>      <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Commuters"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="va">beh_freqtrvl_id</span>  <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Frequent Travelers"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">beh_sb_id</span>        <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Small business owners"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">int_music_id</span>     <span class="op">&lt;-</span> <span class="va">interests_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Music (entertainment &amp; media)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">df_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span>location_unit_type <span class="op">=</span> <span class="st">"countries"</span>,</span>
 <span>                                 location_key       <span class="op">=</span> <span class="fu"><a href="../reference/map_param.html">map_param</a></span><span class="op">(</span><span class="st">"US"</span>, <span class="st">"MX"</span><span class="op">)</span>,</span>
 <span>                                 behaviors          <span class="op">=</span> <span class="fu"><a href="../reference/map_param.html">map_param</a></span><span class="op">(</span><span class="va">beh_comm_id</span>, <span class="va">beh_freqtrvl_id</span><span class="op">)</span>,</span>
+<span>                                 interests          <span class="op">=</span> <span class="va">int_music_id</span>,</span>
 <span>                                 version            <span class="op">=</span> <span class="va">VERSION</span>, </span>
 <span>                                 creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>, </span>
 <span>                                 token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df_out</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;">
+estimate_dau
+</th>
+<th style="text-align:right;">
+estimate_mau_lower_bound
+</th>
+<th style="text-align:right;">
+estimate_mau_upper_bound
+</th>
+<th style="text-align:left;">
+location_unit_type
+</th>
+<th style="text-align:left;">
+location_types
+</th>
+<th style="text-align:left;">
+location_keys
+</th>
+<th style="text-align:left;">
+interests
+</th>
+<th style="text-align:left;">
+behaviors
+</th>
+<th style="text-align:left;">
+gender
+</th>
+<th style="text-align:right;">
+age_min
+</th>
+<th style="text-align:right;">
+age_max
+</th>
+<th style="text-align:left;">
+api_call_time_utc
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+177959166
+</td>
+<td style="text-align:right;">
+167300000
+</td>
+<td style="text-align:right;">
+196800000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+6003020834693
+</td>
+<td style="text-align:left;">
+6013516370183
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:21
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+76456736
+</td>
+<td style="text-align:right;">
+71100000
+</td>
+<td style="text-align:right;">
+83600000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+MX
+</td>
+<td style="text-align:left;">
+6003020834693
+</td>
+<td style="text-align:left;">
+6013516370183
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:21
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+189955721
+</td>
+<td style="text-align:right;">
+185200000
+</td>
+<td style="text-align:right;">
+217900000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+6003020834693
+</td>
+<td style="text-align:left;">
+6002714895372
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:22
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+80735712
+</td>
+<td style="text-align:right;">
+77300000
+</td>
+<td style="text-align:right;">
+91000000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+MX
+</td>
+<td style="text-align:left;">
+6003020834693
+</td>
+<td style="text-align:left;">
+6002714895372
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level4">
+<h4 id="andor-conditions">And/Or Conditions <a name="query_data_ids_multquery_andor"></a><a class="anchor" aria-label="anchor" href="#andor-conditions"></a>
+</h4>
+<p>And/or conditions work as before: vectors <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> specify OR
+conditions, while lists <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> specify and conditions</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">beh_freqtrvl_id</span>  <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Frequent Travelers"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">beh_comm_id</span>      <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Commuters"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">beh_sb_id</span>        <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Small business owners"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span></span>
+<span>  location_unit_type <span class="op">=</span> <span class="st">"countries"</span>,</span>
+<span>  location_key       <span class="op">=</span> <span class="st">"US"</span>,</span>
+<span>  behaviors          <span class="op">=</span> <span class="fu"><a href="../reference/map_param.html">map_param</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Commuters</span></span>
+<span>    <span class="va">beh_comm_id</span>, </span>
+<span>    </span>
+<span>    <span class="co"># Frequent Travelers</span></span>
+<span>    <span class="va">beh_freqtrvl_id</span>, </span>
+<span>    </span>
+<span>    <span class="co"># Commuters OR Frequent Travelers</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">beh_comm_id</span>, <span class="va">beh_freqtrvl_id</span><span class="op">)</span>,</span>
+<span>    </span>
+<span>    <span class="co"># Commuters AND Frequent Travelers</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">beh_comm_id</span>, <span class="va">beh_freqtrvl_id</span><span class="op">)</span>,</span>
+<span>    </span>
+<span>    <span class="co"># Commuters AND (Frequent Travelers OR Small Business Owners)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">beh_comm_id</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">beh_freqtrvl_id</span>, <span class="va">beh_sb_id</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  </span>
+<span>  version            <span class="op">=</span> <span class="va">VERSION</span>, </span>
+<span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>, </span>
+<span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">df_out</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -13576,7 +13941,7 @@ api_call_time_utc
 21994719
 </td>
 <td style="text-align:right;">
-2.14e+07
+21400000
 </td>
 <td style="text-align:right;">
 25200000
@@ -13603,42 +13968,7 @@ US
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:56
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-11578520
-</td>
-<td style="text-align:right;">
-1.10e+07
-</td>
-<td style="text-align:right;">
-13000000
-</td>
-<td style="text-align:left;">
-countries
-</td>
-<td style="text-align:left;">
-home
-</td>
-<td style="text-align:left;">
-MX
-</td>
-<td style="text-align:left;">
-6013516370183
-</td>
-<td style="text-align:left;">
-1 or 2
-</td>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-65
-</td>
-<td style="text-align:left;">
-2023-08-08 18:52:56
+2023-08-09 02:10:23
 </td>
 </tr>
 <tr>
@@ -13646,7 +13976,7 @@ MX
 100663775
 </td>
 <td style="text-align:right;">
-1.00e+08
+100000000
 </td>
 <td style="text-align:right;">
 117700000
@@ -13673,18 +14003,18 @@ US
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:57
+2023-08-09 02:10:24
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-61614818
+102077770
 </td>
 <td style="text-align:right;">
-5.95e+07
+101900000
 </td>
 <td style="text-align:right;">
-70100000
+119900000
 </td>
 <td style="text-align:left;">
 countries
@@ -13693,10 +14023,10 @@ countries
 home
 </td>
 <td style="text-align:left;">
-MX
+US
 </td>
 <td style="text-align:left;">
-6002714895372
+6013516370183 or 6002714895372
 </td>
 <td style="text-align:left;">
 1 or 2
@@ -13708,11 +14038,82 @@ MX
 65
 </td>
 <td style="text-align:left;">
-2023-08-08 18:52:57
+2023-08-09 02:10:25
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+100663775
+</td>
+<td style="text-align:right;">
+100000000
+</td>
+<td style="text-align:right;">
+117700000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+6013516370183 and 6002714895372
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:26
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+100982260
+</td>
+<td style="text-align:right;">
+100400000
+</td>
+<td style="text-align:right;">
+118100000
+</td>
+<td style="text-align:left;">
+countries
+</td>
+<td style="text-align:left;">
+home
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+6013516370183 and (6002714895372 or 6002714898572)
+</td>
+<td style="text-align:left;">
+1 or 2
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+2023-08-09 02:10:26
 </td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
