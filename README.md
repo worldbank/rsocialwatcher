@@ -1,12 +1,18 @@
 # rSocialWatcher
 
-Query data from the Facebook Marketing API using R, with a focus for social science research.
+Query data from the Facebook Marketing API using R, with a focus for social science research. __NOTE: This is under development and subject to change__
 
-## Overview
+* [Overview](#overview)
+* [Installation](#installation)
+* [API Keys](#apikey)
+* [Quick Start](#quick)
+* [Usage](#usage)
+
+## Overview <a name="overview"></a>
 
 This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, [Fatehkia et al 2020](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) show the use of Facebook data for estimating poverty; features such as the proportion of monthly active Facebook users with a high-end phone correlate strongly with ground-truth measures of poverty.
 
-## Installation
+## Installation <a name="installation"></a>
 The package is available via Github and can be install using `devtools`.
 
 ```r
@@ -14,13 +20,19 @@ The package is available via Github and can be install using `devtools`.
 devtools::install_github("ramarty/rSocialWatcher")
 ```
 
-## Facebook API Keys
+## Facebook API Keys <a name="apikeys"></a>
 
 [INCLUDE TEXT HERE DESCRIBING HOW TO GET KEY].
 
-## Quickstart
+## Quickstart <a name="quick"></a>
 
-#### Setup
+* [Setup](#quick-setup)
+* [Get Facebook Parameter IDs](#quick-param-id)
+* [Query Facebook Users for Different Location Types](#quick-location)
+* [Query Facebook Users by Different Attributes](#quick-attributes)
+* [Map Over Multiple Queries](#quick-multiple)
+
+### Setup <a name="quick-setup"></a>
 ```r
 library(rSocialWatcher)
 library(dplyr)
@@ -31,7 +43,7 @@ CREATION_ACT <- "[ENTER HERE]"
 TOKEN        <- "[ENTER HERE]"
 ```
 
-#### Get dataframes of select parameter IDs
+### Get dataframes of select parameter IDs <a name="quick-param-id"></a>
 ```r
 # Get dataframe of Facebook parameter IDs and descriptions ---------------------
 ## Interests and behaviors
@@ -42,7 +54,7 @@ behaviors_df <- get_fb_parameter_ids("behaviors", VERSION, TOKEN)
 country_df <- get_fb_parameter_ids("country", VERSION, TOKEN)
 ```
 
-#### Query data for different location types
+### Query data for different location types <a name="quick-location"></a>
 
 __Example 1:__ Query Facebook users in US
 ```r
@@ -68,9 +80,9 @@ latlon_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-#### Query data for different user attributes
+### Query data for different user attributes <a name="quick-attributes"></a>
 
-__Example 3 [One parameter]:__ MAU/DAU of people who primarily access Facebook using Mac OS X living in the US
+__Example 3 [One parameter]:__ Facebook users who primarily access Facebook using Mac OS X living in the US
 ```r
 beh_mac_id <- behaviors_df %>% 
   filter(name == "Facebook access (OS): Mac OS X") %>% 
@@ -85,7 +97,7 @@ us_mac_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 4 [Two parameters, OR condition]:__ MAU/DAU of people who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. Vectors of IDs are used to specify OR conditions
+__Example 4 [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. Vectors of IDs are used to specify OR conditions
 ```r
 beh_tech_id <- behaviors_df %>% 
   filter(name == "Technology early adopters") %>% 
@@ -100,7 +112,7 @@ us_mac_or_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 5 [Two parameters, AND condition]:__ MAU/DAU of people who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. Lists of IDs are used to specify AND conditions
+__Example 5 [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. Lists of IDs are used to specify AND conditions
 ```r
 us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
@@ -111,7 +123,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 6 [Two parameters, OR and AND condition]:__ MAU/DAU of people who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
+__Example 6 [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
 ```r
 intcomp_id <- interests_df %>% 
   filter(name == "Computers (computers & electronics))") %>% 
@@ -127,7 +139,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-#### Make multiple queries
+### Map Over Multiple Queries <a name="quick-multiple"></a>
 
 Putting parameters in the `map_param` function results in the `query_fb_marketing_api` function making multiple queries.
 
@@ -147,7 +159,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 8:__ Make queries for different and behaviors. In total, four queries are made.
+__Example 8:__ Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).
 ```r
 us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
@@ -159,5 +171,5 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-## Usage
+## Usage <a name="usage"></a>
 See [this vignette](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 
