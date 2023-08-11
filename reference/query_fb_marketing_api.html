@@ -136,8 +136,8 @@ Location
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>location_unit_type</dt>
-<dd><p>Either <code>"coordinates"</code> (for buffer around single point) or <code>"country"</code></p><div class="section">
-<h3 id="if-location-unit-type-coordinates-">If location_unit_type = "coordinates"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-coordinates-"></a></h3>
+<dd><p>Either <code>"coordinates"</code> (for buffer around single point) or type of geographic location, including: <code>"countries"</code>, <code>"regions"</code>, <code>"cities"</code>, <code>"zips"</code>, <code>"places"</code>, <code>"geo_markets"</code>, <code>"electoral_district"</code>, or <code>"country_groups"</code>. See the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location" class="external-link">Basic Targetting</a> documentation for more information.</p><div class="section">
+<h3 id="if-location-unit-type-is-coordinates-">If location_unit_type is "coordinates"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-is-coordinates-"></a></h3>
 
 
 </div></dd>
@@ -153,7 +153,15 @@ Location
 
 <dt>radius_unit</dt>
 <dd><p>Unit for radius; either <code>"kilometer"</code> or <code>"mile"</code></p><div class="section">
-<h3 id="if-location-unit-type-country-">If location_unit_type = "country"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-country-"></a></h3>
+<h3 id="if-location-unit-type-is-not-coordinates-">If location_unit_type is not "coordinates"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-is-not-coordinates-"></a></h3>
+
+
+</div></dd>
+
+
+<dt>location_keys</dt>
+<dd><p>Key associated with location. Use the <code>get_fb_parameter_ids</code> function to get location keys; see <a href="https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids">here</a> for examples.</p><div class="section">
+<h3 id="other-location-parameters">Other location parameters<a class="anchor" aria-label="anchor" href="#other-location-parameters"></a></h3>
 
 
 </div></dd>
@@ -216,7 +224,7 @@ Location
 
 
 <dt>version</dt>
-<dd><p>API version. e.g., "v14.0"</p></dd>
+<dd><p>API version. e.g., "v17.0"</p></dd>
 
 
 <dt>creation_act</dt>
@@ -249,14 +257,6 @@ Location
 
 <dt>add_query_hide_credentials</dt>
 <dd><p>If <code>TRUE</code> (and <code>add_query</code> is <code>TRUE</code>), hide the <code>creation_act</code> and <code>token</code> from the query text returned in the dataframe</p></dd>
-
-
-<dt>country_code</dt>
-<dd><p>Country ISO2; for example, <code>"US"</code>.</p><div class="section">
-<h3 id="other-location-">Other location??<a class="anchor" aria-label="anchor" href="#other-location-"></a></h3>
-
-
-</div></dd>
 
 
 <dt>behavior</dt>
