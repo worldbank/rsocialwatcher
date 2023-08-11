@@ -242,7 +242,7 @@ query_fb_marketing_api(
 
 #### Country
 
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_country, include=TRUE, warning=FALSE, message=FALSE}
 #### Country: United States
 loc_df <- get_fb_parameter_ids(type = "country", 
                                version = VERSION, token = TOKEN)
@@ -256,7 +256,7 @@ us_df <- query_fb_marketing_api(
 ```
 
 #### Region
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_region, include=TRUE, warning=FALSE, message=FALSE}
 
 #### Region: New York (state)
 region_df <- get_fb_parameter_ids(type = "region", country_code = "US", 
@@ -274,7 +274,7 @@ ny_df <- query_fb_marketing_api(
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about large geographic areas: _"Known commonly as a district or governate covering hundreds of square kilometers or more. Example: Akkar in Lebanon."_
 
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_lga, include=TRUE, warning=FALSE, message=FALSE}
 
 #### Large Metro Area
 loc_df <- get_fb_parameter_ids(type = "large_geo_area", 
@@ -294,7 +294,7 @@ lma_df <- query_fb_marketing_api(
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about medium geographic areas: _"Known commonly as a county, covering more than one city. Example: Henrico county in the state of Virginia in United States."_
 
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_mga, include=TRUE, warning=FALSE, message=FALSE}
 
 #### Large Metro Area
 loc_df <- get_fb_parameter_ids(type = "medium_geo_area", 
@@ -314,7 +314,7 @@ mma_df <- query_fb_marketing_api(
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about small geographic areas: _"Known commonly as a residential area near a city or town. Example: El Rosario near Marbella in Spain."_
 
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_sga, include=TRUE, warning=FALSE, message=FALSE}
 
 #### Large Metro Area
 loc_df <- get_fb_parameter_ids(type = "small_geo_area", 
@@ -331,7 +331,7 @@ sma_df <- query_fb_marketing_api(
 ```
 
 #### City
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_city, include=TRUE, warning=FALSE, message=FALSE}
 #### City: New York City
 loc_df <- get_fb_parameter_ids(type = "city", 
                                region_id = region_df %>% filter(name == "New York") %>% pull(key),
@@ -356,7 +356,7 @@ city_r_df <- query_fb_marketing_api(
 ```
 
 #### Subcity
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_subcity, include=TRUE, warning=FALSE, message=FALSE}
 #### Subcity: Manhattan
 loc_df <- get_fb_parameter_ids(type = "subcity", 
                                region_id = region_df %>% filter(name == "New York") %>% pull(key),
@@ -372,7 +372,7 @@ subcity_df <- query_fb_marketing_api(
 ```
 
 #### Neighborhood
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_neighborhood, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "neighborhood", 
                                region_id = region_df %>% filter(name == "New York") %>% pull(key),
                                q = "East Village",
@@ -387,7 +387,7 @@ nbh_df <- query_fb_marketing_api(
 ```
 
 #### Zip Code
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_zip, include=TRUE, warning=FALSE, message=FALSE}
 ## Zip codes can be dieectly entered as "US:[Zip Code]"
 zip1_df <- query_fb_marketing_api(
   location_unit_type = "zips",
@@ -412,7 +412,7 @@ zip2_df <- query_fb_marketing_api(
 
 #### Geo Market (U.S. Designated Market Areas)
 
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_geo_market, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "geo_market", 
                                version = VERSION, token = TOKEN)
 
@@ -425,7 +425,7 @@ gm_df <- query_fb_marketing_api(
 ```
 
 #### Electoral Districts
-```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+```{r loc_elec_dist, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "electoral_district", 
                                q = "New York", 
                                version = VERSION, token = TOKEN)

@@ -55,8 +55,8 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or \code{"country"}
-\subsection{If location_unit_type = "coordinates"}{
+\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.
+\subsection{If location_unit_type is "coordinates"}{
 }}
 
 \item{lat_lon}{Coordinates, c(lat, lon). For example, \code{c(38.90, -77.01)}}
@@ -64,7 +64,11 @@ query_fb_marketing_api(
 \item{radius}{Radius around coordinate}
 
 \item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}
-\subsection{If location_unit_type = "country"}{
+\subsection{If location_unit_type is not "coordinates"}{
+}}
+
+\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.
+\subsection{Other location parameters}{
 }}
 
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
@@ -95,7 +99,7 @@ query_fb_marketing_api(
 \subsection{Credentials}{
 }}
 
-\item{version}{API version. e.g., "v14.0"}
+\item{version}{API version. e.g., "v17.0"}
 
 \item{creation_act}{Facebook creation act}
 
@@ -112,10 +116,6 @@ query_fb_marketing_api(
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
 
 \item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is \code{TRUE}), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
-
-\item{country_code}{Country ISO2; for example, \code{"US"}.
-\subsection{Other location??}{
-}}
 
 \item{behavior}{Vector of behavior IDs. If multiple, uses \code{OR} condition; for example, \code{behavior = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameters(type = "behaviors")} to get dataframe with IDs and descriptions.}
 

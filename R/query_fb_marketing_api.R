@@ -606,7 +606,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
-      print(query)
+      #print(query)
       query_val <- url(query) %>% fromJSON
       
       #### If there is no error
