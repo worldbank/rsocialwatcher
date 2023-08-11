@@ -6,7 +6,7 @@ title: "rSocialWatcher"
 output:
   html_document:
     toc: true
-    toc_depth: 4
+    toc_depth: 5
     toc_float: true
 vignette: >
   %\VignetteEngine{knitr::knitr}
@@ -126,22 +126,6 @@ Users can be targeted by different types of [locations](https://developers.faceb
 
 In addition to `type`, the `country_code`, `region_id`, `key` and `q` parameters can be used to further refine searchers for locations. Providing an input for `country_code`, `region_id`, and `key` (e.g., city key), will search for locations within those larger locations. Providing an input to the `q` parameter limits the search by name. For smaller geographic regions, an input for `q` is required. 
 
-| Location Type      | Radius Can be Specified | US Only |
-| -----------------  | ----------------------  | ------- |
-| country_group      | No                      | No      |
-| country            | No
-| region             |
-| large_geo_area     |
-| medium_geo_area    |
-| small_geo_area     |
-| metro_area         |
-| city               |
-| subcity            |
-| neighborhood       |
-| zip                |
-| geo_market         |
-| electoral_district |
-
 ```{r simple_loc_ex, include=TRUE, warning=FALSE, message=FALSE}
 country_group_df <- get_fb_parameter_ids(type    = "country_group",
                                          version = VERSION, 
@@ -167,12 +151,9 @@ ny_cities_df <- get_fb_parameter_ids(type    = "city",
                                      version = VERSION, 
                                      token   = TOKEN,
                                      region_id = ny_key,
-                                     key = ny_cities_df %>% filter(name == "New York") %>% pull(key),
                                      q = "New York")
 
-
-
-country_df %>% 
+ny_cities_df %>% 
   kable() %>% 
   kable_styling() %>% 
   scroll_box(width = "100%",
@@ -193,9 +174,9 @@ The number of daily and monthly active Facebook users can be queried (1) around 
 
 ## All Facebook Users by Radius (Near NYC)
 r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                  lat_lon = c(40.712, -74.006),
-                                  radius = 5,
-                                  radius_unit = "kilometer",
+                                  lat_lon            = c(40.712, -74.006),
+                                  radius             = 5,
+                                  radius_unit        = "kilometer",
                                   version            = VERSION, 
                                   creation_act       = CREATION_ACT, 
                                   token              = TOKEN)
@@ -203,7 +184,7 @@ r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
 
 ### Location IDs - Country, State, District, City, Neighborhood, etc. <a name="query_data_loc_keys"></a>
 
-We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package. 
+We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package.
 
 * __Location Type:__ This is specified (1) in the `type` parameter in the `get_fb_parameter_ids()` function and in the `location_unit_type` parameter in the `query_fb_marketing_api()` function
 * __Radius Can be Specified:__ For these location types, a radius can optionally be specified; for example, to specify a location and it's surrounding area.
@@ -224,6 +205,8 @@ We can also query using different location types, including countries, cities, e
 | geo_market         | No                      | Yes     | New York| 
 | electoral_district | No                      | Yes     | New York's 18th District, 2020 Census |
 
+Below shows examples for querying Facebook users for each type of location type. Note that when entering the `type` in `get_fb_parameter_ids`, the __singular__ is used (e.g., `"country"`), while when entering the `type` in `query_fb_marketing_api`, the __plural__ is used (e.g., `"countries"`). Using the singular type to obtain the IDs and the plural to query the number of Facebook users mimics how parameters are entered in the Facebook Marketing API.
+
 #### Country Groups
 
 ```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
@@ -234,10 +217,15 @@ loc_df <- get_fb_parameter_ids(type = "country_group",
 
 query_fb_marketing_api(
   location_unit_type = "country_groups",
-  location_keys      = loc_df %>% filter(name == "Worldwide") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "Worldwide") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Country
@@ -247,12 +235,17 @@ query_fb_marketing_api(
 loc_df <- get_fb_parameter_ids(type = "country", 
                                version = VERSION, token = TOKEN)
 
-us_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "countries",
-  location_keys      = loc_df %>% filter(name == "United States") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "United States") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Region
@@ -262,12 +255,17 @@ us_df <- query_fb_marketing_api(
 region_df <- get_fb_parameter_ids(type = "region", country_code = "US", 
                                   version = VERSION, token = TOKEN)
 
-ny_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "regions",
-  location_keys      = region_df %>% filter(name == "New York") %>% pull(key),
+  location_keys      = region_df %>% 
+    filter(name == "New York") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Large Geographic Area
@@ -282,12 +280,17 @@ loc_df <- get_fb_parameter_ids(type = "large_geo_area",
                                q = "Akkar",
                                version = VERSION, token = TOKEN)
 
-lma_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "large_geo_areas",
-  location_keys      = loc_df %>% filter(name == "Akkar") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "Akkar") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Medium Geographic Area
@@ -302,12 +305,17 @@ loc_df <- get_fb_parameter_ids(type = "medium_geo_area",
                                q = "Henrico",
                                version = VERSION, token = TOKEN)
 
-mma_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "medium_geo_areas",
-  location_keys      = loc_df %>% filter(name == "Henrico") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "Henrico") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Small Geographic Area
@@ -322,29 +330,41 @@ loc_df <- get_fb_parameter_ids(type = "small_geo_area",
                                q = "El",
                                version = VERSION, token = TOKEN)
 
-sma_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "small_geo_areas",
-  location_keys      = loc_df %>% filter(name == "El Rosario") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "El Rosario") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### City
 ```{r loc_city, include=TRUE, warning=FALSE, message=FALSE}
 #### City: New York City
 loc_df <- get_fb_parameter_ids(type = "city", 
-                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               region_id = region_df %>% 
+                                 filter(name == "New York") %>% 
+                                 pull(key),
                                q = "New York",
                                version = VERSION, token = TOKEN)
 
-city_df <- query_fb_marketing_api(
+## Facebook users in NYC
+query_fb_marketing_api(
   location_unit_type = "cities",
   location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 
+## Facebook users in and 10 miles around NYC
 city_r_df <- query_fb_marketing_api(
   location_unit_type = "cities",
   location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
@@ -352,62 +372,82 @@ city_r_df <- query_fb_marketing_api(
   radius_unit        = "mile",
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Subcity
 ```{r loc_subcity, include=TRUE, warning=FALSE, message=FALSE}
 #### Subcity: Manhattan
 loc_df <- get_fb_parameter_ids(type = "subcity", 
-                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               region_id = region_df %>% 
+                                 filter(name == "New York") %>% 
+                                 pull(key),
                                q = "Manhattan",
                                version = VERSION, token = TOKEN)
 
-subcity_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "subcities",
   location_keys      = loc_df %>% filter(name == "Manhattan") %>% pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Neighborhood
 ```{r loc_neighborhood, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "neighborhood", 
-                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               region_id = region_df %>% 
+                                 filter(name == "New York") %>% 
+                                 pull(key),
                                q = "East Village",
                                version = VERSION, token = TOKEN)
 
-nbh_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "neighborhoods",
-  location_keys      = loc_df %>% filter(name == "East Village, Manhattan") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "East Village, Manhattan") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Zip Code
 ```{r loc_zip, include=TRUE, warning=FALSE, message=FALSE}
-## Zip codes can be dieectly entered as "US:[Zip Code]"
-zip1_df <- query_fb_marketing_api(
+## Zip codes can be directly entered as "US:[Zip Code]"
+query_fb_marketing_api(
   location_unit_type = "zips",
   location_keys      = "US:90210",
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
-
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 
 ## Zip codes can also be searched for using: "get_fb_parameter_ids"
 loc_df <- get_fb_parameter_ids(type = "zip", 
                                q = "9", # Search using numbers
                                version = VERSION, token = TOKEN)
 
-zip2_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "zips",
   location_keys      = loc_df %>% filter(name == "90210") %>% pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Geo Market (U.S. Designated Market Areas)
@@ -416,12 +456,17 @@ zip2_df <- query_fb_marketing_api(
 loc_df <- get_fb_parameter_ids(type = "geo_market", 
                                version = VERSION, token = TOKEN)
 
-gm_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "geo_markets",
-  location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
+  location_keys      = loc_df %>% 
+    filter(name == "New York") %>% 
+    pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 #### Electoral Districts
@@ -430,14 +475,17 @@ loc_df <- get_fb_parameter_ids(type = "electoral_district",
                                q = "New York", 
                                version = VERSION, token = TOKEN)
 
-ed_df <- query_fb_marketing_api(
+query_fb_marketing_api(
   location_unit_type = "electoral_districts",
   location_keys      = loc_df %>% 
     filter(name == "New York's 18th District - 2020 Census") %>% 
     pull(key),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
-  token              = TOKEN)
+  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 ## ID Options <a name="query_data_ids"></a>
