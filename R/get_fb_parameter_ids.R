@@ -122,11 +122,9 @@ get_fb_parameter_ids <- function(type,
                          "large_geo_area",
                          "medium_geo_area",
                          "small_geo_area",
-                         "metro_area",
                          "city",
                          "subcity",
                          "neighborhood",
-                         "subneighborhood",
                          "zip",
                          "geo_market",
                          "electoral_district")){
@@ -151,7 +149,7 @@ get_fb_parameter_ids <- function(type,
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } 
   
-  if(is.null(nrow(out_df))){
+  if(is.null(nrow(out_df)) & is.null(q)){
     warning("No results; may require `q` parameter")
   }
   

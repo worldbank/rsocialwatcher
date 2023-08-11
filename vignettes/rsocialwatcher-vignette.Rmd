@@ -138,7 +138,6 @@ In addition to `type`, the `country_code`, `region_id`, `key` and `q` parameters
 | city               |
 | subcity            |
 | neighborhood       |
-| subneighborhood    |
 | zip                |
 | geo_market         |
 | electoral_district |
@@ -210,55 +209,235 @@ We can also query using different location types, including countries, cities, e
 * __Radius Can be Specified:__ For these location types, a radius can optionally be specified; for example, to specify a location and it's surrounding area.
 * __US Only:__ These location types can only be used for the US
 
-| Location Type      | Radius Can be Specified | US Only |
-| -----------------  | ----------------------  | ------- |
-| country_group      | No                      | No      |
-| country            | No
-| region             |
-| large_geo_area     |
-| medium_geo_area    |
-| small_geo_area     |
-| metro_area         |
-| city               |
-| subcity            |
-| neighborhood       |
-| subneighborhood    |
-| zip                |
-| geo_market         |
-| electoral_district |
+| Location Type      | Radius Can be Specified | US Only | Example |
+| -----------------  | ----------------------  | ------- | ------- |
+| country_group      | No                      | No      | World Wide
+| country            | No                      | No      | United States|
+| region             | No                      | No      | New York |
+| large_geo_area     | No                      | No      | Akkar, Lebanon |
+| medium_geo_area    | No                      | No      | Henrico County, Virginia, USA |
+| small_geo_area     | No                      | No      | El Rosario, Spain |
+| city               | Yes                     | No      | New York City |
+| subcity            | No                      | No      | Manhattan
+| neighborhood       | No                      | No      | East Village, Manhattan |
+| zip                | No                      | Yes     | 90210 |
+| geo_market         | No                      | Yes     | New York| 
+| electoral_district | No                      | Yes     | New York's 18th District, 2020 Census |
 
-```{r simple_query_lockey_ex, include=TRUE, warning=FALSE, message=FALSE}
+#### Country Groups
 
-## All Facebook Users by Radius (Near NYC)
-r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                  lat_lon = c(40.712, -74.006),
-                                  radius = 5,
-                                  radius_unit = "kilometer",
-                                  version            = VERSION, 
-                                  creation_act       = CREATION_ACT, 
-                                  token              = TOKEN)
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
 
-## All Facebook Users within US
-us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                location_keys      = "US",
-                                version            = VERSION, 
-                                creation_act       = CREATION_ACT, 
-                                token              = TOKEN)
+#### Country Group: World Wide
+loc_df <- get_fb_parameter_ids(type = "country_group", 
+                               version = VERSION, token = TOKEN)
 
-## All Facebook Users within NYC
-nyc_key <- ny_cities_df %>% filter(name == "New York") %>% pull(key)
-nyc_df <- query_fb_marketing_api(location_unit_type = "cities",
-                                 location_keys      = nyc_key,
-                                 version            = VERSION, 
-                                 creation_act       = CREATION_ACT, 
-                                 token              = TOKEN)
+query_fb_marketing_api(
+  location_unit_type = "country_groups",
+  location_keys      = loc_df %>% filter(name == "Worldwide") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
 
-nyc_df %>% 
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%",
-             height = "300px")
+#### Country
 
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+#### Country: United States
+loc_df <- get_fb_parameter_ids(type = "country", 
+                               version = VERSION, token = TOKEN)
+
+us_df <- query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = loc_df %>% filter(name == "United States") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Region
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+
+#### Region: New York (state)
+region_df <- get_fb_parameter_ids(type = "region", country_code = "US", 
+                                  version = VERSION, token = TOKEN)
+
+ny_df <- query_fb_marketing_api(
+  location_unit_type = "regions",
+  location_keys      = region_df %>% filter(name == "New York") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Large Geographic Area
+
+The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about large geographic areas: _"Known commonly as a district or governate covering hundreds of square kilometers or more. Example: Akkar in Lebanon."_
+
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+
+#### Large Metro Area
+loc_df <- get_fb_parameter_ids(type = "large_geo_area", 
+                               country_code = "LB", 
+                               q = "Akkar",
+                               version = VERSION, token = TOKEN)
+
+lma_df <- query_fb_marketing_api(
+  location_unit_type = "large_geo_areas",
+  location_keys      = loc_df %>% filter(name == "Akkar") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Medium Geographic Area
+
+The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about medium geographic areas: _"Known commonly as a county, covering more than one city. Example: Henrico county in the state of Virginia in United States."_
+
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+
+#### Large Metro Area
+loc_df <- get_fb_parameter_ids(type = "medium_geo_area", 
+                               country_code = "US", 
+                               q = "Henrico",
+                               version = VERSION, token = TOKEN)
+
+mma_df <- query_fb_marketing_api(
+  location_unit_type = "medium_geo_areas",
+  location_keys      = loc_df %>% filter(name == "Henrico") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Small Geographic Area
+
+The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about small geographic areas: _"Known commonly as a residential area near a city or town. Example: El Rosario near Marbella in Spain."_
+
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+
+#### Large Metro Area
+loc_df <- get_fb_parameter_ids(type = "small_geo_area", 
+                               country_code = "ES", 
+                               q = "El",
+                               version = VERSION, token = TOKEN)
+
+sma_df <- query_fb_marketing_api(
+  location_unit_type = "small_geo_areas",
+  location_keys      = loc_df %>% filter(name == "El Rosario") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### City
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+#### City: New York City
+loc_df <- get_fb_parameter_ids(type = "city", 
+                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               q = "New York",
+                               version = VERSION, token = TOKEN)
+
+city_df <- query_fb_marketing_api(
+  location_unit_type = "cities",
+  location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
+city_r_df <- query_fb_marketing_api(
+  location_unit_type = "cities",
+  location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
+  radius             = 10,
+  radius_unit        = "mile",
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Subcity
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+#### Subcity: Manhattan
+loc_df <- get_fb_parameter_ids(type = "subcity", 
+                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               q = "Manhattan",
+                               version = VERSION, token = TOKEN)
+
+subcity_df <- query_fb_marketing_api(
+  location_unit_type = "subcities",
+  location_keys      = loc_df %>% filter(name == "Manhattan") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Neighborhood
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+loc_df <- get_fb_parameter_ids(type = "neighborhood", 
+                               region_id = region_df %>% filter(name == "New York") %>% pull(key),
+                               q = "East Village",
+                               version = VERSION, token = TOKEN)
+
+nbh_df <- query_fb_marketing_api(
+  location_unit_type = "neighborhoods",
+  location_keys      = loc_df %>% filter(name == "East Village, Manhattan") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Zip Code
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+## Zip codes can be dieectly entered as "US:[Zip Code]"
+zip1_df <- query_fb_marketing_api(
+  location_unit_type = "zips",
+  location_keys      = "US:90210",
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
+
+## Zip codes can also be searched for using: "get_fb_parameter_ids"
+loc_df <- get_fb_parameter_ids(type = "zip", 
+                               q = "9", # Search using numbers
+                               version = VERSION, token = TOKEN)
+
+zip2_df <- query_fb_marketing_api(
+  location_unit_type = "zips",
+  location_keys      = loc_df %>% filter(name == "90210") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Geo Market (U.S. Designated Market Areas)
+
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+loc_df <- get_fb_parameter_ids(type = "geo_market", 
+                               version = VERSION, token = TOKEN)
+
+gm_df <- query_fb_marketing_api(
+  location_unit_type = "geo_markets",
+  location_keys      = loc_df %>% filter(name == "New York") %>% pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+#### Electoral Districts
+```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
+loc_df <- get_fb_parameter_ids(type = "electoral_district", 
+                               q = "New York", 
+                               version = VERSION, token = TOKEN)
+
+ed_df <- query_fb_marketing_api(
+  location_unit_type = "electoral_districts",
+  location_keys      = loc_df %>% 
+    filter(name == "New York's 18th District - 2020 Census") %>% 
+    pull(key),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
 ```
 
 ## ID Options <a name="query_data_ids"></a>

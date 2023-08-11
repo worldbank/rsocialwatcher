@@ -134,10 +134,11 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("'",location_keys,"'") %>% paste(collapse = ","),
                              "],'location_types':[",location_types,"]},")
-  } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets")){
-    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
-                             paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
-                             "],'location_types':[",location_types,"]},")
+    } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets", "neighborhoods", "subcities",
+                                         "large_geo_areas", "medium_geo_areas", "small_geo_areas")){
+      query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                               paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
+                               "],'location_types':[",location_types,"]},")
   } else if ( (location_unit_type %in% c("cities")) & is.null(radius)){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% 
@@ -434,7 +435,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     if(is.null(radius_unit)) stop("'radius_unit' not spacified. When location_unit_type = 'places', must specify radius_unit (and radius).")
   }
   
-  if(location_unit_type %in% c("countries","regions","zips","geo_markets","electoral_district","country_groups")){
+  if(location_unit_type %in% c("countries","country_groups")){ # "regions","zips","geo_markets","electoral_district"
     if(!is.null(radius))      stop(paste0("'radius' parameter not allowed when location_unit_type = '", location_unit_type, "'"))
     if(!is.null(radius_unit)) stop(paste0("'radius_unit' parameter not allowed when location_unit_type = '", location_unit_type, "'"))
   }
@@ -456,13 +457,14 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   if((location_unit_type %in% c("cities")) & (!is.null(radius))){
     
     if(radius_unit == "mile"){
-      if(radius > 50) stop("Radius too large; if specify radius, radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
-      if(radius < 10) stop("Radius too small; if specify radius, radius must be between 0.63 and 50 miles when location_unit_type = '",location_unit_type,"'.")
+      if(radius > 50) stop("Radius too large; if specify radius, radius must be between 10 and 50 miles when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 10) stop("Radius too small; if specify radius, radius must be between 10 and 50 miles when location_unit_type = '",location_unit_type,"'.")
     }
     
+    
     if(radius_unit == "kilometer"){
-      if(radius > 80) stop("Radius too large; if specify radius, radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
-      if(radius < 17) stop("Radius too small; if specify radius, radius must be between 1 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
+      if(radius > 80) stop("Radius too large; if specify radius, radius must be between 17 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
+      if(radius < 17) stop("Radius too small; if specify radius, radius must be between 17 and 80 kilometers when location_unit_type = '",location_unit_type,"'.")
     }
     
   }
@@ -744,14 +746,14 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 # Query: ALL CALLS -------------------------------------------------------------
 #' Query Facebook Marketing API
 #' ## Location
-#' @param location_unit_type Either `"coordinates"` (for buffer around single point) or `"country"`
-#' ### If location_unit_type = "coordinates"
+#' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
+#' ### If location_unit_type is "coordinates"
 #' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
-#' ### If location_unit_type = "country" 
-#' @param country_code Country ISO2; for example, `"US"`.
-#' ## Other location??
+#' ### If location_unit_type is not "coordinates"
+#' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
+#' ## Other location parameters
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
 #' @param locales Words
 #' ## Parameters. These are optional. If nothing specified, then searches for all users.
@@ -770,7 +772,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' ## Credentials
-#' @param version API version. e.g., "v14.0"
+#' @param version API version. e.g., "v17.0"
 #' @param creation_act Facebook creation act
 #' @param token Facebook API token
 #' ## Scraping parameters
@@ -853,16 +855,14 @@ query_fb_marketing_api <- function(location_unit_type,
   if(!is.null(location_unit_type)){
     location_unit_type_valid_options <- c("coordinates", "countries", "country_groups", "regions", 
                                           "electoral_districts", "zips", "geo_markets", 
-                                          "cities", "places")
+                                          "cities", "subcities", "neighborhoods",
+                                          "large_geo_areas", "medium_geo_areas", "small_geo_areas",
+                                          "places")
     if(!(location_unit_type %in% location_unit_type_valid_options)){
       stop(paste0("Invalid `location_unit_type`; `location_unit_type` must be one of the following:\n",
                   paste(location_unit_type_valid_options, collapse = "\n")))
     }
   }
-  
-  
-  
-  
   
   # TODO: Checks for which ones can't have map_param
   
