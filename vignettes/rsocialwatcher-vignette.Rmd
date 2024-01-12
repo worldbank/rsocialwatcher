@@ -26,18 +26,14 @@ knitr::opts_chunk$set(
 First, we load relevant packages and create variables for our Facebook API keys.
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE}
-## Load Google Traffic package
+## Load packages
 library(rSocialWatcher)
-
-## Load packages for working with and visualizing data
 library(tidyverse)
-
 library(dplyr)
 library(lubridate)
 library(jsonlite)
 library(httr)
 library(stringr)
-
 library(knitr)
 library(kableExtra)
 
@@ -530,6 +526,7 @@ When using multiple parameters (eg, behavior IDs), the function allows for speci
 * __Lists `list()`__ are used to specify AND conditions
 
 However, the following parameters can only except one input (a list or vector is not allowed).
+
 * `location_unit_type`
 * `radius`
 * `radius_unit`

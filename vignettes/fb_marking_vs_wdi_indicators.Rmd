@@ -1,0 +1,155 @@
+---
+title: "Facebook Marketing vs WDI Indicators"
+#author: "Robert Marty"
+#date: "`r Sys.Date()`"
+#output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    toc_depth: 5
+    toc_float: true
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{rSocialWatcher}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r init, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup <a name="setup"></a>
+
+First, we load relevant packages and create variables for our Facebook API keys.
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE}
+## Load packages
+library(rSocialWatcher)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(jsonlite)
+library(httr)
+library(stringr)
+library(knitr)
+library(kableExtra)
+library(WDI)
+
+## Set Facebook Keys
+TOKEN        <- "TOKEN-HERE"
+CREATION_ACT <- "CREATION-ACT-HERE"
+VERSION      <- "VERSION-HERE"
+```
+
+```{r loadkey, include=FALSE}
+## Load keys
+api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
+                     stringsAsFactors = F)
+
+api_keys <- api_keys %>%
+  dplyr::filter(Service == "facebook_marketing_ad",
+                Details == "robmarty3@gmail.com")
+
+TOKEN <- api_keys %>% 
+  dplyr::filter(Account == "token") %>% 
+  pull(Key)
+
+CREATION_ACT <- api_keys %>% 
+  dplyr::filter(Account == "creation_act") %>% 
+  pull(Key) %>% 
+  str_replace_all("ACT_", "") 
+
+VERSION <- api_keys %>% 
+  dplyr::filter(Account == "version") %>% 
+  pull(Key)
+```
+
+---
+
+```{r fb_marketing_data, include=TRUE, warning=FALSE, message=FALSE}
+wdi_df <- WDI(
+  country = "all",
+  indicator = c("NY.GDP.PCAP.KD", "SP.POP.TOTL"),
+  latest = 1,
+  language = "en"
+)
+```
+
+
+```{r fb_marketing_data, include=TRUE, warning=FALSE, message=FALSE}
+
+#### Grab countries
+country_df <- get_fb_parameter_ids(type    = "country",
+                                   version = VERSION, 
+                                   token   = TOKEN)
+
+## Only keep countries with WDI data
+country_df <- country_df[country_df$key %in% wdi_df$iso2c,]
+
+#### Grab interests
+interests_df <- get_fb_parameter_ids(type    = "interests",
+                                     version = VERSION, 
+                                     token   = TOKEN)
+
+lux_goods_id <- interests_df %>%
+  filter(name == "Luxury goods (retail)") %>%
+  pull(id)
+
+#### Query data
+country_codes <- country_df$country_code
+
+fb_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                location_keys      = map_param(country_codes) %>% unlist(),
+                                interests          = map_param(NULL, lux_goods_id),
+                                version            = VERSION, 
+                                creation_act       = CREATION_ACT, 
+                                token              = TOKEN,
+                                sleep_time = 1)
+```
+
+```{r fb_marketing_data, include=FALSE, warning=FALSE, message=FALSE}
+#saveRDS(fb_df, "~/Documents/Github/rSocialWatcher/vignettes/fb_wdi.Rds")
+
+fb_df <- readRDS("~/Documents/Github/rSocialWatcher/vignettes/fb_wdi.Rds")
+```
+
+```{r fb_wdi_merge, include=TRUE, warning=FALSE, message=FALSE}
+
+wdi_clean_df <- wdi_df %>%
+  select(iso2c, year, NY.GDP.PCAP.KD, SP.POP.TOTL) %>%
+  pivot_longer(cols = -c(iso2c, year)) %>%
+  filter(!is.na(value)) %>%
+  arrange(-year) %>%
+  distinct(iso2c, name, value) %>%
+  mutate(name_clean = case_when(
+    name == "NY.GDP.PCAP.KD" ~ "gdp_pc",
+    name == "SP.POP.TOTL" ~ "pop",
+  )) %>%
+  pivot_wider(names_from = name_clean,
+              values_from = value,
+              id_cols = iso2c) %>%
+  rename(country_code = iso2c)
+
+fb_clean_df <- fb_df %>%
+  mutate(variable = case_when(
+    is.na(interests) ~ "all_fb_users",
+    interests == 6007828099136 ~ "interest_lux_goods"
+  ),
+  mau = (estimate_mau_lower_bound + estimate_mau_upper_bound)/2) %>%
+  select(location_keys, variable, mau) %>%
+  pivot_wider(names_from = variable,
+              values_from = mau) %>%
+  rename(country_code = location_keys)
+
+fb_wdi_df <- fb_clean_df %>%
+  left_join(wdi_clean_df, by = "country_code") %>%
+  mutate(prop_interest_lux_goods = interest_lux_goods/all_fb_users)
+```
+
+```{r figure1, include=TRUE, warning=FALSE, message=FALSE}
+
+```
+

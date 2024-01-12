@@ -149,9 +149,19 @@ get_fb_parameter_ids <- function(type,
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } 
   
-  if(is.null(nrow(out_df)) & is.null(q)){
-    warning("No results; may require `q` parameter")
+  if(!is.null(out_df$code)){
+    if(out_df$code != 200){
+      warning(paste0("Error code: ", out_df$code ))
+    }
   }
+  
+  if(!is.null(out_df$message)){
+    warning(out_df$message)
+  }
+  
+  # if(is.null(nrow(out_df)) & is.null(q)){
+  #   warning("No results; may require `q` parameter")
+  # }
   
   return(out_df)
 }

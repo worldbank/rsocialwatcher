@@ -155,7 +155,7 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
   query <- paste0("https://graph.facebook.com/",version,
                   "/act_",creation_act,
                   "/delivery_estimate?access_token=",token,
-                  "&include_headers=false&method=get&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
+                  "&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
                   query_location,
                   "'genders':[",gender_param,"],", 
                   "'age_min':",age_min,",",
@@ -570,8 +570,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   }
   
   if(query_flex != ""){
-    #query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
-    query_flex <- paste0("'flexible_spec':[", query_flex, "]")
+    query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+    #query_flex <- paste0("'flexible_spec':[", query_flex, "]")
     query_all <- paste0(query_all, ",", query_flex)
   }
   
@@ -608,7 +608,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
       
       #print(query)
       query_val <- url(query) %>% fromJSON
-      
+
       #### If there is no error
       if(is.null(query_val$error)){
         
@@ -732,7 +732,10 @@ query_fb_marketing_api_1call <- function(location_unit_type,
       query_val_df
       
     },error = function(e){
-      print("ERROR")
+      
+      warning(paste0("Error code: ", query_val$error$code))
+      warning(query_val$error$message)
+            
       try_api_call <- F
       Sys.sleep(0.1)
       return(NULL)
