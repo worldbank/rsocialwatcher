@@ -16,11 +16,21 @@ get_fb_parameter_ids(
 )
 }
 \arguments{
-\item{type}{Type of data; either "behaviors", "demographics", "interests", or "locales"}
+\item{type}{Type of data. Either: "behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses", "work_positions", "work_employers", "education_statuses", "relationship_statuses", "education_majors", "locales", "country", "country_group", "region", "large_geo_area", "medium_geo_area", "small_geo_area", "city", "subcity", "neighborhood", "zip", "geo_market", "electoral_district", "zip"}
 
 \item{version}{Facebook Marketing API version; for example, "v14.0"}
 
 \item{token}{Facebook Marketing API token}
+
+\item{q}{Query string to limit search. For example, when searching job titles, setting \code{q="data"} will return jobs with "data" in the name, such as "data science."}
+
+\item{country_code}{When searching locations, limit the search to a specific country; for example, only search for cities within a specific country.}
+
+\item{region_id}{When searching locations, limit the search to a specific region; for example, only search for cities within a specific region.}
+
+\item{key}{When searching locations, limit the search to a specific location key; for example, only search for neighborhood within a specific city.}
+
+\item{limit}{Number of parameter IDs to search for.}
 }
 \value{
 Dataframe with parameter IDs and descriptions.
@@ -28,7 +38,37 @@ Dataframe with parameter IDs and descriptions.
 \description{
 This function returns dataframes of Facebook parameters and their associated
 IDs for different categories of information. Categories include behaviors,
-demographics, interests, locales, job titles, education major, and location
+interests, locales, job titles, education major, and location
 (e.g., country, city, zip code, etc). The returned dataframe contains ids
 that can be used in the query_fb_marketing_api function.
+}
+\details{
+For additional information, see: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/
+}
+\examples{
+\dontrun{
+
+#### Define version and token
+VERSION = "enter-version"
+TOKEN = "enter-token"
+
+#### Query parameter IDs
+get_fb_parameter_ids(type = "interests", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "behaviors", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "education_majors", q = "Computer", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "education_schools", q = "Washington", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "education_statuses", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "family_statuses", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "income", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "industries", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "work_positions", q = "Data", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "work_employers", q = "World Bank", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "relationship_statuses", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type = "life_events", version = VERSION, token = TOKEN)
+
+#### Location IDs
+
+
+
+}
 }

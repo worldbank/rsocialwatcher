@@ -2,7 +2,6 @@
 
 export(fill_fb_id_names)
 export(get_fb_parameter_ids)
-export(get_fb_suggested_radius)
 export(map_param)
 export(query_fb_marketing_api)
 import(dplyr)
