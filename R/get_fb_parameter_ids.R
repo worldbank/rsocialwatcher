@@ -238,12 +238,9 @@ get_fb_parameter_ids <- function(type,
     warning(out_df$message)
   }
   
-  # if(is.null(nrow(out_df)) & is.null(q)){
-  #   warning("No results; may require `q` parameter")
-  # }
-  
   if(length(out_df) == 0){
     out_df <- data.frame(NULL)
+    warning("No results; may require adding or changing `q` parameter")
   }
   
   return(out_df)
