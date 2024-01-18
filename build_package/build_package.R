@@ -12,6 +12,9 @@ if(F){
   #R CMD build --as-cran "~/Documents/Github/googletraffic"
   #R CMD check --as-cran "~/Documents/Github/googletraffic/googletraffic_0.0.0.9000.tar.gz"
   
+  pkgdown::build_favicons(pkg = "~/Documents/Github/rSocialWatcher", 
+                          overwrite = FALSE)
+  
   devtools::check("~/Documents/Github/rSocialWatcher")
   
   devtools::check_win_devel("~/Documents/Github/rSocialWatcher")

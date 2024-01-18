@@ -5,27 +5,6 @@
 #' @import stringr
 #' @import splitstackshape
 
-# TODO
-# 1. Start documentation (vignette)
-# 2. Test ALL parameter inputs (and illustrate) [including -- which are flex_target? relationship_statuses?]
-# 3. Singular vs plural? Standardize
-# 4. Add parameter names to dataframe
-# 5. Make geojson of locations (see if feasible to add as option, so exports as sf?)
-
-library(dplyr)
-library(lubridate)
-library(jsonlite)
-library(httr)
-library(stringr)
-library(splitstackshape) 
-
-if(F){
-  remove.packages("rSocialWatcher")
-  devtools::install_github("ramarty/rSocialWatcher")
-  
-  roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
-}
-
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
   # Return TRUE if x is NULL or NA; FALSE otherwise
@@ -381,7 +360,6 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          show_result,
                                          
                                          ## Add to dataframe
-                                         add_param_id_name_vars,
                                          add_query,
                                          add_query_hide_credentials){
   
@@ -759,37 +737,67 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
 #' ## Other location parameters
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
-#' @param locales Words
-#' ## Parameters. These are optional. If nothing specified, then searches for all users.
-#' @param behavior Vector of behavior IDs. If multiple, uses `OR` condition; for example, `behavior = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors")` to get dataframe with IDs and descriptions. 
-#' @param interest Vector of interest IDs. If multiple, uses `OR` condition; for example, `interest = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(type = "interests")` to get dataframe with IDs and descriptions. 
-#' @param relationship_statuses Vector of relationship status IDs. If multiple, uses `OR` condition; for example, `relationship_statuses = c(3,4)` targets those who are married or engaged. See `relationship_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see relationship status ID options with descriptions. 
-#' @param life_events Vector of life event IDs. If multiple, uses `OR` condition; for example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param industries Vector of industries IDs. If multiple, uses `OR` condition; for example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param income Vector of income IDs. If multiple, uses `OR` condition; for example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param family_statuses Vector of family status IDs. If multiple, uses `OR` condition; for example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "demographics")` to get dataframe with IDs and descriptions. 
-#' @param education_statuses Education status IDs. If multiple, uses `OR` condition; for example, `education_statuses = c(9,10)` will yeild those who report to have either a Master degree or professional degree. See `education_statuses` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) to see education status options. 
 #' @param locales Locales ID. 
-#' @param user_os User operating systems. If multiple, uses `OR` condition; for example `user_os = ['iOS', 'Android']` targets those that use either an iOS or Android OS. See `user_os` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
-#' @param wireless_carrier Wireless carriet. If set to `Wifi`, then targets those connecting via a Wifi network. See `wireless_carrier` in the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting) for additional details.
-#' @param gender Genders to target; 1 targets males and 2 targets females Default is both. See `gender` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' ## Parameters. These are optional. If nothing specified, then the function searches for all users.
+#' ### Parameters that can be specified below or in `flex_targeting`. For the below parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies; however, `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
+#' @param interests Interest IDs. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(type = "interests", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests).
+#' @param behaviors Behavior IDs. For example, `behaviors = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#behaviors).
+#' @param college_years College graduation years. For example, `college_years = c(2014, 2015)` will target users who graduated college in 2014 or 2015. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
+#' @param education_majors Education major IDs. For example, `education_majors = 123` will target users who majored in computer science. Use `get_fb_parameters(type = "education_majors", q = "Computer", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
+#' @param education_schools School IDs. For example, `education_schools = 105930651606` will taget users at/who graduated from Harvard University. Use `get_fb_parameters(type = "education_schools", q = "Harvard", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
+#' @param education_statuses Education status IDs. For example, `education_statuses = c(9,10)` will yeild those who report to have either a Master degree or professional degree. Use `get_fb_parameters(type = "education_statuses", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace). 
+#' @param family_statuses Family status IDs. For example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "family_statuses")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param income Income IDs. For example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "income")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param industries Industries IDs. For example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(type = "industries")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param work_positions Work position IDs. For example, `work_positions = 105763692790962` will target users who indicate they are contractors. Use `get_fb_parameters(type = "work_positions", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
+#' @param work_employers Work employer IDs. For example, `work_employers = 50431654` will target users who work for Microsoft. Use `get_fb_parameters(type = "work_employers", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
+#' ### Exclude parameters
+#' @param excl_interests Interest IDs to exclude.
+#' @param excl_behaviors Behavior IDs to exclude.
+#' @param excl_college_years Colleage year IDs to exclude.
+#' @param excl_education_majors Education major IDs to exclude.
+#' @param excl_education_schools Education school IDs to exclude.
+#' @param excl_education_statuses Education status IDs to exclude.
+#' @param excl_family_statuses Family status IDs to exclude.
+#' @param excl_income Income IDs to exclude.
+#' @param excl_industries Industry IDs to exclude.
+#' @param excl_work_positions Work position IDs to exclude.
+#' @param excl_work_employers Work employer IDs to exclude.
+#' ## Parameters that can be specified here, but not in `flex_targeting`.
+#' @param relationship_statuses Relationship status IDs. For example, `relationship_statuses = c(3,4)` targets those who are married or engaged. Use `get_fb_parameters(type = "relationship_statuses")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
+#' @param life_events Life event IDs. For example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "life_events")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
+#' @param user_os User operating systems. For example, `user_os = ('iOS', 'Android')` targets those that use either an iOS or Android OS; `user_os = c("Android_ver_4.2_and_above")` targets those using Android version 4.2 and above; and `user_os = c("iOS_ver_8.0_to_9.0")` targets those using iOS version 8.0 to 9.0. Different versions can be specified. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param wireless_carrier Wireless carrier. If set to `Wifi`, then targets those connecting via a Wifi network. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param gender Genders to target; 1 targets males and 2 targets females. Default is both. See `gender` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' ## Credentials
+#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targetting, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and).
 #' ## Credentials
 #' @param version API version. e.g., "v17.0"
 #' @param creation_act Facebook creation act
 #' @param token Facebook API token
 #' ## Scraping parameters
-#' @param sleep_time words
-#' @param show_result words
+#' @param sleep_time How much time (in seconds) to pause between each query (default: `0.1`).
+#' @param show_result After each query, whether to print the number of monthly active users (default: `FALSE`).
 #' ## Return query text as variable in returned dataframe
 #' @param add_query If `TRUE`, add query text as variable in returned dataframe 
 #' @param add_query_hide_credentials If `TRUE` (and `add_query` is `TRUE`), hide the `creation_act` and `token` from the query text returned in the dataframe
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
-#' @details FOR LOOP, USE LISTS. BUT JUST CAN'T LIST ON LOCATION TYPE.
 #' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales.
+#' @examples
+#' \dontrun{
+#' #### Define version, creation act, and token
+#' VERSION = "enter-version"
+#' CREATION_ACT = "creation_act"
+#' TOKEN = "enter-token"
+#' 
+#' 
+#' 
+#' 
+#' }
 #' @export
 query_fb_marketing_api <- function(location_unit_type,
                                    lat_lon = NULL,
@@ -846,7 +854,6 @@ query_fb_marketing_api <- function(location_unit_type,
                                    show_result = F,
                                    
                                    ## Add to dataframe
-                                   add_param_id_name_vars = F,
                                    add_query = F,
                                    add_query_hide_credentials = T){
   
@@ -1028,7 +1035,6 @@ query_fb_marketing_api <- function(location_unit_type,
                    flex_target = param_grid_df$flex_target,
                    
                    MoreArgs = list(location_unit_type         = location_unit_type,
-                                   add_param_id_name_vars     = add_param_id_name_vars,
                                    sleep_time                 = sleep_time,
                                    show_result                = show_result,
                                    add_query                  = add_query, 
@@ -1042,127 +1048,4 @@ query_fb_marketing_api <- function(location_unit_type,
     bind_rows()
   
   return(out_df)
-}
-
-# Testing ----------------------------------------------------------------------
-#### Default parameters ####
-if(F){
-  lat_lon = NULL
-  radius = NULL
-  radius_unit = NULL
-  location_keys = NULL
-  location_types = "home"
-  locales = NULL
-  
-  #### Specify here or in flex_targeting
-  interests = NULL
-  behaviors = NULL
-  college_years = NULL
-  education_majors = NULL
-  education_schools = NULL
-  education_statuses = NULL
-  family_statuses = NULL
-  income = NULL
-  industries = NULL
-  work_positions = NULL
-  work_employers = NULL
-  
-  ## Exclude 
-  excl_interests = NULL
-  excl_behaviors = NULL
-  excl_college_years = NULL
-  excl_education_majors = NULL
-  excl_education_schools = NULL
-  excl_education_statuses = NULL
-  excl_family_statuses = NULL
-  excl_income = NULL
-  excl_industries = NULL
-  excl_work_positions = NULL
-  excl_work_employers = NULL
-  
-  ## Non Flex Targetting Parameters
-  relationship_statuses = NULL
-  life_events = NULL 
-  #industries = NULL, 
-  user_os = NULL
-  wireless_carrier = NULL
-  gender = c(1,2)
-  age_min = 18
-  age_max = 65
-  
-  flex_target = NULL
-  
-  ## API Keys/Info
-  version = VERSION 
-  creation_act = CREATION_ACT
-  token = TOKEN
-  
-  ## Query info
-  sleep_time = 20
-  show_result = F
-  
-  ## Add to dataframe
-  add_param_id_name_vars = F
-  add_query = F
-  add_query_hide_credentials = T
-  
-  #### Test Function ####
-  out1 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                 lat_lon = c(38.913744, -77.040018),
-                                 radius = 10,
-                                 radius_unit = "kilometer",
-                                 location_types = "home",
-                                 behaviors = list(6002714895372, 6002714898572),
-                                 interests = c(6002839660079, 6002866718622),
-                                 excl_interests = c(6002868910910, 6002884511422),
-                                 excl_behaviors = c(6003986707172, 6003966451572),
-                                 version = VERSION,
-                                 creation_act = CREATION_ACT,
-                                 token = TOKEN,
-                                 add_query = T,
-                                 add_query_hide_credentials = F)
-  
-  out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                 lat_lon = c(38.913744, -77.040018),
-                                 radius = 10,
-                                 radius_unit = "kilometer",
-                                 location_types = "home",
-                                 
-                                 flex_target = list(
-                                   list(interests = c(6002839660079, 6002866718622),
-                                        behaviors = c(6002714895372)),
-                                   list(interests = c(6002868910910, 6002884511422),
-                                        behaviors = c(6003986707172, 6003966451572))
-                                 ),
-                                 
-                                 version = VERSION,
-                                 creation_act = CREATION_ACT,
-                                 token = TOKEN,
-                                 add_query = T,
-                                 add_query_hide_credentials = F)
-  
-  out2 <- query_fb_marketing_api(location_unit_type = "coordinates",
-                                 lat_lon = c(38.913744, -77.040018),
-                                 radius = 10,
-                                 radius_unit = "kilometer",
-                                 location_types = "home",
-                                 
-                                 flex_target = map_param(list(
-                                   list(interests = c(6002839660079, 6002866718622),
-                                        behaviors = c(6002714895372)),
-                                   list(interests = c(6002868910910, 6002884511422),
-                                        behaviors = c(6003986707172, 6003966451572))
-                                 ),
-                                 list(
-                                   list(interests = c(6002839660079, 6002866718622),
-                                        behaviors = c(6002714895372)),
-                                   list(interests = c(6002868910910, 6002884511422),
-                                        behaviors = c(6003986707172, 6003966451572))
-                                 )),
-                                 
-                                 version = VERSION,
-                                 creation_act = CREATION_ACT,
-                                 token = TOKEN,
-                                 add_query = T,
-                                 add_query_hide_credentials = F)
 }

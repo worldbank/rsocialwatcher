@@ -6,20 +6,30 @@ if(T){
   library(hexSticker)
   library(ggplot2)
   library(tidyverse)
-  library(raster)
-  library(rgeos)
-  library(sp)
-  library(sf)
-  
 
   # Make ROI -------------------------------------------------------------------
+  set.seed(42)
+  
+  p <- data.frame(n = rnorm(10000)) %>%
+    filter(n > -1.3,
+           n < 1.3) %>%
+    ggplot() + 
+    geom_histogram(aes(x = n),
+                   fill = "white",
+                   alpha = 0.7,
+                   color = rgb(44, 100, 246, maxColorValue = 255),
+                   size = 0.25,
+                   bins = 30) +
+    scale_y_continuous(limits = c(0, 600)) +
+    theme_void() +
+    theme(panel.background = element_rect(fill = rgb(44, 100, 246, maxColorValue = 255) )) 
 
   sticker(p, 
-          package="blackmarbler", 
+          package="rSocialWatcher", 
           spotlight = F,
-          #l_alpha = 1, #0.15,
-          p_size=23, #7 
-          p_y = 1.40,
+          #l_alpha = 0.3, #0.15,
+          p_size=19, #7 
+          p_y = 1.4, # 1.40,
           p_family = "sans",
           p_fontface = "italic",
           s_x=1, 
@@ -34,7 +44,6 @@ if(T){
           l_x = 0.93,
           l_width = 3,
           l_height = 3,
-          filename="~/Documents/Github/download_blackmarble/man/figures/hex.png")
-  
-  
+          filename="~/Documents/Github/rSocialWatcher/man/figures/logo.png")
+
 }

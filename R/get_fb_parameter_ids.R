@@ -18,15 +18,47 @@ n_embedded_lists <- function(obj){
 #'
 #' This function returns dataframes of Facebook parameters and their associated
 #' IDs for different categories of information. Categories include behaviors,
-#' demographics, interests, locales, job titles, education major, and location 
+#' interests, locales, job titles, education major, and location 
 #' (e.g., country, city, zip code, etc). The returned dataframe contains ids 
 #' that can be used in the query_fb_marketing_api function.
 #'
-#' @param type Type of data; either "behaviors", "demographics", "interests", or "locales"
+#' @param type Type of data. Either: "behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses", "work_positions", "work_employers", "education_statuses", "relationship_statuses", "education_majors", "locales", "country", "country_group", "region", "large_geo_area", "medium_geo_area", "small_geo_area", "city", "subcity", "neighborhood", "zip", "geo_market", "electoral_district", "zip"   
 #' @param version Facebook Marketing API version; for example, "v14.0"
 #' @param token Facebook Marketing API token
+#' @param q Query string to limit search. For example, when searching job titles, setting `q="data"` will return jobs with "data" in the name, such as "data science."
+#' @param country_code When searching locations, limit the search to a specific country; for example, only search for cities within a specific country.
+#' @param region_id When searching locations, limit the search to a specific region; for example, only search for cities within a specific region.
+#' @param key When searching locations, limit the search to a specific location key; for example, only search for neighborhood within a specific city.
+#' @param limit Number of parameter IDs to search for. 
 #' 
+#' @details For additional information, see: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/
 #' @return Dataframe with parameter IDs and descriptions.
+#' @examples
+#' \dontrun{
+#' 
+#' #### Define version and token
+#' VERSION = "enter-version"
+#' TOKEN = "enter-token"
+#' 
+#' #### Query parameter IDs
+#' get_fb_parameter_ids(type = "interests", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "behaviors", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "education_majors", q = "Computer", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "education_schools", q = "Washington", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "education_statuses", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "family_statuses", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "income", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "industries", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "work_positions", q = "Data", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "work_employers", q = "World Bank", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "relationship_statuses", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "life_events", version = VERSION, token = TOKEN)
+#' 
+#' #### Location IDs
+#' 
+#' 
+#' 
+#' }
 #' @export
 get_fb_parameter_ids <- function(type,
                                  version,
@@ -39,7 +71,33 @@ get_fb_parameter_ids <- function(type,
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
-  if( (type == "job_titles") & is.null(q)) stop("When type = 'job_titles', 'q' must be specified.")
+  #if( (type == "work_positions") & is.null(q)) stop("When type = 'work_positions', 'q' must be specified.")
+  #if( (type == "work_employers") & is.null(q)) stop("When type = 'work_employers', 'q' must be specified.")
+  
+  valid_types <- c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses",
+                   "locales",
+                   "work_positions",
+                   "work_employers",
+                   "education_statuses",
+                   "relationship_statuses",
+                   "education_majors",
+                   "education_schools",
+                   "country",
+                   "country_group",
+                   "region",
+                   "large_geo_area",
+                   "medium_geo_area",
+                   "small_geo_area",
+                   "city",
+                   "subcity",
+                   "neighborhood",
+                   "zip",
+                   "geo_market",
+                   "electoral_district")
+  
+  if(!(type %in% valid_types)){
+    stop(paste0("'type' not valid; 'type' must be one of the following:\n", valid_types %>% paste(collapse = "\n")))
+  }
   
   # Call API -----------------------------------------------------------------
   if(type %in% c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses")){
@@ -59,11 +117,22 @@ get_fb_parameter_ids <- function(type,
         access_token=token,
         limit = ifelse(is.null(limit), 2000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
-  } else if (type %in% "job_titles"){
+  } else if (type %in% "work_positions"){
+    if(is.null(q)) stop("'q' required")
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
       query=list(
         type='adworkposition',
+        q=q,
+        access_token=token,
+        limit = ifelse(is.null(limit), 5000, limit)
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "work_employers"){
+    if(is.null(q)) stop("'q' required")
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adworkemployer',
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
@@ -99,12 +168,22 @@ get_fb_parameter_ids <- function(type,
                         data.frame(id = 12, name = "Divorced"),
                         data.frame(id = 13, name = "Widowed"))
     
-  } else if (type %in% "education_major"){
+  } else if (type %in% "education_majors"){
     if(is.null(q)) stop("'q' required")
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
       query=list(
         type='adeducationmajor',
+        q=q,
+        access_token=token,
+        limit = ifelse(is.null(limit), 5000, limit)
+      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+  } else if (type %in% "education_schools"){
+    if(is.null(q)) stop("'q' required")
+    out_df <- GET(
+      paste0("https://graph.facebook.com/",version,"/search"),
+      query=list(
+        type='adeducationschool',
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
@@ -131,7 +210,7 @@ get_fb_parameter_ids <- function(type,
     
     if(type %in% c("zip")){
       if(is.null(q)){
-        #stop("Parameter 'q' required")
+        stop("Parameter 'q' required")
       }
     }
     
@@ -162,6 +241,10 @@ get_fb_parameter_ids <- function(type,
   # if(is.null(nrow(out_df)) & is.null(q)){
   #   warning("No results; may require `q` parameter")
   # }
+  
+  if(length(out_df) == 0){
+    out_df <- data.frame(NULL)
+  }
   
   return(out_df)
 }

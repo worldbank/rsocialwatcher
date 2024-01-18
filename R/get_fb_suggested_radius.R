@@ -16,7 +16,6 @@
 #'                         token    = "TOKEN-HERE")
 #' }
 #' 
-#' @export
 get_fb_suggested_radius <- function(location,
                                     distance_unit = "kilometer",
                                     version,
