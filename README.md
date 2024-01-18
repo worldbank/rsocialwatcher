@@ -1,4 +1,4 @@
-# rSocialWatcher
+# rSocialWatcher <img src="man/figures/logo.png" align="right" width="200" />
 
 Query data from the Facebook Marketing API using R, with a focus for social science research. __NOTE: This is under development and subject to change__
 
