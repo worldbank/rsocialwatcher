@@ -786,7 +786,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
-#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales.
+#' @seealso [get_fb_parameters()] To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html).
 #' @examples
 #' \dontrun{
 #' #### Define version, creation act, and token

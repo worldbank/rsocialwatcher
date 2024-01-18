@@ -186,5 +186,5 @@ TOKEN = "enter-token"
 }
 }
 \seealso{
-\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, interests, and locales.
+\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html}{the documentation here}.
 }
