@@ -180,7 +180,27 @@ VERSION = "enter-version"
 CREATION_ACT = "creation_act"
 TOKEN = "enter-token"
 
+#### Query data
+## All Facebook users in US
+query_fb_marketing_api(
+location_unit_type = "countries",
+location_keys      = "US",
+version            = VERSION, 
+creation_act       = CREATION_ACT, 
+token              = TOKEN)
 
+## All Facebook users in US with interest in concernts
+concert_id <- get_fb_parameter_ids(type = "interests", version = VERSION, token = TOKEN) \%>\% 
+  filter(name == "Concerts (music event)") \%>\%
+  pull(id) 
+
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  interests          = concert_id,
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
 
 
 }
