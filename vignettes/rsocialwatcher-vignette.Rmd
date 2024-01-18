@@ -7,7 +7,7 @@ output:
   html_document:
     toc: true
     toc_depth: 5
-    toc_float: true
+    toc_float: false
 vignette: >
   %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{rSocialWatcher}
@@ -203,7 +203,7 @@ We can also query using different location types, including countries, cities, e
 
 Below shows examples for querying Facebook users for each type of location type. Note that when entering the `type` in `get_fb_parameter_ids`, the __singular__ is used (e.g., `"country"`), while when entering the `type` in `query_fb_marketing_api`, the __plural__ is used (e.g., `"countries"`). Using the singular type to obtain the IDs and the plural to query the number of Facebook users mimics how parameters are entered in the Facebook Marketing API.
 
-#### Country Groups
+#### Country Groups <a name="query_data_loc_keys_country_groups"></a>
 
 ```{r loc_country_group, include=TRUE, warning=FALSE, message=FALSE}
 
@@ -224,7 +224,7 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Country
+#### Country <a name="query_data_loc_keys_country"></a>
 
 ```{r loc_country, include=TRUE, warning=FALSE, message=FALSE}
 #### Country: United States
@@ -244,7 +244,8 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Region
+#### Region <a name="query_data_loc_keys_region"></a>
+
 ```{r loc_region, include=TRUE, warning=FALSE, message=FALSE}
 
 #### Region: New York (state)
@@ -264,7 +265,7 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Large Geographic Area
+#### Large Geographic Area <a name="query_data_loc_keys_lga"></a>
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about large geographic areas: _"Known commonly as a district or governate covering hundreds of square kilometers or more. Example: Akkar in Lebanon."_
 
@@ -289,7 +290,7 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Medium Geographic Area
+#### Medium Geographic Area <a name="query_data_loc_keys_mga"></a>
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about medium geographic areas: _"Known commonly as a county, covering more than one city. Example: Henrico county in the state of Virginia in United States."_
 
@@ -314,7 +315,7 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Small Geographic Area
+#### Small Geographic Area <a name="query_data_loc_keys_sga"></a>
 
 The Facebook Marketing [Targeting Search](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search) provides the following description about small geographic areas: _"Known commonly as a residential area near a city or town. Example: El Rosario near Marbella in Spain."_
 
@@ -339,7 +340,8 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### City
+#### City <a name="query_data_loc_keys_city"></a>
+
 ```{r loc_city, include=TRUE, warning=FALSE, message=FALSE}
 #### City: New York City
 loc_df <- get_fb_parameter_ids(type = "city", 
@@ -374,7 +376,8 @@ city_r_df <- query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Subcity
+#### Subcity <a name="query_data_loc_keys_subcity"></a>
+
 ```{r loc_subcity, include=TRUE, warning=FALSE, message=FALSE}
 #### Subcity: Manhattan
 loc_df <- get_fb_parameter_ids(type = "subcity", 
@@ -395,7 +398,8 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Neighborhood
+#### Neighborhood <a name="query_data_loc_keys_neighborhood"></a>
+
 ```{r loc_neighborhood, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "neighborhood", 
                                region_id = region_df %>% 
@@ -417,7 +421,8 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Zip Code
+#### Zip Code <a name="query_data_loc_keys_zipcode"></a>
+
 ```{r loc_zip, include=TRUE, warning=FALSE, message=FALSE}
 ## Zip codes can be directly entered as "US:[Zip Code]"
 query_fb_marketing_api(
@@ -446,7 +451,7 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Geo Market (U.S. Designated Market Areas)
+#### Geo Market (U.S. Designated Market Areas) <a name="query_data_loc_keys_geo_market"></a>
 
 ```{r loc_geo_market, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "geo_market", 
@@ -465,7 +470,8 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-#### Electoral Districts
+#### Electoral Districts <a name="query_data_loc_keys_electoral"></a>
+
 ```{r loc_elec_dist, include=TRUE, warning=FALSE, message=FALSE}
 loc_df <- get_fb_parameter_ids(type = "electoral_district", 
                                q = "New York", 
@@ -484,9 +490,11 @@ query_fb_marketing_api(
   scroll_box(width = "100%")
 ```
 
-## ID Options <a name="query_data_ids"></a>
+## Querying data using parameter IDs <a name="query_data_ids"></a>
 
-### Options <a name="query_data_ids_options"></a>
+### Using one parameter ID per parameter type <a name="query_data_ids_options"></a>
+
+We use parameter IDs to query the number of Facebook users by behaviors, interests, etc. Below we show examples querying data by behaviors and interests. An OR condition is used when parameters are entered for multiple parameter types. For example, the third example shows querying users by a behavior and an interest---setting a value in `query_fb_marketing_api` for the `behaviors` (commuters) and `interests` (music) parameters. In this case, the function determines the number of Facebook users that are commuters OR have an interest in music.
 
 ```{r simple_query_params_ex, include=TRUE, warning=FALSE, message=FALSE}
 
@@ -520,7 +528,7 @@ comm_or_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
 
 ### And and OR Categories <a name="query_data_ids_andor"></a>
 
-When using multiple parameters (eg, behavior IDs), the function allows for specifying `and` and `or` condition; for example, identifying Facebook users that are commuters and/or are frequent travelers. Across parameters:
+The function allows for specifying `and` and `or` conditions; for example, identifying Facebook users that are commuters and/or are frequent travelers. Vectors and lists are used to distinguish between AND and OR conditions:
 
 * __Vectors `c()`__ are used to specify OR conditions
 * __Lists `list()`__ are used to specify AND conditions
@@ -533,16 +541,29 @@ However, the following parameters can only except one input (a list or vector is
 
 #### Within parameter types <a name="query_data_ids_andor_within"></a>
 
+To specify AND or OR conditions for the same parameter type:
+
+* Enter multiple parameter IDs within vectors to specify OR conditions
+* Enter multiple parameter IDs within lists to specify AND conditions
+
 ```{r and_or_within, include=TRUE, warning=FALSE, message=FALSE}
 
 beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
 beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
 
-# Commuters or Travelers
+# Users who are: Commuters or Travelers
 comm_or_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
                                           location_keys      = "US",
                                           behaviors          = c(beh_comm_id, beh_freqtrvl_id),
+                                          version            = VERSION, 
+                                          creation_act       = CREATION_ACT, 
+                                          token              = TOKEN)
+
+# Users who are: Commuters and Travelers
+comm_or_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
+                                          location_keys      = "US",
+                                          behaviors          = list(beh_comm_id, beh_freqtrvl_id),
                                           version            = VERSION, 
                                           creation_act       = CREATION_ACT, 
                                           token              = TOKEN)
@@ -558,9 +579,9 @@ comm_and_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
                                            token              = TOKEN)
 ```
 
-#### Flexible Targetting: Or and And <a name="query_data_ids_andor_flex"></a>
+#### Across parameter types: Flexible Targetting <a name="query_data_ids_andor_flex"></a>
 
-Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification---including AND conditions across parameter types (eg, behavior X and interest Y). The input for `flex_target` follows the following logic:
+Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification---including AND conditions across parameter types (eg, behavior X AND interest Y). The input for `flex_target` follows the following logic:
 
 * `flex_target` uses named lists to specify the (1) parameter type and (2) parameter ID
 * All parameters within the same list index are grouped using an OR condition
@@ -583,7 +604,7 @@ flex_param <- list(list("interests" = 1), list("behaviors" = 2))
 ```
 
 __Example 3: OR and AND Conditions__
-The below shows a more complicated example, which grabs all users that meet EITHER interests:1 or behaviors:3 AND behaviors:2. Everything within `flex_param[[1]]` are grouped within OR conditions, but different indices (`flex_param[[1]]` and `flex_param[[2]]`) are separated by AND conditions.
+The below shows a more complicated example, which grabs all users that meet (EITHER interests:1 or behaviors:3) AND (behaviors:2). Everything within `flex_param[[1]]` are grouped within OR conditions, but different indices (`flex_param[[1]]` and `flex_param[[2]]`) are separated by AND conditions.
 ```
 flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = 2))
 # flex_param[[1]] AND flex_param[[2]]
@@ -643,9 +664,36 @@ comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
 
 ## Multiple Queries <a name="query_data_ids_multquery"></a>
 
-The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls
+The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls. For example, when `location_unit_type = "countries"`, `location_key = map_param("US", "MX")` will make one query for the US, and a second query for Mexico.
+
+Note that `map_param` simply creates a list where each item entered into `map_param` becomes a different item in the list. In addition, the `map_param` assigns the first value of this list as the string `"map_param"`, which is used within the function to indicate that a seprate query should be made for each item in the list. 
+
+More generally, for any `list` or `vector` where the first element of the `list` or `vector` is `map_param`, separate queries will be made for additional elements. 
+
+Below shows examples. Assume hat we are using `map_param` to create separate queries for interests, for interest ID `1` and `2`.
+
+__Example 1: Simple example,__ making one query to determing the number of users with an interest in `1`, and a separate query to determine the number of users with an interest in `2`.
+```{r map_param_ex1, include=TRUE, warning=FALSE, message=FALSE}
+map_param(1, 2)
+```
+
+__Example 2: Note that below will only make one query,__ querying users with an interest in 1 OR 2. The first item in the list is `"map_param`, indicating that the next items should be made in separate queries. However, there is only one separate item: `c(1,2)` -- which the function interprets using an `OR` condition.
+```{r map_param_ex2, include=TRUE, warning=FALSE, message=FALSE}
+interests_vec <- c(1, 2)
+
+map_param(interests_vec)
+```
+
+__Example 3: To map over a vector,__ we can use the following code. 
+```{r map_param_ex3, include=TRUE, warning=FALSE, message=FALSE}
+interests_vec <- c(1, 2)
+
+map_param(interests_vec) %>% unlist()
+```
 
 ### Simple Examples <a name="query_data_ids_multquery_simple"></a>
+
+Below we show simple examples using `map_param`.
 
 ```{r vec_list_1, include=TRUE, warning=FALSE, message=FALSE}
 ## Number of Users in US or Mexico, as separate queries
@@ -696,7 +744,7 @@ df_out %>%
 
 ### And/Or Conditions <a name="query_data_ids_multquery_andor"></a>
 
-And/or conditions work as before: vectors `c()` specify OR conditions, while lists `list()` specify and conditions
+And/or conditions work as before: vectors `c()` specify OR conditions, while lists `list()` specify and conditions.
 
 ```{r vec_list_1_andor, include=TRUE, warning=FALSE, message=FALSE}
 

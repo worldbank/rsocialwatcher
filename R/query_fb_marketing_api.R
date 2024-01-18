@@ -26,15 +26,6 @@ if(F){
   roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
 }
 
-# TODO:
-# 2. And/Or
-# 3. More geolocation options; other types (region, etc etc -- implement all)
-#   -- Allow searching...
-#   --SEE HERE: https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting
-# 6. See very bottom: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search#geo
-# 8. Add examples
-# 9. Function to add names, from IDs (don't do for location?)
-
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){
   # Return TRUE if x is NULL or NA; FALSE otherwise
@@ -395,10 +386,15 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          add_query_hide_credentials){
   
   # Checks ---------------------------------------------------------------------
-  
   if(!is.null(lat_lon)){
     if(is.list(lat_lon)){
       stop('\"lat_lon\" cannot be a list')
+    }
+  }
+  
+  if(!is.null(location_keys)){
+    if(is.list(location_keys)){
+      stop('\"location_keys\" cannot be a list')
     }
   }
   
@@ -704,6 +700,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         }
         
         ## Sleep
+        #cat(paste0(n_fb_calls, " of ", nrow(param_grid_df), " queries made (", round( n_fb_calls / nrow(param_grid_df) * 100), ")\n"))
+        #n_fb_calls <<- n_fb_calls + 1
         Sys.sleep(sleep_time) 
         
         #### If there is an error, print the error and make output null  
@@ -712,8 +710,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         if(!is.null(query_val$error$code)){
           if((query_val$error$code == 80004)){
             try_api_call <- TRUE
-            print("Too many calls, so pausing for 30 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.")
-            Sys.sleep(30)
+            
+            #cat(paste0("Too many calls, so pausing for 60 seconds then will try the query again; will only move to the next API query after the current query has successfully been called. So far, ",n_fb_calls, " of ", nrow(param_grid_df), " queries have been made.\n"))
+            cat("Too many calls, so pausing for 60 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.\n")
+            
+            Sys.sleep(60)
           } 
         }
         
@@ -850,6 +851,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                    add_query_hide_credentials = T){
   
   # Checks -----------------------------------------------------------------------
+  #n_fb_calls <<- 1
   
   if(length(location_unit_type) != 1){
     stop("'location_unit_type' must be a vector of length one; only one option allowed")

@@ -90,7 +90,7 @@ country_df <- get_fb_parameter_ids(type    = "country",
 country_df <- country_df[country_df$key %in% wdi_df$iso2c,]
 
 #### Grab interests
-interests_df <- get_fb_parameter_ids(type    = "interests",
+interests_df <- get_fb_parameter_ids(type    = "behaviors",
                                      version = VERSION, 
                                      token   = TOKEN)
 
@@ -103,11 +103,15 @@ country_codes <- country_df$country_code
 
 fb_df <- query_fb_marketing_api(location_unit_type = "countries",
                                 location_keys      = map_param(country_codes) %>% unlist(),
-                                interests          = map_param(NULL, lux_goods_id),
+                                behaviors = map_param(NULL, 
+                                                               c(6075237200983,6075237226583,6106223987983,
+                                                                 6106224431383,6092512462983,6120699687383,
+                                                                 6120699721983,6120699725783,6092512412783,
+                                                                 6092512424583)),
                                 version            = VERSION, 
                                 creation_act       = CREATION_ACT, 
                                 token              = TOKEN,
-                                sleep_time = 1)
+                                show_result = T)
 ```
 
 ```{r fb_marketing_data, include=FALSE, warning=FALSE, message=FALSE}
@@ -117,7 +121,7 @@ fb_df <- readRDS("~/Documents/Github/rSocialWatcher/vignettes/fb_wdi.Rds")
 ```
 
 ```{r fb_wdi_merge, include=TRUE, warning=FALSE, message=FALSE}
-
+## Clean up WDI data
 wdi_clean_df <- wdi_df %>%
   select(iso2c, year, NY.GDP.PCAP.KD, SP.POP.TOTL) %>%
   pivot_longer(cols = -c(iso2c, year)) %>%
@@ -133,6 +137,7 @@ wdi_clean_df <- wdi_df %>%
               id_cols = iso2c) %>%
   rename(country_code = iso2c)
 
+## Clean up Facebook marketing data
 fb_clean_df <- fb_df %>%
   mutate(variable = case_when(
     is.na(interests) ~ "all_fb_users",
@@ -144,12 +149,17 @@ fb_clean_df <- fb_df %>%
               values_from = mau) %>%
   rename(country_code = location_keys)
 
+## Merge datasets
 fb_wdi_df <- fb_clean_df %>%
   left_join(wdi_clean_df, by = "country_code") %>%
   mutate(prop_interest_lux_goods = interest_lux_goods/all_fb_users)
 ```
 
 ```{r figure1, include=TRUE, warning=FALSE, message=FALSE}
+
+fb_wdi_df %>%
+  ggplot(aes(x = log(pop), y = log(all_fb_users))) +
+  geom_point()
 
 ```
 
