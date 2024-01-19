@@ -162,12 +162,6 @@ ny_cities_df <- get_fb_parameter_ids(type    = "city",
                                      region_id = ny_key,
                                      q = "New York")
 
-ny_cities_df <- get_fb_parameter_ids(type    = "city",
-                                     version = VERSION, 
-                                     token   = TOKEN,
-                                     region_id = ny_key,
-                                     q = "New York")
-
 ny_cities_df %>% 
   kable() %>% 
   kable_styling() %>% 

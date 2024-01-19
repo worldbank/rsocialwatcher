@@ -240,7 +240,7 @@ get_fb_parameter_ids <- function(type,
         country_code=country_code,
         key=key,
         access_token=token,
-        limit = ifelse(is.null(limit), 2000, limit)
+        limit = ifelse(is.null(limit), 1000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } 
   
