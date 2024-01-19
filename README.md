@@ -1,10 +1,10 @@
 # rSocialWatcher <img src="man/figures/logo.png" align="right" width="200" />
 
-Query data from the Facebook Marketing API using R, with a focus for social science research. __NOTE: This is under development and subject to change__
+Query data from the Facebook Marketing API using R, with a focus for social science research. 
 
 * [Overview](#overview)
 * [Installation](#installation)
-* [API Keys](#apikey)
+* [Credentials](#credentials)
 * [Quick Start](#quick)
 * [Usage](#usage)
 
@@ -30,9 +30,15 @@ The package is available via Github and can be install using `devtools`.
 devtools::install_github("ramarty/rSocialWatcher")
 ```
 
-## Facebook API Keys <a name="apikeys"></a>
+## Facebook API Credentials <a name="credentials"></a>
 
-[INCLUDE TEXT HERE DESCRIBING HOW TO GET KEY].
+Using the Facebook Marketing API requires indicating the following:
+
+1. Token
+2. Version
+3. Creation
+
+Follow the instructions [here](https://ramarty.github.io/rSocialWatcher/articles/create_facebook_credentials.html) to obtain these credentials.
 
 ## Quickstart <a name="quick"></a>
 
