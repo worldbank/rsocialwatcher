@@ -12,7 +12,8 @@ get_location_coords(
   version,
   token,
   large_query_chunk_size = 10,
-  large_query_pause = 0
+  large_query_pause = 0,
+  limit = NULL
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ get_location_coords(
 \item{large_query_chunk_size}{The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. By default, the function will query 10 locations at a time. (Default: 10).}
 
 \item{large_query_pause}{The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. After each query, the \code{large_query_pause} can be set to > 0 to sleep for \code{large_query_pause} seconds in order to not make too many API calls too quickly. (Default: 0).}
+
+\item{limit}{Number of parameter IDs to search for.}
 }
 \value{
 Spatial features dataframe
