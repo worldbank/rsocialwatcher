@@ -87,7 +87,7 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
     latitude  <- lat_lon[1]
     longitude <- lat_lon[2]
     
-    query_location <- paste0("'geo_locations':{'location_types':[",c,"],'custom_locations':[{'latitude':",
+    query_location <- paste0("'geo_locations':{'location_types':[",location_types,"],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
                              longitude %>% substring(1,7),",",

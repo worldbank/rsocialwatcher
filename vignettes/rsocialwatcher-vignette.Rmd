@@ -37,6 +37,7 @@ library(stringr)
 library(knitr)
 library(kableExtra)
 library(leaflet)
+library(sf)
 
 ## Set Facebook Keys
 TOKEN        <- "TOKEN-HERE"
@@ -236,7 +237,10 @@ r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
                                   radius_unit        = "kilometer",
                                   version            = VERSION, 
                                   creation_act       = CREATION_ACT, 
-                                  token              = TOKEN)
+                                  token              = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
 ```
 
 ### Location IDs - Country, State, District, City, Neighborhood, etc. <a name="query_data_loc_keys"></a>
