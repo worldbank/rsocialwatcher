@@ -100,20 +100,33 @@ behaviors_df <- get_fb_parameter_ids(type    = "behaviors",
                                      version = VERSION, 
                                      token   = TOKEN)
 
+behaviors_df %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%",
+             height = "300px")
+
 interests_df <- get_fb_parameter_ids(type    = "interests",
                                      version = VERSION, 
                                      token   = TOKEN)
+
+interests_df %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%",
+             height = "300px")
 
 job_titles_df <- get_fb_parameter_ids(type    = "job_titles",
                                       version = VERSION, 
                                       token   = TOKEN,
                                       q = "data")
 
-behaviors_df %>% 
+job_titles_df %>% 
   kable() %>% 
   kable_styling() %>% 
   scroll_box(width = "100%",
              height = "300px")
+
 ```
 
 ## Location Key <a name="param_locs"></a>
@@ -154,6 +167,53 @@ ny_cities_df %>%
   kable_styling() %>% 
   scroll_box(width = "100%",
              height = "300px")
+```
+
+## Location Key with Coordinates/Geometries <a name="param_locs"></a>
+
+When querying locations using `get_fb_parameter_ids`, setting `add_location_coords` to `TRUE` adds coordinates and, when available, geometries.
+
+```{r cities_coords, include=TRUE, warning=FALSE, message=FALSE}
+ny_cities_coords_df <- get_fb_parameter_ids(type    = "city",
+                                            version = VERSION, 
+                                            token   = TOKEN,
+                                            region_id = ny_key,
+                                            q = "New York",
+                                            add_location_coords = T)
+
+leaflet() %>%
+  addTiles() %>%
+  addCircles(data = ny_cities_coords_df,
+              popup = ~name)
+```
+
+# Get coordinates/geometries for location keys <a name="coord_geom"></a>
+
+Above we show that, when using `get_fb_parameter_ids`, coordinates/geometries of locations can be added by setting `add_location_coords` to `TRUE`. However, coordinates/geometries can also be queried using location keys. Retrieving locations/coordinates for many locations can take a long time. Consequently, we may want to (1) use `get_fb_parameter_ids` to obtain location keys, (2) filter keys to relevant keys, then (3) query coordinates/geometries for relevant locations.
+
+For valid location keys, the function will return coordinates (latitude and longitude). When available, the function will also return the geometry. 
+
+Below we show an example for obtaining geometries for Washington, DC zip codes
+
+```{r africa_geom, include=TRUE, warning=FALSE, message=FALSE}
+zip_df <- get_fb_parameter_ids(type = "zip", 
+                               q = "20", 
+                               country_code = "US",
+                               version = VERSION, 
+                               token = TOKEN)
+
+zip_dc_df <- zip_df %>%
+  filter(region == "Washington, District of Columbia")
+
+zip_dc_sf <- get_location_coords(location_unit_type = "zip",
+                                 location_keys = zip_dc_df$key,
+                                 version = VERSION,
+                                 token = TOKEN)
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = zip_dc_sf,
+              popup = ~name)
 ```
 
 # Querying Data <a name="query_data"></a>

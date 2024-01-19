@@ -31,52 +31,15 @@ VERSION <- api_keys %>%
   pull(Key)
 
 # Develop ----------------------------------------------------------------------
-loc_sf <- get_location_geometries(location_unit_type = "countries",
-                                  location_keys = c("US", "MX", "CA"),
+country_df <- get_fb_parameter_ids(type    = "country",
+                                   version = VERSION, 
+                                   token   = TOKEN,
+                                   add_location_coords = T)
+                                   
+loc_sf <- get_location_coords(location_unit_type = "countries",
+                                  location_keys = country_df$key[1:3],
                                   version = VERSION,
-                                  token = TOKEN,
-                                  add_location_info = T)
-
-region_df <- get_fb_parameter_ids(type = "region", country_code = "US", 
-                                  version = VERSION, token = TOKEN,
-                                  add_location_coords = T)
-
-out_df <- get_fb_parameter_ids(type = "large_geo_area", 
-                               country_code = "LB", 
-                               q = "Akkar",
-                               version = VERSION, token = TOKEN)
-
-out_sf <- get_location_geometries(location_unit_type = "large_geo_area",
-                                       location_keys = loc_df$key,
-                                       version = VERSION,
-                                       token = TOKEN)
-
-vars_to_keep <- out_sf[!(names(out_sf) %in% names(out_df))] %>% names()
-vars_to_keep <- c("key", vars_to_keep)
-
-out_sf <- out_sf[,vars_to_keep]
-
-out_df <- out_df %>%
-  left_join(out_sf, by = "key")
-
-loc_df <- get_fb_parameter_ids(type = "city", 
-                               region_id = region_df %>% 
-                                 filter(name == "New York") %>% 
-                                 pull(key),
-                               q = "New York",
-                               version = VERSION, token = TOKEN)
-loc_df <- get_fb_parameter_ids(type = "country_group", 
-                               version = VERSION, token = TOKEN)
-
-a <- get_location_geometries(location_unit_type = "large_geo_area",
-                             location_keys = 1321105,
-                             version = VERSION,
-                             token = TOKEN)
-
-
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = a)
+                                  token = TOKEN)
 
 # Test parameter types ---------------------------------------------------------
 ## Get IDs ####
