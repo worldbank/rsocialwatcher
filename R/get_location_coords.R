@@ -38,7 +38,8 @@ get_location_coords <- function(location_unit_type,
   out_sf <- get_location_coords_i(location_unit_type,
                                   location_keys,
                                   version,
-                                  token)
+                                  token,
+                                  limit = limit)
   
   #### Query in chunks if too many observations
   if(length(out_sf) == 1){
@@ -54,7 +55,8 @@ get_location_coords <- function(location_unit_type,
         out_sf_i <- get_location_coords_i(location_unit_type,
                                           loc_keys_i,
                                           version,
-                                          token)
+                                          token,
+                                          limit = limit)
         
         if(out_sf_i == "CODE_1"){
           stop("Querying too many locations")
