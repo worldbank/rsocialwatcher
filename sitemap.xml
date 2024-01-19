@@ -4,6 +4,9 @@
     <loc>https://ramarty.github.io/rSocialWatcher/404.html</loc>
   </url>
   <url>
+    <loc>https://ramarty.github.io/rSocialWatcher/articles/create_facebook_credentials.html</loc>
+  </url>
+  <url>
     <loc>https://ramarty.github.io/rSocialWatcher/articles/index.html</loc>
   </url>
   <url>
@@ -23,6 +26,9 @@
   </url>
   <url>
     <loc>https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html</loc>
+  </url>
+  <url>
+    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_location_coords.html</loc>
   </url>
   <url>
     <loc>https://ramarty.github.io/rSocialWatcher/reference/index.html</loc>
