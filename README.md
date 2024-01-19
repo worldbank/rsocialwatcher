@@ -14,7 +14,7 @@ This package facilitates querying data from the Facebook Marketing API. The pack
 
 * [Poverty estimation](https://ojs.aaai.org//index.php/ICWSM/article/view/7361)
 * [Disease surveillance](https://arxiv.org/abs/1705.04045)
-* [Monitoring refugee and migrant flows in Venezula](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175)
+* [Monitoring refugee and migrant flows in Venezuela](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175)
 
 The package provides three functions:
 
