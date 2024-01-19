@@ -77,24 +77,19 @@ get_fb_parameter_ids <- function(type,
   #if( (type == "work_employers") & is.null(q)) stop("When type = 'work_employers', 'q' must be specified.")
   
   #### Make plural
-  if(type == "country")             type <- "countries"
-  if(type == "region")              type <- "regions"
-  if(type == "city")                type <- "cities"
-  if(type == "zip")                 type <- "zips"
-  if(type == "place")               type <- "places"
-  if(type == "custom_location")     type <- "custom_locations"
-  if(type == "geo_market")          type <- "geo_markets"
-  if(type == "electoral_district")  type <- "electoral_districts"
-  if(type == "country_group")       type <- "country_groups"
-  if(type == "subneighborhood")     type <- "subneighborhoods"
-  if(type == "neighborhood")        type <- "neighborhoods"
-  if(type == "subcity")             type <- "subcities"
-  if(type == "metro_area")          type <- "metro_areas"
-  if(type == "small_geo_area")      type <- "small_geo_areas"
-  if(type == "medium_geo_area")     type <- "medium_geo_areas"
-  if(type == "large_geo_area")      type <- "large_geo_areas"
-  if(type == "location_cluster_id") type <- "location_cluster_ids"
-  
+  if(type == "countries")           type <- "country"
+  if(type == "country_groups")      type <- "country_group"
+  if(type == "regions")             type <- "region"
+  if(type == "large_geo_areas")     type <- "large_geo_area"
+  if(type == "medium_geo_areas")    type <- "medium_geo_area"
+  if(type == "small_geo_areas")     type <- "small_geo_area"
+  if(type == "cities")              type <- "city"
+  if(type == "subcities")           type <- "subcity"
+  if(type == "neighborhoods")       type <- "neighborhood"
+  if(type == "zips")                type <- "zip"
+  if(type == "geo_markets")         type <- "geo_market"
+  if(type == "electoral_districts") type <- "electoral_district"
+
   valid_types <- c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses",
                    "locales",
                    "work_positions",
