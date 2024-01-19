@@ -12,7 +12,7 @@ query_fb_marketing_api(
   radius = NULL,
   radius_unit = NULL,
   location_keys = NULL,
-  location_types = "home",
+  location_types = c("home", "recent"),
   locales = NULL,
   interests = NULL,
   behaviors = NULL,

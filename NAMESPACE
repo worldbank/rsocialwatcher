@@ -2,11 +2,6 @@
 
 export(fill_fb_id_names)
 export(get_fb_parameter_ids)
+export(get_location_coords)
 export(map_param)
 export(query_fb_marketing_api)
-import(dplyr)
-import(httr)
-import(jsonlite)
-import(lubridate)
-import(splitstackshape)
-import(stringr)

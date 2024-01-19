@@ -12,7 +12,8 @@ get_fb_parameter_ids(
   country_code = NULL,
   region_id = NULL,
   key = NULL,
-  limit = NULL
+  limit = NULL,
+  add_location_coords = F
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ get_fb_parameter_ids(
 \item{key}{When searching locations, limit the search to a specific location key; for example, only search for neighborhood within a specific city.}
 
 \item{limit}{Number of parameter IDs to search for.}
+
+\item{add_location_coords}{When querying location IDs (eg, when \verb{type = "city}), add location coordinates---which will add the latitude and longitude, as well as the geometry when available. (Default: \code{FALSE})}
 }
 \value{
 Dataframe with parameter IDs and descriptions.
