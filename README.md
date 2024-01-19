@@ -207,5 +207,23 @@ us_mult_cnt_param_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
+### Using Multiple API Tokens <a name="multiple_tokens"></a>
+
+The Facebook API is rate limited, where only a certain number of queries can be made in a given time. If the rate limit is reached, `query_fb_marketing_api` will pause then try the query until it is successfully called. `query_fb_marketing_api` can take a long time to complete if mapping over a large number of queries.
+
+Multiple API tokens can be used to minimize delay times from the function reaching its rate limit. To use multiple tokens, enter a vector with multiple entries for `version`, `creation_act`, and `token`.
+
+__Example:__ Using multiple API tokens
+```r
+mult_queries_df <- query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX", "GB", "FR", "DE", "IT"),
+  behaviors          = c(beh_mac_id, beh_tech_id),
+  interests          = int_comp_id
+  version            = c(VERSION_1,      VERSION_2,      VERSION_3) ,
+  creation_act       = c(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3)
+  token              = c(TOKEN_1,        TOKEN_2,        TOKEN_3) )
+```
+
 ## Usage <a name="usage"></a>
 See [this vignette](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 

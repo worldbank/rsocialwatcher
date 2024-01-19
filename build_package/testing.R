@@ -31,6 +31,20 @@ VERSION <- api_keys %>%
   pull(Key)
 
 # Develop ----------------------------------------------------------------------
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = map_param("US", "FR", "GB"),
+  version            = c(VERSION, VERSION), 
+  creation_act       = c(CREATION_ACT, CREATION_ACT), 
+  token              = c(TOKEN, TOKEN))
+
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
 region_df <- get_fb_parameter_ids(type    = "region",
                                 country_code = "US",
                                 version = VERSION, 

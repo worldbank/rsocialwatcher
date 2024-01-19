@@ -95,7 +95,7 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
     latitude  <- lat_lon[1]
     longitude <- lat_lon[2]
     
-    query_location <- paste0("'geo_locations':{'location_types':[",location_types,"],'custom_locations':[{'latitude':",
+    query_location <- paste0("'geo_locations':{'location_types':[",c,"],'custom_locations':[{'latitude':",
                              latitude %>% substring(1,7),",",
                              "'longitude':",
                              longitude %>% substring(1,7),",",
@@ -106,11 +106,11 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("'",location_keys,"'") %>% paste(collapse = ","),
                              "],'location_types':[",location_types,"]},")
-    } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets", "neighborhoods", "subcities",
-                                         "large_geo_areas", "medium_geo_areas", "small_geo_areas")){
-      query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
-                               paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
-                               "],'location_types':[",location_types,"]},")
+  } else if (location_unit_type %in% c("regions","electoral_districts","zips","geo_markets", "neighborhoods", "subcities",
+                                       "large_geo_areas", "medium_geo_areas", "small_geo_areas")){
+    query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
+                             paste0("{'key':'",location_keys,"'}") %>% paste(collapse = ","),
+                             "],'location_types':[",location_types,"]},")
   } else if ( (location_unit_type %in% c("cities")) & is.null(radius)){
     query_location <- paste0("'geo_locations':{'",location_unit_type,"':[",
                              paste0("{'key':'",location_keys,"'}") %>% 
@@ -582,9 +582,13 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
-      #print(query)
       query_val <- url(query) %>% fromJSON
-
+      
+      if(!is.null(query_val$error)){
+        warning("Error message from Facebook Marketing API")
+        print(query_val)
+      }
+      
       #### If there is no error
       if(is.null(query_val$error)){
         
@@ -670,18 +674,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
           if(query_val_df[[var]] %in% "") query_val_df[[var]] <- NULL
         }
         
-        ## Print result and sleep (sleep needed b/c of rate limiting)
-        #if(show_result){
-        #  print(query_val_df)
-        #}
-        
         if(show_result){
           print(query_val_df$estimate_mau_upper_bound)
         }
         
         ## Sleep
-        #cat(paste0(n_fb_calls, " of ", nrow(param_grid_df), " queries made (", round( n_fb_calls / nrow(param_grid_df) * 100), ")\n"))
-        #n_fb_calls <<- n_fb_calls + 1
         Sys.sleep(sleep_time) 
         
         #### If there is an error, print the error and make output null  
@@ -691,10 +688,9 @@ query_fb_marketing_api_1call <- function(location_unit_type,
           if((query_val$error$code == 80004)){
             try_api_call <- TRUE
             
-            #cat(paste0("Too many calls, so pausing for 60 seconds then will try the query again; will only move to the next API query after the current query has successfully been called. So far, ",n_fb_calls, " of ", nrow(param_grid_df), " queries have been made.\n"))
-            cat("Too many calls, so pausing for 60 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.\n")
+            cat("Too many calls, so pausing for 30 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.\n")
             
-            Sys.sleep(60)
+            Sys.sleep(30)
           } 
         }
         
@@ -716,7 +712,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
       
       warning(paste0("Error code: ", query_val$error$code))
       warning(query_val$error$message)
-            
+      
       try_api_call <- F
       Sys.sleep(0.1)
       return(NULL)
@@ -826,7 +822,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                    radius = NULL,
                                    radius_unit = NULL,
                                    location_keys = NULL,
-                                   location_types = "home",
+                                   location_types = c("home", "recent"),
                                    locales = NULL,
                                    
                                    #### Specify here or in flex_targeting
@@ -880,7 +876,13 @@ query_fb_marketing_api <- function(location_unit_type,
                                    add_query_hide_credentials = T){
   
   # Checks -----------------------------------------------------------------------
-  #n_fb_calls <<- 1
+  if((c(length(version),
+    length(creation_act),
+    length(token)) %>%
+    unique() %>%
+    length()) > 1){
+    stop("The length of the vector of 'version', 'creation_act', and 'token' must all be the same length.")
+  }
   
   if(length(location_unit_type) != 1){
     stop("'location_unit_type' must be a vector of length one; only one option allowed")
@@ -1009,6 +1011,10 @@ query_fb_marketing_api <- function(location_unit_type,
                                ## Flex target, advanced
                                flex_target = flex_target)
   
+  param_grid_df$version      <- rep(version,      length = nrow(param_grid_df))
+  param_grid_df$creation_act <- rep(creation_act, length = nrow(param_grid_df))
+  param_grid_df$token        <- rep(token,        length = nrow(param_grid_df))
+  
   # Length parameter inputs to same length -------------------------------------
   out_df <- mapply(query_fb_marketing_api_1call,
                    lat_lon        = param_grid_df$lat_lon, 
@@ -1056,14 +1062,16 @@ query_fb_marketing_api <- function(location_unit_type,
                    ## Flex target, advanced
                    flex_target = param_grid_df$flex_target,
                    
+                   ## Credentials
+                   version      = param_grid_df$version, 
+                   creation_act = param_grid_df$creation_act, 
+                   token        = param_grid_df$token, 
+                   
                    MoreArgs = list(location_unit_type         = location_unit_type,
                                    sleep_time                 = sleep_time,
                                    show_result                = show_result,
                                    add_query                  = add_query, 
-                                   add_query_hide_credentials = add_query_hide_credentials,
-                                   version                    = version,
-                                   creation_act               = creation_act,
-                                   token                      = token),
+                                   add_query_hide_credentials = add_query_hide_credentials),
                    
                    SIMPLIFY = F
   ) %>% 
