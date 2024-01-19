@@ -4,6 +4,8 @@
 #' @import httr
 #' @import stringr
 #' @import splitstackshape
+#' @import sf
+#' @import map
 
 # Helper functions -------------------------------------------------------------
 is_null_or_na <- function(x){

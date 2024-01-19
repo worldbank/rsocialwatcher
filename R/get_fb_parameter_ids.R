@@ -30,6 +30,7 @@ n_embedded_lists <- function(obj){
 #' @param region_id When searching locations, limit the search to a specific region; for example, only search for cities within a specific region.
 #' @param key When searching locations, limit the search to a specific location key; for example, only search for neighborhood within a specific city.
 #' @param limit Number of parameter IDs to search for. 
+#' @param add_location_coords When querying location IDs (eg, when `type = "city`), add location coordinates---which will add the latitude and longitude, as well as the geometry when available. (Default: `FALSE`)
 #' 
 #' @details For additional information, see: https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/
 #' @return Dataframe with parameter IDs and descriptions.
@@ -67,7 +68,8 @@ get_fb_parameter_ids <- function(type,
                                  country_code = NULL,
                                  region_id = NULL,
                                  key=NULL,
-                                 limit = NULL){
+                                 limit = NULL,
+                                 add_location_coords = F){
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
@@ -241,6 +243,22 @@ get_fb_parameter_ids <- function(type,
   if(length(out_df) == 0){
     out_df <- data.frame(NULL)
     warning("No results; may require adding or changing `q` parameter")
+  }
+  
+  # Add location information ---------------------------------------------------
+  if(add_location_coords){
+    out_sf <- get_location_coords(location_unit_type = type,
+                                  location_keys = out_df$key,
+                                  version = version,
+                                  token = token)
+    
+    vars_to_keep <- out_sf[!(names(out_sf) %in% names(out_df))] %>% names()
+    vars_to_keep <- c("key", vars_to_keep)
+    
+    out_sf <- out_sf[,vars_to_keep]
+    
+    out_df <- out_df %>%
+      left_join(out_sf, by = "key")
   }
   
   return(out_df)

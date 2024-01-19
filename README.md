@@ -12,9 +12,10 @@ Query data from the Facebook Marketing API using R, with a focus for social scie
 
 This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, [Fatehkia et al 2020](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) show the use of Facebook data for estimating poverty; features such as the proportion of monthly active Facebook users with a high-end phone correlate strongly with ground-truth measures of poverty.
 
-The package provides two functions:
+The package provides three functions:
 
-* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including different types and by their location.
+* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* `get_location_coords`: To obtain coordinates and, when available, geometries of locations based on their location keys.
 * `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 
 
 ## Installation <a name="installation"></a>
@@ -61,7 +62,7 @@ country_df <- get_fb_parameter_ids("country", VERSION, TOKEN)
 
 ### Query data for different location types <a name="quick-location"></a>
 
-__Example 1:__ Query Facebook users in US
+__Example:__ Query Facebook users in US
 ```r
 us_key <- country_df %>% 
   filter(name == "United States") %>% 
@@ -75,7 +76,7 @@ us_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 2:__ Query Facebook users around specific location
+__Example:__ Query Facebook users around specific location
 ```r
 latlon_df <- query_fb_marketing_api(
   location_unit_type = "coordinates",
@@ -87,9 +88,33 @@ latlon_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
+### Obtain location coordinates/geometries <a name="quick-location"></a>
+
+__Example:__ Location coordinates and, when available, geometries can be obtained using the `get_location_coords` function.
+
+```r
+countries_sf <- get_location_coords(
+  location_unit_type = "countries",
+  location_keys      = c("US", "MX", "CA"),
+  version            = VERSION,
+  token              = TOKEN
+)
+```
+
+__Example:__ In addition, when obtaining location IDs using the `query_fb_marketing_api` function, we can directly add coordinates/geometries by setting the `add_location_coords` to `TRUE`.
+
+```r
+us_states_sf <- get_fb_parameter_ids(
+  type = "region", 
+  country_code = "US", 
+  version = VERSION, 
+  token = TOKEN,
+  add_location_coords = T)
+```
+
 ### Query data for different user attributes <a name="quick-attributes"></a>
 
-__Example 3 [One parameter]:__ Facebook users who primarily access Facebook using Mac OS X living in the US
+__Example [One parameter]:__ Facebook users who primarily access Facebook using Mac OS X living in the US
 ```r
 beh_mac_id <- behaviors_df %>% 
   filter(name == "Facebook access (OS): Mac OS X") %>% 
@@ -104,7 +129,7 @@ us_mac_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 4 [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
+__Example [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
 ```r
 beh_tech_id <- behaviors_df %>% 
   filter(name == "Technology early adopters") %>% 
@@ -119,7 +144,7 @@ us_mac_or_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 5 [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. _Lists of IDs are used to specify AND conditions._
+__Example [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. _Lists of IDs are used to specify AND conditions._
 ```r
 us_mac_and_tech_df <- query_fb_marketing_api(
   location_unit_type = "country",
@@ -130,7 +155,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 6 [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
+__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
 ```r
 int_comp_id <- interests_df %>% 
   filter(name == "Computers (computers & electronics))") %>% 
@@ -150,7 +175,7 @@ us_mac_and_tech_or_comp_df <- query_fb_marketing_api(
 
 Putting parameters in the `map_param` function results in the `query_fb_marketing_api` function making multiple queries.
 
-__Example 7:__ Make queries for different countries.
+__Example:__ Make queries for different countries.
 ```r
 country_df %>% 
   filter(name %in% c("United States", "Canada", "Mexico")) %>% 
@@ -166,7 +191,7 @@ us_mult_cnt_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example 8:__ Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).
+__Example:__ Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).
 ```r
 us_mult_cnt_param_df <- query_fb_marketing_api(
   location_unit_type = "country",
