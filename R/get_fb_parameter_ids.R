@@ -226,7 +226,7 @@ get_fb_parameter_ids <- function(type,
         country_code=country_code,
         key=key,
         access_token=token,
-        limit = ifelse(is.null(limit), 1000, limit)
+        limit = ifelse(is.null(limit), 2000, limit)
       )) %>% content(as="text") %>% fromJSON %>%. [[1]]
   } 
   
@@ -242,7 +242,7 @@ get_fb_parameter_ids <- function(type,
   
   if(length(out_df) == 0){
     out_df <- data.frame(NULL)
-    warning("No results; may require adding or changing `q` parameter")
+    warning("No results; may be trying to query for too many IDs. Adding or changing `q` parameter can reduce the number of keys.")
   }
   
   # Add location information ---------------------------------------------------

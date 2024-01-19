@@ -31,15 +31,26 @@ VERSION <- api_keys %>%
   pull(Key)
 
 # Develop ----------------------------------------------------------------------
-country_df <- get_fb_parameter_ids(type    = "country",
-                                   version = VERSION, 
-                                   token   = TOKEN,
-                                   add_location_coords = T)
-                                   
+region_df <- get_fb_parameter_ids(type    = "region",
+                                country_code = "US",
+                                version = VERSION, 
+                                token   = TOKEN)
+
+letters
+prefix <- ""
+
+city_df <- get_fb_parameter_ids(type    = "city",
+                                country_code = "US",
+                                region_id = region_df$key[1],
+                                q = prefix,
+                                version = VERSION, 
+                                token   = TOKEN,
+                                limit = 9999)
+
 loc_sf <- get_location_coords(location_unit_type = "countries",
-                                  location_keys = country_df$key[1:3],
-                                  version = VERSION,
-                                  token = TOKEN)
+                              location_keys = country_df$key[1:3],
+                              version = VERSION,
+                              token = TOKEN)
 
 # Test parameter types ---------------------------------------------------------
 ## Get IDs ####

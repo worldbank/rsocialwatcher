@@ -36,6 +36,7 @@ library(httr)
 library(stringr)
 library(knitr)
 library(kableExtra)
+library(leaflet)
 
 ## Set Facebook Keys
 TOKEN        <- "TOKEN-HERE"
@@ -196,6 +197,7 @@ For valid location keys, the function will return coordinates (latitude and long
 Below we show an example for obtaining geometries for Washington, DC zip codes
 
 ```{r africa_geom, include=TRUE, warning=FALSE, message=FALSE}
+## All Washington, DC zip codes start with 20
 zip_df <- get_fb_parameter_ids(type = "zip", 
                                q = "20", 
                                country_code = "US",
