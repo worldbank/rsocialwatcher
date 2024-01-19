@@ -76,6 +76,25 @@ get_fb_parameter_ids <- function(type,
   #if( (type == "work_positions") & is.null(q)) stop("When type = 'work_positions', 'q' must be specified.")
   #if( (type == "work_employers") & is.null(q)) stop("When type = 'work_employers', 'q' must be specified.")
   
+  #### Make plural
+  if(type == "country")             type <- "countries"
+  if(type == "region")              type <- "regions"
+  if(type == "city")                type <- "cities"
+  if(type == "zip")                 type <- "zips"
+  if(type == "place")               type <- "places"
+  if(type == "custom_location")     type <- "custom_locations"
+  if(type == "geo_market")          type <- "geo_markets"
+  if(type == "electoral_district")  type <- "electoral_districts"
+  if(type == "country_group")       type <- "country_groups"
+  if(type == "subneighborhood")     type <- "subneighborhoods"
+  if(type == "neighborhood")        type <- "neighborhoods"
+  if(type == "subcity")             type <- "subcities"
+  if(type == "metro_area")          type <- "metro_areas"
+  if(type == "small_geo_area")      type <- "small_geo_areas"
+  if(type == "medium_geo_area")     type <- "medium_geo_areas"
+  if(type == "large_geo_area")      type <- "large_geo_areas"
+  if(type == "location_cluster_id") type <- "location_cluster_ids"
+  
   valid_types <- c("behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses",
                    "locales",
                    "work_positions",

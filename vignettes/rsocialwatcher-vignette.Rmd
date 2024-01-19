@@ -46,8 +46,10 @@ VERSION      <- "VERSION-HERE"
 
 ```{r loadkey, include=FALSE}
 ## Load keys
-api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
-                     stringsAsFactors = F)
+#api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
+#                     stringsAsFactors = F)
+
+api_keys <- read.csv("https://www.dropbox.com/scl/fi/5ug1cfhmoi6v2m393broz/fb_credentials.csv?rlkey=xedl2727l7mnf7ayg0zgrxtr0&dl=1")
 
 api_keys <- api_keys %>%
   dplyr::filter(Service == "facebook_marketing_ad",
