@@ -8,7 +8,8 @@
 #' @param token Facebook API token
 #' @param large_query_chunk_size The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. By default, the function will query 10 locations at a time. (Default: 10).
 #' @param large_query_pause The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. After each query, the `large_query_pause` can be set to > 0 to sleep for `large_query_pause` seconds in order to not make too many API calls too quickly. (Default: 0).
-
+#' @param limit Number of parameter IDs to search for. 
+#'
 #' @return Spatial features dataframe
 #' 
 #' @examples
@@ -30,7 +31,8 @@ get_location_coords <- function(location_unit_type,
                                 version,
                                 token,
                                 large_query_chunk_size = 10,
-                                large_query_pause = 0){
+                                large_query_pause = 0,
+                                limit = NULL){
   
   #### Query data
   out_sf <- get_location_coords_i(location_unit_type,
@@ -71,7 +73,8 @@ get_location_coords <- function(location_unit_type,
 get_location_coords_i <- function(location_unit_type,
                                   location_keys,
                                   version,
-                                  token){
+                                  token,
+                                  limit){
   
   #### Checks
   valid_types <- c("countries",
