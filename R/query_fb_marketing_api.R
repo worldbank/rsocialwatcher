@@ -839,6 +839,15 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' 
 #' }
 #' @export
+#' 
+#' @import dplyr
+#' @import lubridate
+#' @import jsonlite
+#' @import httr
+#' @import stringr
+#' @import splitstackshape
+#' @import sf
+#' @rawNamespace import(purrr, except = c(flatten))
 query_fb_marketing_api <- function(location_unit_type,
                                    lat_lon = NULL,
                                    radius = NULL,
