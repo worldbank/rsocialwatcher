@@ -9,13 +9,22 @@ library(jsonlite)
 library(httr)
 library(sf)
 
+library(dplyr)
+library(lubridate)
+library(jsonlite)
+library(httr)
+library(stringr)
+library(splitstackshape)
+library(sf)
+library(purrr)
+
 ## Load keys
 api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
                      stringsAsFactors = F)
 
 api_keys <- api_keys %>%
   dplyr::filter(Service == "facebook_marketing_ad",
-                Details == "robmarty3@gmail.com")
+                Details == "ieconnectlagosproject10@gmail.com")
 
 TOKEN <- api_keys %>% 
   dplyr::filter(Account == "token") %>% 
@@ -31,7 +40,36 @@ VERSION <- api_keys %>%
   pull(Key)
 
 # Flex parameters --------------------------------------------------------------
+interests_df <- get_fb_parameter_ids(type = "interests", version = VERSION, token = TOKEN)
+behaviors_df <- get_fb_parameter_ids(type = "behaviors", version = VERSION, token = TOKEN)
 
+int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
+beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
+
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       flex_target        = list("interests" = int_music_id,
+                                                 "behaviors" = beh_comm_id),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
+
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       interests = int_music_id,
+                       behaviors = beh_comm_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
+
+# TODO: Enter as OR condition
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       interests          = int_music_id,
+                       flex_target        = list("behaviors" = beh_comm_id),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 
 # Test parameter types ---------------------------------------------------------
 ## Get IDs ####
@@ -67,6 +105,15 @@ query_fb_marketing_api(
   creation_act       = CREATION_ACT, 
   token              = TOKEN)
 
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  interests          = id,
+  gender             = map_param(1,2),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
 ## Behaviors ####
 id <- get_fb_parameter_ids(type = "behaviors", version = VERSION, token = TOKEN) %>% pull(id) %>% head(1)
 
@@ -74,6 +121,15 @@ query_fb_marketing_api(
   location_unit_type = "countries",
   location_keys      = "US",
   behaviors          = id,
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
+## College Years ####
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  college_years      = c(2014, 2015),
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
   token              = TOKEN)
@@ -172,7 +228,7 @@ id <- get_fb_parameter_ids(type = "relationship_statuses", version = VERSION, to
 query_fb_marketing_api(
   location_unit_type    = "countries",
   location_keys         = "US",
-  relationship_statuses = id,
+  relationship_statuses = 1,
   version               = VERSION, 
   creation_act          = CREATION_ACT, 
   token                 = TOKEN)
@@ -187,6 +243,54 @@ query_fb_marketing_api(
   version               = VERSION, 
   creation_act          = CREATION_ACT, 
   token                 = TOKEN)
+
+## User OS ####
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  user_os               = "Android",
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+## Wireless Carrier ####
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  wireless_carrier      = "Wifi",
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+## Gender ####
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  gender                = map_param(1,2,c(1,2)),
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+## Age Min ####
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  age_min               = 30,
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+## Age Max ####
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  age_max               = 30,
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+# Test Excluding ---------------------------------------------------------------
+
 
 # Test location types ----------------------------------------------------------
 

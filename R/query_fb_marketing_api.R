@@ -73,6 +73,10 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
                                       radius = NULL,
                                       radius_unit = NULL,
                                       location_keys = NULL,
+                                      relationship_statuses = NULL,
+                                      life_events = NULL,
+                                      user_os = NULL,
+                                      wireless_carrier = NULL,
                                       gender_param = NULL,
                                       age_min = NULL,
                                       age_max = NULL,
@@ -121,10 +125,14 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
                   "/delivery_estimate?access_token=",token,
                   "&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
                   query_location,
+                  ifelse(!is.null(relationship_statuses), paste0("'relationship_statuses':[",relationship_statuses,"],"), ""),
+                  ifelse(!is.null(life_events),           paste0("'life_events':[",life_events,"],"), ""),
+                  ifelse(!is.null(user_os),               paste0("'user_os':[",user_os,"],"), ""),
+                  ifelse(!is.null(wireless_carrier),      paste0("'wireless_carrier':[",wireless_carrier,"],"), ""),
                   "'genders':[",gender_param,"],", 
                   "'age_min':",age_min,",",
                   "'age_max':",age_max)
-  
+
   return(query)
 }
 
@@ -172,7 +180,7 @@ make_flex_spec <- function(param,
   #add_id <- F # ?? Needed ??
   if(name == "interests")             add_id <- T
   if(name == "behaviors")             add_id <- T
-  if(name == "college_years")         add_id <- T # NA ??
+  if(name == "college_years")         add_id <- F # NA ??
   if(name == "education_majors")      add_id <- T # NA ??
   if(name == "education_schools")     add_id <- T # NA ??
   if(name == "education_statuses")    add_id <- F
@@ -387,7 +395,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   if(is_null_or_na(user_os)){
     user_os_param <- NULL
   } else{
-    if(length(user_os) > 1) stop("Only accepts vector of length 1 for user_os (right now)")
+    #if(length(user_os) > 1) stop("Only accepts vector of length 1 for user_os (right now)")
     user_os_param <- paste0("'", user_os, "'")
   }
   
@@ -468,12 +476,21 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   # Make query -----------------------------------------------------------------
   
   #### Non-flex params ####
+  collase_if_not_null <- function(x){
+    if(!is.null(x)) x <- x %>% paste(collapse = ",")
+    return(x)
+  }
+  
   query_all <- make_query_nonflex_params(location_unit_type = location_unit_type,
                                          lat_lon            = lat_lon,
                                          location_types     = location_types,
                                          radius             = radius,
                                          radius_unit        = radius_unit,
                                          location_keys      = location_keys,
+                                         relationship_statuses = relationship_statuses %>% collase_if_not_null, 
+                                         life_events           = life_events %>% collase_if_not_null, 
+                                         user_os               = user_os_param %>% collase_if_not_null, 
+                                         wireless_carrier      = wireless_carrier_param %>% collase_if_not_null, 
                                          gender_param       = gender %>% paste(collapse = ","),
                                          age_min            = age_min,
                                          age_max            = age_max,
@@ -538,8 +555,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   }
   
   if(query_flex != ""){
-    query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
-    #query_flex <- paste0("'flexible_spec':[", query_flex, "]")
+    if( substring(query_flex, 1, 1) == "{"){
+      query_flex <- paste0("'flexible_spec':[", query_flex, "]")
+    } else{
+      query_flex <- paste0("'flexible_spec':[{", query_flex, "}]")
+    }
     query_all <- paste0(query_all, ",", query_flex)
   }
   
@@ -574,6 +594,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
+      #print(query)
       query_val <- url(query) %>% fromJSON
       
       if(!is.null(query_val$error)){
@@ -643,12 +664,21 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         ## Add time
         query_val_df$api_call_time_utc <- Sys.time() %>% with_tz(tzone = "UTC")
         
+        ## Make character
+        query_val_df <- query_val_df %>%
+          mutate(across(-c(estimate_dau, 
+                           estimate_mau_lower_bound, 
+                           estimate_mau_upper_bound, 
+                           api_call_time_utc), as.character))
+        
         ## Add ID names
         # if(add_param_id_name_vars){
         #   query_val_df <- fill_fb_id_names(query_val_df,
         #                                    version = version,
         #                                    token = token)
         # }
+        
+        
         
         if(add_query){
           query_val_df$query <- query
@@ -711,7 +741,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     })
   }
   
-  #### Return Result ####
+
   return(query_val_df)
 }
 
@@ -869,10 +899,10 @@ query_fb_marketing_api <- function(location_unit_type,
   
   # Checks -----------------------------------------------------------------------
   if((c(length(version),
-    length(creation_act),
-    length(token)) %>%
-    unique() %>%
-    length()) > 1){
+        length(creation_act),
+        length(token)) %>%
+      unique() %>%
+      length()) > 1){
     stop("The length of the vector of 'version', 'creation_act', and 'token' must all be the same length.")
   }
   
