@@ -30,41 +30,8 @@ VERSION <- api_keys %>%
   dplyr::filter(Account == "version") %>% 
   pull(Key)
 
-# Develop ----------------------------------------------------------------------
-query_fb_marketing_api(
-  location_unit_type = "countries",
-  location_keys      = map_param("US", "FR", "GB"),
-  version            = c(VERSION, VERSION), 
-  creation_act       = c(CREATION_ACT, CREATION_ACT), 
-  token              = c(TOKEN, TOKEN))
+# Flex parameters --------------------------------------------------------------
 
-query_fb_marketing_api(
-  location_unit_type = "countries",
-  location_keys      = "US",
-  version            = VERSION, 
-  creation_act       = CREATION_ACT, 
-  token              = TOKEN)
-
-region_df <- get_fb_parameter_ids(type    = "region",
-                                country_code = "US",
-                                version = VERSION, 
-                                token   = TOKEN)
-
-letters
-prefix <- ""
-
-city_df <- get_fb_parameter_ids(type    = "city",
-                                country_code = "US",
-                                region_id = region_df$key[1],
-                                q = prefix,
-                                version = VERSION, 
-                                token   = TOKEN,
-                                limit = 9999)
-
-loc_sf <- get_location_coords(location_unit_type = "countries",
-                              location_keys = country_df$key[1:3],
-                              version = VERSION,
-                              token = TOKEN)
 
 # Test parameter types ---------------------------------------------------------
 ## Get IDs ####
@@ -251,3 +218,40 @@ query_fb_marketing_api(
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
   token              = TOKEN)
+
+# Develop ----------------------------------------------------------------------
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = map_param("US", "FR", "GB"),
+  version            = c(VERSION, VERSION), 
+  creation_act       = c(CREATION_ACT, CREATION_ACT), 
+  token              = c(TOKEN, TOKEN))
+
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+
+region_df <- get_fb_parameter_ids(type    = "region",
+                                  country_code = "US",
+                                  version = VERSION, 
+                                  token   = TOKEN)
+
+letters
+prefix <- ""
+
+city_df <- get_fb_parameter_ids(type    = "city",
+                                country_code = "US",
+                                region_id = region_df$key[1],
+                                q = prefix,
+                                version = VERSION, 
+                                token   = TOKEN,
+                                limit = 9999)
+
+loc_sf <- get_location_coords(location_unit_type = "countries",
+                              location_keys = country_df$key[1:3],
+                              version = VERSION,
+                              token = TOKEN)
+

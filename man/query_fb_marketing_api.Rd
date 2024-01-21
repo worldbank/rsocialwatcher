@@ -74,9 +74,8 @@ query_fb_marketing_api(
 
 \item{locales}{Locales ID.
 \subsection{Parameters. These are optional. If nothing specified, then the function searches for all users.}{
-\subsection{Parameters that can be specified below or in \code{flex_targeting}. For the below parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies; however, \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.}{
-}
 
+Parameters that can be specified below or in \code{flex_targeting}. For the below parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies; however, \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
 }}
 
 \item{interests}{Interest IDs. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(type = "interests", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests}{Basic Targeting Documentation}.}

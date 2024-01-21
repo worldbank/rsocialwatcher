@@ -15,12 +15,13 @@ This package facilitates querying data from the Facebook Marketing API. The pack
 * [Poverty estimation](https://ojs.aaai.org//index.php/ICWSM/article/view/7361)
 * [Disease surveillance](https://arxiv.org/abs/1705.04045)
 * [Monitoring refugee and migrant flows in Venezuela](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175)
+* [Studying the Urban/Rural Divide](https://arxiv.org/pdf/2002.11645.pdf)
 
 The package provides three functions:
 
-* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
-* `get_location_coords`: To obtain coordinates and, when available, geometries of locations based on their location keys.
-* `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 
+* `get_fb_parameter_ids()`: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* `get_location_coords()`: To obtain coordinates and, when available, geometries of locations based on their location keys.
+* `query_fb_marketing_api()`: Query daily and monthly active users, querying users for specific locations and by specific types. 
 
 ## Installation <a name="installation"></a>
 The package is available via Github and can be install using `devtools`.
