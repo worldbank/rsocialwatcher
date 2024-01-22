@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   create_facebook_credentials: create_facebook_credentials.html
   rsocialwatcher-vignette: rsocialwatcher-vignette.html
-last_built: 2024-01-19T23:17Z
+last_built: 2024-01-22T16:05Z
 urls:
   reference: https://ramarty.github.io/rSocialWatcher/reference
   article: https://ramarty.github.io/rSocialWatcher/articles
