@@ -95,14 +95,16 @@
 <li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175" class="external-link">Monitoring refugee and migrant flows in Venezuela</a></li>
 <li><a href="https://arxiv.org/pdf/2002.11645.pdf" class="external-link">Studying the Urban/Rural Divide</a></li>
 </ul>
-<p>The package provides three functions:</p>
+<p>The package provides the following functions:</p>
 <ul>
 <li>
-<code><a href="reference/get_fb_parameter_ids.html">get_fb_parameter_ids()</a></code>: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)</li>
+<a href="https://ramarty.github.io/rSocialWatcher/reference/get_fb_parameter_ids.html"><code>get_fb_parameter_ids()</code></a>: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)</li>
 <li>
-<code><a href="reference/get_location_coords.html">get_location_coords()</a></code>: To obtain coordinates and, when available, geometries of locations based on their location keys.</li>
+<a href="https://ramarty.github.io/rSocialWatcher/reference/get_location_coords.html"><code>get_location_coords()</code></a>: To obtain coordinates and, when available, geometries of locations based on their location keys.</li>
 <li>
-<code><a href="reference/query_fb_marketing_api.html">query_fb_marketing_api()</a></code>: Query daily and monthly active users, querying users for specific locations and by specific types.</li>
+<a href="https://ramarty.github.io/rSocialWatcher/reference/query_fb_marketing_api.html"><code>query_fb_marketing_api()</code></a>: Query daily and monthly active users, querying users for specific locations and by specific types.</li>
+<li>
+<a href="https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html"><code>get_fb_suggested_radius()</code></a>: Determine a suggested radius to reach enough people for a given coordinate pair.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -212,11 +214,26 @@
 <span>  add_location_coords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="get-suggested-radius">Get suggested radius<a class="anchor" aria-label="anchor" href="#get-suggested-radius"></a>
+</h3>
+<p>Facebook enables querying a specific location to determine a suggested radius to reach enough people (see <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius" class="external-link">Facebook documentation here</a>). We can use the <code>get_fb_suggested_radius</code> function to get the suggested radius. Below shows the querying the suggested radius for Paris, France and Paris, Kentucky.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Paris, France</span></span>
+<span><span class="fu"><a href="reference/get_fb_suggested_radius.html">get_fb_suggested_radius</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">48.856667</span>, <span class="fl">2.352222</span><span class="op">)</span>,</span>
+<span>                        version <span class="op">=</span> <span class="va">VERSION</span>,</span>
+<span>                        token <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Paris, Kentucky</span></span>
+<span><span class="fu"><a href="reference/get_fb_suggested_radius.html">get_fb_suggested_radius</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">38.209682</span>, <span class="op">-</span><span class="fl">84.253915</span><span class="op">)</span>,</span>
+<span>                        version <span class="op">=</span> <span class="va">VERSION</span>,</span>
+<span>                        token <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="query-data-for-different-user-attributes-">Query data for different user attributes <a name="quick-attributes"></a>
 <a class="anchor" aria-label="anchor" href="#query-data-for-different-user-attributes-"></a>
 </h3>
 <p><strong>Example [One parameter]:</strong> Facebook users who primarily access Facebook using Mac OS X living in the US</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beh_mac_id</span> <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Facebook access (OS): Mac OS X"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
@@ -229,7 +246,7 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Example [Two parameters, OR condition]:</strong> Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. <em>Vectors of IDs are used to specify OR conditions.</em></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beh_tech_id</span> <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Technology early adopters"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
@@ -242,7 +259,7 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Example [Two parameters, AND condition]:</strong> Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. <em>Lists of IDs are used to specify AND conditions.</em></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_mac_and_tech_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span></span>
 <span>  location_unit_type <span class="op">=</span> <span class="st">"country"</span>,</span>
 <span>  location_keys      <span class="op">=</span> <span class="st">"US"</span>,</span>
@@ -250,19 +267,19 @@
 <span>  version            <span class="op">=</span> <span class="va">VERSION</span>,</span>
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Example [Two parameters, OR and AND condition]:</strong> Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The “flex_target” parameters can be used to specify AND conditions across parameters; see <a href="https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and">here</a> for examples.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>int_comp_id <span class="ot">&lt;-</span> interests_df <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Computers (computers &amp; electronics))"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>us_mac_and_tech_or_comp_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="st">"US"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">list</span>(beh_mac_id, beh_tech_id),</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
+<p><strong>Example [Two parameters, OR and AND condition]:</strong> Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The “flex_target” parameters can be used to specify AND conditions across parameters; see <a href="https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting">here</a> for examples.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>int_comp_id <span class="ot">&lt;-</span> interests_df <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"Computers (computers &amp; electronics))"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>us_mac_and_tech_or_comp_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="st">"US"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">list</span>(beh_mac_id, beh_tech_id),</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="map-over-multiple-queries-">Map Over Multiple Queries <a name="quick-multiple"></a>
@@ -270,27 +287,27 @@
 </h3>
 <p>Putting parameters in the <code>map_param</code> function results in the <code>query_fb_marketing_api</code> function making multiple queries.</p>
 <p><strong>Example:</strong> Make queries for different countries.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>country_df <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"United States"</span>, <span class="st">"Canada"</span>, <span class="st">"Mexico"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">pull</span>(key)</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>us_mult_cnt_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>),</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">c</span>(beh_mac_id, beh_tech_id),</span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>country_df <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"United States"</span>, <span class="st">"Canada"</span>, <span class="st">"Mexico"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">pull</span>(key)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>us_mult_cnt_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">c</span>(beh_mac_id, beh_tech_id),</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
 <p><strong>Example:</strong> Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>us_mult_cnt_param_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>),</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">map_param</span>(beh_mac_id, beh_tech_id),</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>us_mult_cnt_param_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">map_param</span>(beh_mac_id, beh_tech_id),</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="at">version            =</span> VERSION,</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="at">creation_act       =</span> CREATION_ACT,</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="at">token              =</span> TOKEN)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="using-multiple-api-tokens-">Using Multiple API Tokens <a name="multiple_tokens"></a>
@@ -299,14 +316,14 @@
 <p>The Facebook API is rate limited, where only a certain number of queries can be made in a given time. If the rate limit is reached, <code>query_fb_marketing_api</code> will pause then try the query until it is successfully called. <code>query_fb_marketing_api</code> can take a long time to complete if mapping over a large number of queries.</p>
 <p>Multiple API tokens can be used to minimize delay times from the function reaching its rate limit. To use multiple tokens, enter a vector with multiple entries for <code>version</code>, <code>creation_act</code>, and <code>token</code>.</p>
 <p><strong>Example:</strong> Using multiple API tokens</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>mult_queries_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>, <span class="st">"GB"</span>, <span class="st">"FR"</span>, <span class="st">"DE"</span>, <span class="st">"IT"</span>),</span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">c</span>(beh_mac_id, beh_tech_id),</span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="at">version            =</span> <span class="fu">c</span>(VERSION_1,      VERSION_2,      VERSION_3) ,</span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="at">creation_act       =</span> <span class="fu">c</span>(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3)</span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="at">token              =</span> <span class="fu">c</span>(TOKEN_1,        TOKEN_2,        TOKEN_3) )</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>mult_queries_df <span class="ot">&lt;-</span> <span class="fu">query_fb_marketing_api</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">location_unit_type =</span> <span class="st">"country"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">location_keys      =</span> <span class="fu">map_param</span>(<span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>, <span class="st">"GB"</span>, <span class="st">"FR"</span>, <span class="st">"DE"</span>, <span class="st">"IT"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">behaviors          =</span> <span class="fu">c</span>(beh_mac_id, beh_tech_id),</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">interests          =</span> int_comp_id</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">version            =</span> <span class="fu">c</span>(VERSION_1,      VERSION_2,      VERSION_3) ,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="at">creation_act       =</span> <span class="fu">c</span>(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3)</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="at">token              =</span> <span class="fu">c</span>(TOKEN_1,        TOKEN_2,        TOKEN_3) )</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

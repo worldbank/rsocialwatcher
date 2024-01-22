@@ -72,6 +72,8 @@
 <span>  family_statuses <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  income <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  industries <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  life_events <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  relationship_statuses <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  work_positions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  work_employers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  excl_interests <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -83,10 +85,10 @@
 <span>  excl_family_statuses <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  excl_income <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  excl_industries <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  excl_life_events <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  excl_relationship_statuses <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  excl_work_positions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  excl_work_employers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  relationship_statuses <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  life_events <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  user_os <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  wireless_carrier <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gender <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
@@ -187,6 +189,14 @@
 <dd><p>Industries IDs. For example, <code>industries = c(6008888980183, 6008888972183)</code> targets users who work in sales or legal services. Use <code>get_fb_parameters(type = "industries")</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
 
 
+<dt>life_events</dt>
+<dd><p>Life event IDs. For example, <code>life_events = c(6005149512172, 6005149512172)</code> targets users who recently moved or are in a new job. Use <code>get_fb_parameters(type = "life_events")</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
+
+
+<dt>relationship_statuses</dt>
+<dd><p>Relationship status IDs. For example, <code>relationship_statuses = c(3,4)</code> targets those who are married or engaged. Use <code>get_fb_parameters(type = "relationship_statuses")</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
+
+
 <dt>work_positions</dt>
 <dd><p>Work position IDs. For example, <code>work_positions = 105763692790962</code> will target users who indicate they are contractors. Use <code>get_fb_parameters(type = "work_positions", ...)</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
 
@@ -235,24 +245,26 @@
 <dd><p>Industry IDs to exclude.</p></dd>
 
 
+<dt>excl_life_events</dt>
+<dd><p>Life event IDs to exclude.</p></dd>
+
+
+<dt>excl_relationship_statuses</dt>
+<dd><p>Relationship status IDs to exclude.</p></dd>
+
+
 <dt>excl_work_positions</dt>
 <dd><p>Work position IDs to exclude.</p></dd>
 
 
 <dt>excl_work_employers</dt>
 <dd><p>Work employer IDs to exclude.</p><div class="section">
-<h3 id="parameters-that-can-be-specified-here-but-not-in-flex-targeting-">Parameters that can be specified here, but not in <code>flex_targeting</code>.<a class="anchor" aria-label="anchor" href="#parameters-that-can-be-specified-here-but-not-in-flex-targeting-"></a></h3>
+<h3 id="non-flexible-parameters">Non-Flexible parameters<a class="anchor" aria-label="anchor" href="#non-flexible-parameters"></a></h3>
 
-
-</div></dd>
-
-
-<dt>relationship_statuses</dt>
-<dd><p>Relationship status IDs. For example, <code>relationship_statuses = c(3,4)</code> targets those who are married or engaged. Use <code>get_fb_parameters(type = "relationship_statuses")</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
-
-
-<dt>life_events</dt>
-<dd><p>Life event IDs. For example, <code>life_events = c(6005149512172, 6005149512172)</code> targets users who recently moved or are in a new job. Use <code>get_fb_parameters(type = "life_events")</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
+<ul><li><p>Across parameters, AND conditions are used. For example, if <code>gender = 1</code> and <code>age_min = 30</code>, queries users that are male AND are over 30 years old.</p></li>
+<li><p>These parameters <em>cannot</em> be specified in <code>flex_targeting</code></p></li>
+<li><p>Within parameters, vectors (<code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>) specify OR conditions. AND conditions cannot be specified within these parameters.</p></li>
+</ul></div></dd>
 
 
 <dt>user_os</dt>
@@ -273,22 +285,22 @@
 
 <dt>age_max</dt>
 <dd><p>Maximum age. Default is 65. See <code>age_max</code> in the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics" class="external-link">Basic Targeting Documentation</a>.</p><div class="section">
-<h3 id="credentials">Credentials<a class="anchor" aria-label="anchor" href="#credentials"></a></h3>
+<h3 id="flex-targeting">Flex Targeting<a class="anchor" aria-label="anchor" href="#flex-targeting"></a></h3>
 
 
 </div></dd>
 
 
 <dt>flex_target</dt>
-<dd><p>Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targetting, see <a href="https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and">the documentation here</a>.</p><div class="section">
-<h3 id="credentials-1">Credentials<a class="anchor" aria-label="anchor" href="#credentials-1"></a></h3>
+<dd><p>Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see <a href="https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting">the documentation here</a>.</p><div class="section">
+<h3 id="credentials">Credentials<a class="anchor" aria-label="anchor" href="#credentials"></a></h3>
 
 
 </div></dd>
 
 
 <dt>version</dt>
-<dd><p>API version. e.g., "v17.0"</p></dd>
+<dd><p>API version. e.g., "v18.0"</p></dd>
 
 
 <dt>creation_act</dt>
