@@ -48,8 +48,14 @@ beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 
 query_fb_marketing_api(location_unit_type = "countries",
                        location_keys      = "US",
-                       flex_target        = list("interests" = int_music_id,
-                                                 "behaviors" = beh_comm_id),
+                       interests          = int_music_id,
+                       excl_behaviors     = beh_comm_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
+
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
                        version            = VERSION, 
                        creation_act       = CREATION_ACT, 
                        token              = TOKEN)
@@ -67,6 +73,7 @@ query_fb_marketing_api(location_unit_type = "countries",
                        location_keys      = "US",
                        interests          = int_music_id,
                        flex_target        = list("behaviors" = beh_comm_id),
+                       relationship_statuses = 1,
                        version            = VERSION, 
                        creation_act       = CREATION_ACT, 
                        token              = TOKEN)

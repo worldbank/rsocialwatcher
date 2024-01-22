@@ -747,19 +747,22 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 
 # Query: ALL CALLS -------------------------------------------------------------
 #' Query Facebook Marketing API
-#' ## Location
+#' 
 #' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
-#' ### If location_unit_type is "coordinates"
+#' #### If location_unit_type is "coordinates"
 #' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
-#' ### If location_unit_type is not "coordinates"
+#' #### If location_unit_type is not "coordinates"
 #' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
-#' ## Other location parameters
+#' ### Other location parameters
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
 #' @param locales Locales ID. 
-#' ## Parameters. These are optional. If nothing specified, then the function searches for all users.
-#' Parameters that can be specified below or in `flex_targeting`. For the below parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies; however, `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
+#' ### Parameters 
+#' 
+#' * Within parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies, while `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
+#' * Across parameters, OR conditions are used. For example, if enter `interests = 6003349442621` and `behaviors = 6008297697383` are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
+#' * And conditions across parameters can be specified using the `flex_target` argument.
 #' @param interests Interest IDs. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameters(type = "interests", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests).
 #' @param behaviors Behavior IDs. For example, `behaviors = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameters(type = "behaviors", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#behaviors).
 #' @param college_years College graduation years. For example, `college_years = c(2014, 2015)` will target users who graduated college in 2014 or 2015. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
@@ -906,7 +909,27 @@ query_fb_marketing_api <- function(location_unit_type,
                                    add_query = F,
                                    add_query_hide_credentials = T){
   
-  # Checks -----------------------------------------------------------------------
+  # Checks ---------------------------------------------------------------------
+  if(!is.null(flex_target)){
+    
+    use_flex_target_mssg <- function(type){
+      paste0("When enter value for 'flex_target', cannot enter value for '",type,"'. When using 'flex_target', ",type," IDs must be specified within 'flex_target'.")
+    }
+    
+    if(!is.null(interests))          stop(use_flex_target_mssg("interests"))
+    if(!is.null(behaviors))          stop(use_flex_target_mssg("behaviors"))
+    if(!is.null(college_years))      stop(use_flex_target_mssg("college_years"))
+    if(!is.null(education_majors))   stop(use_flex_target_mssg("education_majors"))
+    if(!is.null(education_schools))  stop(use_flex_target_mssg("education_schools"))
+    if(!is.null(education_statuses)) stop(use_flex_target_mssg("education_statuses"))
+    if(!is.null(family_statuses))    stop(use_flex_target_mssg("family_statuses"))
+    if(!is.null(income))             stop(use_flex_target_mssg("income"))
+    if(!is.null(industries))         stop(use_flex_target_mssg("industries"))
+    if(!is.null(work_positions))     stop(use_flex_target_mssg("work_positions"))
+    if(!is.null(work_employers))     stop(use_flex_target_mssg("work_employers"))
+    
+  }
+
   if((c(length(version),
         length(creation_act),
         length(token)) %>%
