@@ -30,5 +30,4 @@ get_fb_suggested_radius(location = c(38.89831, -77.03658),
                         version  = "v14.0",
                         token    = "TOKEN-HERE")
 }
-
 }

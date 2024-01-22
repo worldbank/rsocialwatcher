@@ -12,6 +12,9 @@ RoxygenNote: 7.2.1
 URL: https://ramarty.github.io/rSocialWatcher/
 BugReports: https://github.com/ramarty/rSocialWatcher/issues
 VignetteBuilder: knitr, rmarkdown
+Suggests:
+    knitr, 
+    rmarkdown
 Imports:
   dplyr,
   lubridate,
