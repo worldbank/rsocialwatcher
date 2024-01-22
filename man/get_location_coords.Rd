@@ -2,9 +2,7 @@
 % Please edit documentation in R/get_location_coords.R
 \name{get_location_coords}
 \alias{get_location_coords}
-\title{Get Coordinates/Geometries for Valid Location Keys
-\subsection{Location}{
-}}
+\title{Get Coordinates/Geometries for Valid Location Keys}
 \usage{
 get_location_coords(
   location_unit_type,
@@ -36,8 +34,6 @@ Spatial features dataframe
 }
 \description{
 Get Coordinates/Geometries for Valid Location Keys
-\subsection{Location}{
-}
 }
 \examples{
 \dontrun{

@@ -40,6 +40,20 @@ VERSION <- api_keys %>%
   pull(Key)
 
 # Flex parameters --------------------------------------------------------------
+# Paris, France
+get_fb_suggested_radius(location = c(48.856667, 2.352222),
+                        version = VERSION,
+                        token = TOKEN)
+
+# Paris, Kentucky
+get_fb_suggested_radius(location = c(38.20968272102618, -84.25391551816764),
+                        version = VERSION,
+                        token = TOKEN)
+
+
+
+
+
 interests_df <- get_fb_parameter_ids(type = "interests", version = VERSION, token = TOKEN)
 behaviors_df <- get_fb_parameter_ids(type = "behaviors", version = VERSION, token = TOKEN)
 
@@ -77,6 +91,17 @@ query_fb_marketing_api(location_unit_type = "countries",
                        version            = VERSION, 
                        creation_act       = CREATION_ACT, 
                        token              = TOKEN)
+
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       interests          = int_music_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN,
+                       add_query = T,
+                       add_query_hide_credentials = F)
+
+
 
 # Test parameter types ---------------------------------------------------------
 ## Get IDs ####
@@ -235,7 +260,7 @@ id <- get_fb_parameter_ids(type = "relationship_statuses", version = VERSION, to
 query_fb_marketing_api(
   location_unit_type    = "countries",
   location_keys         = "US",
-  relationship_statuses = 1,
+  relationship_statuses = id,
   version               = VERSION, 
   creation_act          = CREATION_ACT, 
   token                 = TOKEN)
@@ -256,6 +281,14 @@ query_fb_marketing_api(
   location_unit_type    = "countries",
   location_keys         = "US",
   user_os               = "Android",
+  version               = VERSION, 
+  creation_act          = CREATION_ACT, 
+  token                 = TOKEN)
+
+query_fb_marketing_api(
+  location_unit_type    = "countries",
+  location_keys         = "US",
+  user_os               = c("Android", "iOS"),
   version               = VERSION, 
   creation_act          = CREATION_ACT, 
   token                 = TOKEN)

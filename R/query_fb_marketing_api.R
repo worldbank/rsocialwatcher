@@ -73,8 +73,8 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
                                       radius = NULL,
                                       radius_unit = NULL,
                                       location_keys = NULL,
-                                      relationship_statuses = NULL,
-                                      life_events = NULL,
+                                      #relationship_statuses = NULL,
+                                      #life_events = NULL,
                                       user_os = NULL,
                                       wireless_carrier = NULL,
                                       gender_param = NULL,
@@ -125,8 +125,8 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
                   "/delivery_estimate?access_token=",token,
                   "&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={",
                   query_location,
-                  ifelse(!is.null(relationship_statuses), paste0("'relationship_statuses':[",relationship_statuses,"],"), ""),
-                  ifelse(!is.null(life_events),           paste0("'life_events':[",life_events,"],"), ""),
+                  #ifelse(!is.null(relationship_statuses), paste0("'relationship_statuses':[",relationship_statuses,"],"), ""),
+                  #ifelse(!is.null(life_events),           paste0("'life_events':[",life_events,"],"), ""),
                   ifelse(!is.null(user_os),               paste0("'user_os':[",user_os,"],"), ""),
                   ifelse(!is.null(wireless_carrier),      paste0("'wireless_carrier':[",wireless_carrier,"],"), ""),
                   "'genders':[",gender_param,"],", 
@@ -187,9 +187,11 @@ make_flex_spec <- function(param,
   if(name == "family_statuses")       add_id <- T # NA ??
   if(name == "income")                add_id <- T # NA ??
   if(name == "industries")            add_id <- T # NA ??
+  if(name == "life_events")           add_id <- T
+  if(name == "relationship_statuses") add_id <- F
   if(name == "work_positions")        add_id <- T # NA ??
   if(name == "work_employers")        add_id <- T # NA ??
-  if(name == "relationship_statuses") add_id <- F
+
   
   # life_events_param     <- prep_param(life_events, add_id = T)
   # industries_param      <- prep_param(industries, add_id = T)
@@ -325,6 +327,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          family_statuses,
                                          income,
                                          industries,
+                                         life_events, 
+                                         relationship_statuses, 
                                          work_positions,
                                          work_employers,
                                          
@@ -338,18 +342,19 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          excl_family_statuses,
                                          excl_income,
                                          excl_industries,
+                                         excl_life_events, 
+                                         excl_relationship_statuses, 
                                          excl_work_positions,
                                          excl_work_employers,
                                          
-                                         ## Non Flex Targetting Parameters
-                                         relationship_statuses, 
-                                         life_events, 
+                                         ## Non Flex Targeting Parameters
                                          user_os,
                                          wireless_carrier,
                                          gender,
                                          age_min,
                                          age_max,
                                          
+                                         ## Flex target
                                          flex_target,
                                          
                                          ## API Keys/Info
@@ -366,6 +371,36 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          add_query_hide_credentials){
   
   # Checks ---------------------------------------------------------------------
+  if(!is.null(user_os)){
+    if(is.list(user_os)){
+      stop('\"user_os\" cannot be a list')
+    }
+  }
+  
+  if(!is.null(wireless_carrier)){
+    if(is.list(wireless_carrier)){
+      stop('\"wireless_carrier\" cannot be a list')
+    }
+  }
+  
+  if(!is.null(gender)){
+    if(is.list(gender)){
+      stop('\"gender\" cannot be a list')
+    }
+  }
+  
+  if(!is.null(age_min)){
+    if(is.list(age_min)){
+      stop('\"age_min\" cannot be a list')
+    }
+  }
+  
+  if(!is.null(age_max)){
+    if(is.list(age_max)){
+      stop('\"age_max\" cannot be a list')
+    }
+  }
+  
   if(!is.null(lat_lon)){
     if(is.list(lat_lon)){
       stop('\"lat_lon\" cannot be a list')
@@ -487,8 +522,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          radius             = radius,
                                          radius_unit        = radius_unit,
                                          location_keys      = location_keys,
-                                         relationship_statuses = relationship_statuses %>% collase_if_not_null, 
-                                         life_events           = life_events %>% collase_if_not_null, 
+                                         #relationship_statuses = relationship_statuses %>% collase_if_not_null, 
+                                         #life_events           = life_events %>% collase_if_not_null, 
                                          user_os               = user_os_param %>% collase_if_not_null, 
                                          wireless_carrier      = wireless_carrier_param %>% collase_if_not_null, 
                                          gender_param       = gender %>% paste(collapse = ","),
@@ -508,6 +543,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                        make_flex_spec(family_statuses,    "family_statuses"),
                        make_flex_spec(income,             "income"),
                        make_flex_spec(industries,         "industries"),
+                       make_flex_spec(life_events,        "life_events"),
+                       make_flex_spec(relationship_statuses, "relationship_statuses"),
                        make_flex_spec(work_positions,     "work_positions"),
                        make_flex_spec(work_employers,     "work_employers")) %>%
     str_replace_all(",$", "")
@@ -573,6 +610,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                           make_flex_spec(excl_family_statuses,    "family_statuses"),
                           make_flex_spec(excl_income,             "income"),
                           make_flex_spec(excl_industries,         "industries"),
+                          make_flex_spec(excl_life_events,        "life_events"),
+                          make_flex_spec(excl_relationship_statuses, "relationship_statuses"),
                           make_flex_spec(excl_work_positions,     "work_positions"),
                           make_flex_spec(excl_work_employers,     "work_employers")) %>%
     str_replace_all(",$", "")
@@ -628,6 +667,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         query_val_df$family_statuses    <- family_statuses    %>% param_str()
         query_val_df$income             <- income             %>% param_str()
         query_val_df$industries         <- industries         %>% param_str()
+        query_val_df$life_events        <- life_events        %>% param_str()
+        query_val_df$relationship_statuses <- relationship_statuses %>% param_str()
         query_val_df$work_positions     <- work_positions     %>% param_str()
         query_val_df$work_employers     <- work_employers     %>% param_str()
         
@@ -641,12 +682,14 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         query_val_df$excl_family_statuses    <- excl_family_statuses    %>% param_str()
         query_val_df$excl_income             <- excl_income             %>% param_str()
         query_val_df$excl_industries         <- excl_industries         %>% param_str()
+        query_val_df$excl_life_events        <- excl_life_events        %>% param_str()
+        query_val_df$excl_relationship_statuses <- excl_relationship_statuses %>% param_str()
         query_val_df$excl_work_positions     <- excl_work_positions     %>% param_str()
         query_val_df$excl_work_employers     <- excl_work_employers     %>% param_str()
         
         ## Non Flex Targetting Parameters
-        query_val_df$relationship_statuses <- relationship_statuses %>% param_str()
-        query_val_df$life_events           <- life_events           %>% param_str()
+        #query_val_df$relationship_statuses <- relationship_statuses %>% param_str()
+        #query_val_df$life_events           <- life_events           %>% param_str()
         query_val_df$user_os               <- user_os               %>% param_str()
         query_val_df$wireless_carrier      <- wireless_carrier      %>% param_str()
         query_val_df$gender                <- gender                %>% param_str()
@@ -772,6 +815,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param family_statuses Family status IDs. For example, `family_statuses = c(6023080302983, 6023005681983)` targets users who are parents with preteens or parents with teenagers. Use `get_fb_parameters(type = "family_statuses")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
 #' @param income Income IDs. For example, `income = c(6107813553183, 6107813554583)` targets users with a household income in the top 10%-25% or 25%-50% of ZIP codes (US). Use `get_fb_parameters(type = "income")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
 #' @param industries Industries IDs. For example, `industries = c(6008888980183, 6008888972183)` targets users who work in sales or legal services. Use `get_fb_parameters(type = "industries")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
+#' @param life_events Life event IDs. For example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "life_events")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
+#' @param relationship_statuses Relationship status IDs. For example, `relationship_statuses = c(3,4)` targets those who are married or engaged. Use `get_fb_parameters(type = "relationship_statuses")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
 #' @param work_positions Work position IDs. For example, `work_positions = 105763692790962` will target users who indicate they are contractors. Use `get_fb_parameters(type = "work_positions", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
 #' @param work_employers Work employer IDs. For example, `work_employers = 50431654` will target users who work for Microsoft. Use `get_fb_parameters(type = "work_employers", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
 #' ### Exclude parameters
@@ -784,20 +829,24 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param excl_family_statuses Family status IDs to exclude.
 #' @param excl_income Income IDs to exclude.
 #' @param excl_industries Industry IDs to exclude.
+#' @param excl_life_events Life event IDs to exclude.
+#' @param excl_relationship_statuses Relationship status IDs to exclude.
 #' @param excl_work_positions Work position IDs to exclude.
 #' @param excl_work_employers Work employer IDs to exclude.
-#' ## Parameters that can be specified here, but not in `flex_targeting`.
-#' @param relationship_statuses Relationship status IDs. For example, `relationship_statuses = c(3,4)` targets those who are married or engaged. Use `get_fb_parameters(type = "relationship_statuses")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
-#' @param life_events Life event IDs. For example, `life_events = c(6005149512172, 6005149512172)` targets users who recently moved or are in a new job. Use `get_fb_parameters(type = "life_events")` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic). 
+#' ### Non-Flexible parameters 
+#' 
+#' * Across parameters, AND conditions are used. For example, if `gender = 1` and `age_min = 30`, queries users that are male AND are over 30 years old.
+#' * These parameters _cannot_ be specified in `flex_targeting`
+#' * Within parameters, vectors (`c()`) specify OR conditions. AND conditions cannot be specified within these parameters.
 #' @param user_os User operating systems. For example, `user_os = ('iOS', 'Android')` targets those that use either an iOS or Android OS; `user_os = c("Android_ver_4.2_and_above")` targets those using Android version 4.2 and above; and `user_os = c("iOS_ver_8.0_to_9.0")` targets those using iOS version 8.0 to 9.0. Different versions can be specified. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
 #' @param wireless_carrier Wireless carrier. If set to `Wifi`, then targets those connecting via a Wifi network. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic).
 #' @param gender Genders to target; 1 targets males and 2 targets females. Default is both. See `gender` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
+#' ## Flex Targeting
+#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
 #' ## Credentials
-#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targetting, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and).
-#' ## Credentials
-#' @param version API version. e.g., "v17.0"
+#' @param version API version. e.g., "v18.0"
 #' @param creation_act Facebook creation act
 #' @param token Facebook API token
 #' ## Scraping parameters
@@ -869,6 +918,8 @@ query_fb_marketing_api <- function(location_unit_type,
                                    family_statuses = NULL,
                                    income = NULL,
                                    industries = NULL,
+                                   life_events = NULL, 
+                                   relationship_statuses = NULL, 
                                    work_positions = NULL,
                                    work_employers = NULL,
                                    
@@ -882,12 +933,12 @@ query_fb_marketing_api <- function(location_unit_type,
                                    excl_family_statuses = NULL,
                                    excl_income = NULL,
                                    excl_industries = NULL,
+                                   excl_life_events = NULL, 
+                                   excl_relationship_statuses = NULL, 
                                    excl_work_positions = NULL,
                                    excl_work_employers = NULL,
                                    
                                    ## Non Flex Targetting Parameters
-                                   relationship_statuses = NULL, 
-                                   life_events = NULL, 
                                    user_os = NULL,
                                    wireless_carrier = NULL,
                                    gender = c(1,2),
@@ -925,6 +976,8 @@ query_fb_marketing_api <- function(location_unit_type,
     if(!is.null(family_statuses))    stop(use_flex_target_mssg("family_statuses"))
     if(!is.null(income))             stop(use_flex_target_mssg("income"))
     if(!is.null(industries))         stop(use_flex_target_mssg("industries"))
+    if(!is.null(life_events))        stop(use_flex_target_mssg("life_events"))
+    if(!is.null(relationship_statuses)) stop(use_flex_target_mssg("relationship_statuses"))
     if(!is.null(work_positions))     stop(use_flex_target_mssg("work_positions"))
     if(!is.null(work_employers))     stop(use_flex_target_mssg("work_employers"))
     
@@ -991,6 +1044,8 @@ query_fb_marketing_api <- function(location_unit_type,
   family_statuses    <- family_statuses    %>% make_iterable()
   income             <- income             %>% make_iterable()
   industries         <- industries         %>% make_iterable()
+  life_events        <- life_events        %>% make_iterable()
+  relationship_statuses <- relationship_statuses %>% make_iterable()
   work_positions     <- work_positions     %>% make_iterable()
   work_employers     <- work_employers     %>% make_iterable()
   
@@ -1004,12 +1059,14 @@ query_fb_marketing_api <- function(location_unit_type,
   excl_family_statuses    <- excl_family_statuses    %>% make_iterable()
   excl_income             <- excl_income             %>% make_iterable()
   excl_industries         <- excl_industries         %>% make_iterable()
+  excl_life_events        <- excl_life_events        %>% make_iterable()
+  excl_relationship_statuses <- excl_relationship_statuses %>% make_iterable()
   excl_work_positions     <- excl_work_positions     %>% make_iterable()
   excl_work_employers     <- excl_work_employers     %>% make_iterable()
   
   ## Non flex targetting parameters
-  relationship_statuses <- relationship_statuses %>% make_iterable() 
-  life_events           <- life_events           %>% make_iterable() 
+  #relationship_statuses <- relationship_statuses %>% make_iterable() 
+  #life_events           <- life_events           %>% make_iterable() 
   user_os               <- user_os               %>% make_iterable()
   wireless_carrier      <- wireless_carrier      %>% make_iterable()
   gender                <- gender                %>% make_iterable()
@@ -1037,6 +1094,8 @@ query_fb_marketing_api <- function(location_unit_type,
                                family_statuses    = family_statuses, 
                                income             = income, 
                                industries         = industries, 
+                               life_events        = life_events, 
+                               relationship_statuses = relationship_statuses, 
                                work_positions     = work_positions, 
                                work_employers     = work_employers, 
                                
@@ -1050,12 +1109,14 @@ query_fb_marketing_api <- function(location_unit_type,
                                excl_family_statuses    = excl_family_statuses,
                                excl_income             = excl_income, 
                                excl_industries         = excl_industries, 
+                               excl_life_events        = excl_life_events, 
+                               excl_relationship_statuses = excl_relationship_statuses, 
                                excl_work_positions     = excl_work_positions, 
                                excl_work_employers     = excl_work_employers, 
                                
                                ## Non flex targetting parameters
-                               relationship_statuses = relationship_statuses,
-                               life_events           = life_events,
+                               #relationship_statuses = relationship_statuses,
+                               #life_events           = life_events,
                                user_os               = user_os,
                                wireless_carrier      = wireless_carrier,
                                gender                = gender,
@@ -1088,6 +1149,8 @@ query_fb_marketing_api <- function(location_unit_type,
                    family_statuses    = param_grid_df$family_statuses, 
                    income             = param_grid_df$income, 
                    industries         = param_grid_df$industries, 
+                   life_events        = param_grid_df$life_events, 
+                   relationship_statuses = param_grid_df$relationship_statuses, 
                    work_positions     = param_grid_df$work_positions, 
                    work_employers     = param_grid_df$work_employers, 
                    
@@ -1101,12 +1164,14 @@ query_fb_marketing_api <- function(location_unit_type,
                    excl_family_statuses    = param_grid_df$excl_family_statuses,
                    excl_income             = param_grid_df$excl_income, 
                    excl_industries         = param_grid_df$excl_industries, 
+                   excl_life_events        = param_grid_df$excl_life_events, 
+                   excl_relationship_statuses = param_grid_df$excl_relationship_statuses, 
                    excl_work_positions     = param_grid_df$excl_work_positions, 
                    excl_work_employers     = param_grid_df$excl_work_employers, 
                    
                    ## Non flex targetting parameters
-                   relationship_statuses = param_grid_df$relationship_statuses,
-                   life_events           = param_grid_df$life_events,
+                   #relationship_statuses = param_grid_df$relationship_statuses,
+                   #life_events           = param_grid_df$life_events,
                    user_os               = param_grid_df$user_os,
                    wireless_carrier      = param_grid_df$wireless_carrier,
                    gender                = param_grid_df$gender,

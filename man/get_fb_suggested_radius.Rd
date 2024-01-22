@@ -21,6 +21,9 @@ Dataframe with suggested radius and distance unit
 \description{
 When targeting around a specific location, returns a suggested radius to reach enough people
 }
+\details{
+For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius}{Facebook documentation here}
+}
 \examples{
 \dontrun{
 get_fb_suggested_radius(location = c(38.89831, -77.03658),

@@ -9,6 +9,8 @@
 #' 
 #' @return Dataframe with suggested radius and distance unit
 #' 
+#' @details For more information, see the [Facebook documentation here](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius)
+#' 
 #' @examples
 #' \dontrun{
 #' get_fb_suggested_radius(location = c(38.89831, -77.03658),

@@ -2,9 +2,7 @@
 % Please edit documentation in R/query_fb_marketing_api.R
 \name{query_fb_marketing_api}
 \alias{query_fb_marketing_api}
-\title{Query Facebook Marketing API
-\subsection{Location}{
-}}
+\title{Query Facebook Marketing API}
 \usage{
 query_fb_marketing_api(
   location_unit_type,
@@ -23,6 +21,8 @@ query_fb_marketing_api(
   family_statuses = NULL,
   income = NULL,
   industries = NULL,
+  life_events = NULL,
+  relationship_statuses = NULL,
   work_positions = NULL,
   work_employers = NULL,
   excl_interests = NULL,
@@ -34,10 +34,10 @@ query_fb_marketing_api(
   excl_family_statuses = NULL,
   excl_income = NULL,
   excl_industries = NULL,
+  excl_life_events = NULL,
+  excl_relationship_statuses = NULL,
   excl_work_positions = NULL,
   excl_work_employers = NULL,
-  relationship_statuses = NULL,
-  life_events = NULL,
   user_os = NULL,
   wireless_carrier = NULL,
   gender = c(1, 2),
@@ -73,9 +73,12 @@ query_fb_marketing_api(
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
 
 \item{locales}{Locales ID.
-\subsection{Parameters. These are optional. If nothing specified, then the function searches for all users.}{
-
-Parameters that can be specified below or in \code{flex_targeting}. For the below parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies; however, \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
+\subsection{Parameters}{
+\itemize{
+\item Within parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies, while \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
+\item Across parameters, OR conditions are used. For example, if enter \code{interests = 6003349442621} and \code{behaviors = 6008297697383} are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
+\item And conditions across parameters can be specified using the \code{flex_target} argument.
+}
 }}
 
 \item{interests}{Interest IDs. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(type = "interests", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests}{Basic Targeting Documentation}.}
@@ -95,6 +98,10 @@ Parameters that can be specified below or in \code{flex_targeting}. For the belo
 \item{income}{Income IDs. For example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameters(type = "income")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
 \item{industries}{Industries IDs. For example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameters(type = "industries")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+
+\item{life_events}{Life event IDs. For example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(type = "life_events")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+
+\item{relationship_statuses}{Relationship status IDs. For example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. Use \code{get_fb_parameters(type = "relationship_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
 \item{work_positions}{Work position IDs. For example, \code{work_positions = 105763692790962} will target users who indicate they are contractors. Use \code{get_fb_parameters(type = "work_positions", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
@@ -120,15 +127,20 @@ Parameters that can be specified below or in \code{flex_targeting}. For the belo
 
 \item{excl_industries}{Industry IDs to exclude.}
 
+\item{excl_life_events}{Life event IDs to exclude.}
+
+\item{excl_relationship_statuses}{Relationship status IDs to exclude.}
+
 \item{excl_work_positions}{Work position IDs to exclude.}
 
 \item{excl_work_employers}{Work employer IDs to exclude.
-\subsection{Parameters that can be specified here, but not in \code{flex_targeting}.}{
+\subsection{Non-Flexible parameters}{
+\itemize{
+\item Across parameters, AND conditions are used. For example, if \code{gender = 1} and \code{age_min = 30}, queries users that are male AND are over 30 years old.
+\item These parameters \emph{cannot} be specified in \code{flex_targeting}
+\item Within parameters, vectors (\code{c()}) specify OR conditions. AND conditions cannot be specified within these parameters.
+}
 }}
-
-\item{relationship_statuses}{Relationship status IDs. For example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. Use \code{get_fb_parameters(type = "relationship_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
-
-\item{life_events}{Life event IDs. For example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(type = "life_events")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
 \item{user_os}{User operating systems. For example, \verb{user_os = ('iOS', 'Android')} targets those that use either an iOS or Android OS; \code{user_os = c("Android_ver_4.2_and_above")} targets those using Android version 4.2 and above; and \code{user_os = c("iOS_ver_8.0_to_9.0")} targets those using iOS version 8.0 to 9.0. Different versions can be specified. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
@@ -139,14 +151,14 @@ Parameters that can be specified below or in \code{flex_targeting}. For the belo
 \item{age_min}{Minimum age. Default is 18. See \code{age_min} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
 
 \item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.
+\subsection{Flex Targeting}{
+}}
+
+\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.
 \subsection{Credentials}{
 }}
 
-\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targetting, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and}{the documentation here}.
-\subsection{Credentials}{
-}}
-
-\item{version}{API version. e.g., "v17.0"}
+\item{version}{API version. e.g., "v18.0"}
 
 \item{creation_act}{Facebook creation act}
 
@@ -169,8 +181,6 @@ Dataframe that includes (1) daily and monthly active users and (2) parameter val
 }
 \description{
 Query Facebook Marketing API
-\subsection{Location}{
-}
 }
 \examples{
 \dontrun{

@@ -243,6 +243,27 @@ r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
   scroll_box(width = "100%")
 ```
 
+Facebook enables querying a specific location to determine a suggested radius to reach enough people (see [Facebook documentation here](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius)). We can use the `get_fb_suggested_radius` function to get the suggested radius. Below shows the querying the suggested radius for Paris, France and Paris, Kentucky. 
+
+```{r get_sugg_radius, include=TRUE, warning=FALSE, message=FALSE}
+
+# Paris, France
+get_fb_suggested_radius(location = c(48.856667, 2.352222),
+                        version = VERSION,
+                        token = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
+
+# Paris, Kentucky
+get_fb_suggested_radius(location = c(38.209682, -84.253915),
+                        version = VERSION,
+                        token = TOKEN) %>%
+  kable() %>% 
+  kable_styling() %>%
+  scroll_box(width = "100%")
+```
+
 ### Location IDs - Country, State, District, City, Neighborhood, etc. <a name="query_data_loc_keys"></a>
 
 We can also query using different location types, including countries, cities, etc. The `get_fb_parameter_ids()` function can be used to extract location keys for different location types; the location keys can then be used in the `query_fb_marketing_api()`. The below table indicates all the location types supported by the package.

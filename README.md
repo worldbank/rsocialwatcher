@@ -17,11 +17,12 @@ This package facilitates querying data from the Facebook Marketing API. The pack
 * [Monitoring refugee and migrant flows in Venezuela](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175)
 * [Studying the Urban/Rural Divide](https://arxiv.org/pdf/2002.11645.pdf)
 
-The package provides three functions:
+The package provides the following functions:
 
-* `get_fb_parameter_ids()`: To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
-* `get_location_coords()`: To obtain coordinates and, when available, geometries of locations based on their location keys.
-* `query_fb_marketing_api()`: Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_parameter_ids()`](https://ramarty.github.io/rSocialWatcher/reference/get_fb_parameter_ids.html): To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* [`get_location_coords()`](https://ramarty.github.io/rSocialWatcher/reference/get_location_coords.html): To obtain coordinates and, when available, geometries of locations based on their location keys.
+* [`query_fb_marketing_api()`](https://ramarty.github.io/rSocialWatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_suggested_radius()`](https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
 
 ## Installation <a name="installation"></a>
 The package is available via Github and can be install using `devtools`.
@@ -123,6 +124,22 @@ us_states_sf <- get_fb_parameter_ids(
   add_location_coords = T)
 ```
 
+### Get suggested radius
+
+Facebook enables querying a specific location to determine a suggested radius to reach enough people (see [Facebook documentation here](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius)). We can use the `get_fb_suggested_radius` function to get the suggested radius. Below shows the querying the suggested radius for Paris, France and Paris, Kentucky. 
+
+```r
+# Paris, France
+get_fb_suggested_radius(location = c(48.856667, 2.352222),
+                        version = VERSION,
+                        token = TOKEN)
+
+# Paris, Kentucky
+get_fb_suggested_radius(location = c(38.209682, -84.253915),
+                        version = VERSION,
+                        token = TOKEN)
+```
+
 ### Query data for different user attributes <a name="quick-attributes"></a>
 
 __Example [One parameter]:__ Facebook users who primarily access Facebook using Mac OS X living in the US
@@ -166,7 +183,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#flexible-targetting-or-and-and) for examples. 
+__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples. 
 ```r
 int_comp_id <- interests_df %>% 
   filter(name == "Computers (computers & electronics))") %>% 
