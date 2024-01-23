@@ -25,7 +25,7 @@ if(T){
     theme(panel.background = element_rect(fill = rgb(44, 100, 246, maxColorValue = 255) )) 
 
   sticker(p, 
-          package="rSocialWatcher", 
+          package="rsocialwatcher", 
           spotlight = F,
           #l_alpha = 0.3, #0.15,
           p_size=19, #7 
@@ -44,6 +44,6 @@ if(T){
           l_x = 0.93,
           l_width = 3,
           l_height = 3,
-          filename="~/Documents/Github/rSocialWatcher/man/figures/logo.png")
+          filename="~/Documents/Github/rsocialwatcher/man/figures/logo.png")
 
 }

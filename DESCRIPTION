@@ -1,5 +1,5 @@
-Package: rSocialWatcher
-Title: What the Package Does (One Line, Title Case)
+Package: rsocialwatcher
+Title: A Social Data Collector for Facebook Marketing API
 Version: 0.1.0
 Authors@R: 
     person("Robert", "Marty", , "robmarty3@gmail.com", role = c("aut", "cre"),
@@ -9,9 +9,8 @@ License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-URL: https://ramarty.github.io/rSocialWatcher/,
-    https://worldbank.github.io/rsocialwatcher/
-BugReports: https://github.com/ramarty/rSocialWatcher/issues
+URL:  https://worldbank.github.io/rsocialwatcher/
+BugReports: https://github.com/worldbank/rsocialwatcher/issues
 VignetteBuilder: knitr, rmarkdown
 Suggests:
     knitr, 

@@ -1,5 +1,5 @@
 ---
-title: "rsocialwatcher"
+title: "rsocialwatcher: Usage Examples"
 #author: "Robert Marty"
 #date: "`r Sys.Date()`"
 #output: rmarkdown::html_vignette
