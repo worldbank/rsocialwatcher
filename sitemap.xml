@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/404.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/404.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/articles/create_facebook_credentials.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/articles/create_facebook_credentials.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/articles/index.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/authors.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/authors.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/index.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/index.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/fill_fb_id_names.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/fill_fb_id_names.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_fb_parameter_ids.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/get_fb_parameter_ids.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/get_location_coords.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/get_location_coords.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/index.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/map_param.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/map_param.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/merge_fb_with_param_df.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/merge_fb_with_param_df.html</loc>
   </url>
   <url>
-    <loc>https://ramarty.github.io/rSocialWatcher/reference/query_fb_marketing_api.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html</loc>
   </url>
 </urlset>
