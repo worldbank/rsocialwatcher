@@ -9,7 +9,8 @@ License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-URL: https://ramarty.github.io/rSocialWatcher/
+URL: https://ramarty.github.io/rSocialWatcher/,
+    https://worldbank.github.io/rsocialwatcher/
 BugReports: https://github.com/ramarty/rSocialWatcher/issues
 VignetteBuilder: knitr, rmarkdown
 Suggests:

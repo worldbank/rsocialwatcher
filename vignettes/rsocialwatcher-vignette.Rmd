@@ -1,5 +1,5 @@
 ---
-title: "rSocialWatcher"
+title: "rsocialwatcher"
 #author: "Robert Marty"
 #date: "`r Sys.Date()`"
 #output: rmarkdown::html_vignette
@@ -10,7 +10,7 @@ output:
     toc_float: false
 vignette: >
   %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{rSocialWatcher}
+  %\VignetteIndexEntry{rsocialwatcher}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -27,7 +27,7 @@ First, we load relevant packages and create variables for our Facebook API keys.
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE}
 ## Load packages
-library(rSocialWatcher)
+library(rsocialwatcher)
 library(tidyverse)
 library(dplyr)
 library(lubridate)
@@ -72,7 +72,7 @@ VERSION <- api_keys %>%
 
 ---
 
-The `rSocialWatcher` package provides two functions:
+The `rsocialwatcher` package provides two functions:
 
 * `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including different types and by their location.
 * `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 

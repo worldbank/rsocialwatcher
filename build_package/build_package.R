@@ -1,7 +1,7 @@
 if(F){
-  setwd("~/Documents/Github/rSocialWatcher")
+  setwd("~/Documents/Github/rsocialwatcher")
   
-  roxygen2::roxygenise("~/Documents/Github/rSocialWatcher")
+  roxygen2::roxygenise("~/Documents/Github/rsocialwatcher")
   
   pkgdown::clean_site()
   pkgdown::deploy_to_branch()

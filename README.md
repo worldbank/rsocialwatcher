@@ -1,4 +1,4 @@
-# rSocialWatcher <img src="man/figures/logo.png" align="right" width="200" />
+# rsocialwatcher <img src="man/figures/logo.png" align="right" width="200" />
 
 Query data from the Facebook Marketing API using R, with a focus for social science research. 
 
@@ -19,17 +19,17 @@ This package facilitates querying data from the Facebook Marketing API. The pack
 
 The package provides the following functions:
 
-* [`get_fb_parameter_ids()`](https://ramarty.github.io/rSocialWatcher/reference/get_fb_parameter_ids.html): To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
-* [`get_location_coords()`](https://ramarty.github.io/rSocialWatcher/reference/get_location_coords.html): To obtain coordinates and, when available, geometries of locations based on their location keys.
-* [`query_fb_marketing_api()`](https://ramarty.github.io/rSocialWatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
-* [`get_fb_suggested_radius()`](https://ramarty.github.io/rSocialWatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
+* [`get_fb_parameter_ids()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_parameter_ids.html): To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* [`get_location_coords()`](https://worldbank.github.io/rsocialwatcher/reference/get_location_coords.html): To obtain coordinates and, when available, geometries of locations based on their location keys.
+* [`query_fb_marketing_api()`](https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_suggested_radius()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
 
 ## Installation <a name="installation"></a>
 The package is available via Github and can be install using `devtools`.
 
 ```r
 # install.packages("devtools")
-devtools::install_github("ramarty/rSocialWatcher")
+devtools::install_github("worldbank/rsocialwatcher")
 ```
 
 ## Facebook API Credentials <a name="credentials"></a>
@@ -40,7 +40,7 @@ Using the Facebook Marketing API requires indicating the following:
 2. Version
 3. Creation
 
-Follow the instructions [here](https://ramarty.github.io/rSocialWatcher/articles/create_facebook_credentials.html) to obtain these credentials.
+Follow the instructions [here](https://worldbank.github.io/rsocialwatcher/articles/create_facebook_credentials.html) to obtain these credentials.
 
 ## Quickstart <a name="quick"></a>
 
@@ -52,7 +52,7 @@ Follow the instructions [here](https://ramarty.github.io/rSocialWatcher/articles
 
 ### Setup <a name="quick-setup"></a>
 ```r
-library(rSocialWatcher)
+library(rsocialwatcher)
 library(dplyr)
 
 # Define API version, creation act & token -------------------------------------
@@ -183,7 +183,7 @@ us_mac_and_tech_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. __The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples.__
+__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. __The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples.__
 ```r
 int_comp_id <- interests_df %>% 
   filter(name == "Computers (computers & electronics))") %>% 
@@ -250,4 +250,4 @@ mult_queries_df <- query_fb_marketing_api(
 ```
 
 ## Usage <a name="usage"></a>
-See [this vignette](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 
+See [this vignette](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 
