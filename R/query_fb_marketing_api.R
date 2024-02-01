@@ -638,7 +638,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
       
       if(!is.null(query_val$error)){
         warning("Error message from Facebook Marketing API")
-        print(query_val)
+        if(query_val$error$code != 80004) print(query_val)
       }
       
       #### If there is no error
@@ -800,7 +800,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
 #' ### Other location parameters
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
-#' @param locales Locales ID. 
+#' @param locales Locales ID. For more information on locales, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional)
 #' ### Parameters 
 #' 
 #' * Within parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies, while `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
