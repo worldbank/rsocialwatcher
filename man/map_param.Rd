@@ -2,7 +2,8 @@
 % Please edit documentation in R/query_fb_marketing_api.R
 \name{map_param}
 \alias{map_param}
-\title{Map Parameters}
+\title{Map Parameters
+Instruct \code{query_fb_marketing_api()} to make separate queries. \code{query_fb_marketing_api()} makes a separate query for each item in \code{map_param()}.}
 \usage{
 map_param(...)
 }
@@ -11,4 +12,20 @@ map_param(...)
 }
 \description{
 Map Parameters
+Instruct \code{query_fb_marketing_api()} to make separate queries. \code{query_fb_marketing_api()} makes a separate query for each item in \code{map_param()}.
+}
+\examples{
+\dontrun{
+# Make 3 queries:
+# 1. Number of males and females MAU/DAU
+# 2. Number of male MAU/DAU
+# 3. Number of female MAU/DAU
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = "US",
+  gender             = map_param(c(1,2), 1, 2)
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+}
 }

@@ -233,6 +233,55 @@ us_mult_cnt_param_df <- query_fb_marketing_api(
   token              = TOKEN)
 ```
 
+__Example:__ Make query for each country, for:
+
+* Those that access Facebook using Mac OS X OR who are likely technology early adopters
+* Those that access Facebook using Mac OS X AND who are likely technology early adopters
+
+The below illustrates how we can make complex queries (ie, using AND and OR) conditions within `map_param()`
+
+```r
+us_mult_cnt_param_df <- query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX"),
+  behaviors          = map_param(c(beh_mac_id, beh_tech_id), # OR condition
+                                 list(beh_mac_id, beh_tech_id)), # AND condition
+  interests          = int_comp_id
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+__Example:__ Make queries using vector as input. Below, we want to make a separate query for six countries. We define the following vector:
+
+`countries <- c("US", "CA", "MX", "FR", "GB", "ES")`
+
+However, for the below:
+
+`location_keys = map_param(countries)`
+
+`map_param()` views `countries` as one item (a vector of countries), so will make just 1 query---querying the number of MAU/DAU across countries. To make a query for each item in the vector, we use `map_param_vec()`.
+
+
+```r
+countries <- c("US", "CA", "MX", "FR", "GB", "ES")
+
+# INCORRECT: The below will make 1 query, querying the number of MAU/DAU across countries.
+us_mult_cnt_param_df <- query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param(countries),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+  
+# CORRECT: The below will make 6 queries, one for each country.
+us_mult_cnt_param_df <- query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param_vec(countries),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
 ### Using Multiple API Tokens <a name="multiple_tokens"></a>
 
 The Facebook API is rate limited, where only a certain number of queries can be made in a given time. If the rate limit is reached, `query_fb_marketing_api` will pause then try the query until it is successfully called. `query_fb_marketing_api` can take a long time to complete if mapping over a large number of queries.

@@ -770,11 +770,11 @@ interests_vec <- c(1, 2)
 map_param(interests_vec)
 ```
 
-__Example 3: To map over a vector,__ we can use the following code. 
+__Example 3: To map over a vector,__ we can use the `map_param_vec()` function---which creates a separate query for each item in the vector.
 ```{r map_param_ex3, include=TRUE, warning=FALSE, message=FALSE}
 interests_vec <- c(1, 2)
 
-map_param(interests_vec) %>% unlist()
+map_param_vec(interests_vec)
 ```
 
 ### Simple Examples <a name="query_data_ids_multquery_simple"></a>

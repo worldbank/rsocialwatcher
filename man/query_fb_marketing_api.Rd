@@ -72,7 +72,7 @@ query_fb_marketing_api(
 
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
 
-\item{locales}{Locales ID.
+\item{locales}{Locales ID. For more information on locales, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional}{Advanced Targeting Documentation}
 \subsection{Parameters}{
 \itemize{
 \item Within parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies, while \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.

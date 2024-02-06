@@ -15,7 +15,23 @@ is_null_or_na <- function(x){
 }
 
 #' Map Parameters
+#' Instruct `query_fb_marketing_api()` to make separate queries. `query_fb_marketing_api()` makes a separate query for each item in `map_param()`.
+#' 
 #' @param ... Vector or list
+#' @examples
+#' \dontrun{
+#' # Make 3 queries:
+#' # 1. Number of males and females MAU/DAU
+#' # 2. Number of male MAU/DAU
+#' # 3. Number of female MAU/DAU
+#' query_fb_marketing_api(
+#'   location_unit_type = "countries",
+#'   location_keys      = "US",
+#'   gender             = map_param(c(1,2), 1, 2)
+#'   version            = VERSION, 
+#'   creation_act       = CREATION_ACT, 
+#'   token              = TOKEN)
+#' }
 #' @export
 #' 
 map_param <- function(...){
@@ -30,23 +46,39 @@ map_param <- function(...){
   
   return(OUT)
 }
-# map_param <- function(...){
-#   # Function will create a separate query for each item. 
-#   # Creates a list, where the first element in the list is "map_param", where the
-#   # function then interprets each element of the list as a separate query.
-#   # Complex queries can still be made:
-#   # map_param
-#   
-#   if(is.list(c(...))){
-#     l <- list(...)
-#   } else{
-#     l <- as.list(c(...))
-#   }
-#   
-#   #l <- as.list(c(...))
-#   l <- as.list(c("map_param", l))
-#   return(l)
-# }
+
+#' Map Parameters over Vector
+#' Instruct `query_fb_marketing_api()` to make separate queries for each item in a vector. 
+#' 
+#' @param ... Vector
+#' @examples
+#' \dontrun{
+#' # Make 2 queries:
+#' # 1. Number of male MAU/DAU
+#' # 2. Number of female MAU/DAU
+#' query_fb_marketing_api(
+#'   location_unit_type = "countries",
+#'   location_keys      = "US",
+#'   gender             = map_param(1:2)
+#'   version            = VERSION, 
+#'   creation_act       = CREATION_ACT, 
+#'   token              = TOKEN)
+#' }
+#' @export
+#' 
+map_param_vec <- function(...){
+  # Function will create a separate query for each item. 
+  # Creates a list, where the first element in the list is "map_param", where the
+  # function then interprets each element of the list as a separate query.
+  # Complex queries can still be made:
+  # map_param
+  
+  OUT <- list(...)
+  OUT <- as.list(c("map_param", OUT))
+  OUT <- unlist(OUT)
+  
+  return(OUT)
+}
 
 group <- function(...){
   list(c(...))
