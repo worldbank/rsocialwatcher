@@ -164,7 +164,7 @@ make_query_nonflex_params <- function(location_unit_type = NULL,
                   "'genders':[",gender_param,"],", 
                   "'age_min':",age_min,",",
                   "'age_max':",age_max)
-
+  
   return(query)
 }
 
@@ -223,7 +223,7 @@ make_flex_spec <- function(param,
   if(name == "relationship_statuses") add_id <- F
   if(name == "work_positions")        add_id <- T # NA ??
   if(name == "work_employers")        add_id <- T # NA ??
-
+  
   
   # life_events_param     <- prep_param(life_events, add_id = T)
   # industries_param      <- prep_param(industries, add_id = T)
@@ -403,6 +403,36 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          add_query_hide_credentials){
   
   # Checks ---------------------------------------------------------------------
+  # If NA, change to NULL
+  if(is.na(interests))               interests        <- NULL
+  if(is.na(behaviors))               behaviors        <- NULL
+  if(is.na(college_years))           college_years    <- NULL
+  if(is.na(education_majors))        education_majors <- NULL
+  if(is.na(education_schools))       education_schools <- NULL
+  if(is.na(education_statuses))      education_statuses <- NULL
+  if(is.na(family_statuses))         family_statuses <- NULL
+  if(is.na(income))                  income <- NULL
+  if(is.na(industries))              industries <- NULL
+  if(is.na(life_events))             life_events <- NULL
+  if(is.na(relationship_statuses))   relationship_statuses <- NULL
+  if(is.na(work_positions))          work_positions <- NULL
+  if(is.na(work_employers))          work_employers <- NULL
+  if(is.na(excl_interests))          excl_interests <- NULL
+  if(is.na(excl_behaviors))          excl_behaviors <- NULL
+  if(is.na(excl_college_years))      excl_college_years <- NULL
+  if(is.na(excl_education_majors))   excl_education_majors <- NULL
+  if(is.na(excl_education_schools))  excl_education_schools <- NULL
+  if(is.na(excl_education_statuses)) excl_education_statuses <- NULL
+  if(is.na(excl_family_statuses))    excl_family_statuses <- NULL
+  if(is.na(excl_income))             excl_income <- NULL
+  if(is.na(excl_industries))         excl_industries <- NULL
+  if(is.na(excl_life_events))        excl_life_events <- NULL
+  if(is.na(excl_relationship_statuses)) excl_relationship_statuses <- NULL
+  if(is.na(excl_work_positions))     excl_work_positions <- NULL
+  if(is.na(excl_work_employers))     excl_work_employers <- NULL
+  if(is.na(user_os))                 user_os <- NULL
+  if(is.na(wireless_carrier))        wireless_carrier <- NULL
+  
   if(!is.null(user_os)){
     if(is.list(user_os)){
       stop('\"user_os\" cannot be a list')
@@ -816,7 +846,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     })
   }
   
-
+  
   return(query_val_df)
 }
 
@@ -1014,7 +1044,7 @@ query_fb_marketing_api <- function(location_unit_type,
     if(!is.null(work_employers))     stop(use_flex_target_mssg("work_employers"))
     
   }
-
+  
   if((c(length(version),
         length(creation_act),
         length(token)) %>%
@@ -1026,6 +1056,21 @@ query_fb_marketing_api <- function(location_unit_type,
   if(length(location_unit_type) != 1){
     stop("'location_unit_type' must be a vector of length one; only one option allowed")
   } 
+  
+  if(location_unit_type == "coordinate")         location_unit_type <- "coordinates"
+  if(location_unit_type == "country")            location_unit_type <- "countries"
+  if(location_unit_type == "country_group")      location_unit_type <- "country_groups"
+  if(location_unit_type == "region")             location_unit_type <- "regions"
+  if(location_unit_type == "electoral_district") location_unit_type <- "electoral_districts"
+  if(location_unit_type == "zip")                location_unit_type <- "zips"
+  if(location_unit_type == "geo_market")         location_unit_type <- "geo_markets"
+  if(location_unit_type == "city")               location_unit_type <- "cities"
+  if(location_unit_type == "subcity")            location_unit_type <- "subcities"
+  if(location_unit_type == "neighborhood")       location_unit_type <- "neighborhoods"
+  if(location_unit_type == "large_geo_area")     location_unit_type <- "large_geo_areas"
+  if(location_unit_type == "medium_geo_area")    location_unit_type <- "medium_geo_areas"
+  if(location_unit_type == "small_geo_area")     location_unit_type <- "small_geo_areas"
+  if(location_unit_type == "place")              location_unit_type <- "places"
   
   if(!is.null(location_unit_type)){
     location_unit_type_valid_options <- c("coordinates", "countries", "country_groups", "regions", 
