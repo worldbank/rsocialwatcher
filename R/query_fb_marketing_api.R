@@ -406,14 +406,18 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   # If NA, change to NULL
   is_na_null <- function(x){
     
+    out <- F
+    
+    if(is.null(x)) out <- T
+    
     if(!is.null(x)){
-      if(is.na(x)) x <- NULL
+      if(is.na(x)) out <- NULL
     }
     
-    return(x)
-
+    return(out)
+    
   }
-
+  
   if(is_na_null(interests))               interests        <- NULL
   if(is_na_null(behaviors))               behaviors        <- NULL
   if(is_na_null(college_years))           college_years    <- NULL
@@ -785,7 +789,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                            estimate_mau_lower_bound, 
                            estimate_mau_upper_bound, 
                            api_call_time_utc), as.character))
-      
+        
         if(add_query){
           query_val_df$query <- query
           if(add_query_hide_credentials){
@@ -1162,7 +1166,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                location_types = location_types, 
                                locales        = locales, 
                                
-                               ## Flex targetting parameters
+                               ## Flex targeting parameters
                                interests          = interests, 
                                behaviors          = behaviors, 
                                college_years      = college_years, 

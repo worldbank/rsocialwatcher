@@ -235,7 +235,7 @@ The number of daily and monthly active Facebook users can be queried (1) around 
 ```{r simple_query_latlon_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 ## All Facebook Users by Radius (Near NYC)
-r5km_df <- query_fb_marketing_api(location_unit_type = "coordinates",
+query_fb_marketing_api(location_unit_type = "coordinates",
                                   lat_lon            = c(40.712, -74.006),
                                   radius             = 5,
                                   radius_unit        = "kilometer",
