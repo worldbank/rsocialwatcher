@@ -1,10 +1,10 @@
 pandoc: 3.1.1
-pkgdown: 2.0.6
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   create_facebook_credentials: create_facebook_credentials.html
   rsocialwatcher-vignette: rsocialwatcher-vignette.html
-last_built: 2024-01-23T16:30Z
+last_built: 2024-04-10T13:08Z
 urls:
   reference: https://worldbank.github.io/rsocialwatcher/reference
   article: https://worldbank.github.io/rsocialwatcher/articles

@@ -19,9 +19,6 @@
     <loc>https://worldbank.github.io/rsocialwatcher/index.html</loc>
   </url>
   <url>
-    <loc>https://worldbank.github.io/rsocialwatcher/reference/fill_fb_id_names.html</loc>
-  </url>
-  <url>
     <loc>https://worldbank.github.io/rsocialwatcher/reference/get_fb_parameter_ids.html</loc>
   </url>
   <url>
@@ -37,7 +34,7 @@
     <loc>https://worldbank.github.io/rsocialwatcher/reference/map_param.html</loc>
   </url>
   <url>
-    <loc>https://worldbank.github.io/rsocialwatcher/reference/merge_fb_with_param_df.html</loc>
+    <loc>https://worldbank.github.io/rsocialwatcher/reference/map_param_vec.html</loc>
   </url>
   <url>
     <loc>https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html</loc>
