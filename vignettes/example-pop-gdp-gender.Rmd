@@ -1,0 +1,295 @@
+---
+title: "Example: Facebook Usage, Population Online, GDP, & Gender in Africa"
+#author: "Robert Marty"
+#date: "`r Sys.Date()`"
+#output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    toc_depth: 5
+    toc_float: false
+    code_folding: show
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{rsocialwatcher}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r init, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+How does Facebook usage relate to socio-economic indicators? This vignette illustates the extent that Facebook usage relates to internet connectivity and per capita GDP in sub-Saharan Africa---as well as how Facebook data can be used to examine the gender digital divide. 
+
+### Setup
+Below we load relevant packages and define Facebook keys.
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE}
+## Load packages
+library(rsocialwatcher)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(WDI)
+library(janitor)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+
+## Set Facebook Keys
+TOKEN        <- "TOKEN-HERE"
+CREATION_ACT <- "CREATION-ACT-HERE"
+VERSION      <- "VERSION-HERE"
+```
+
+```{r loadkey, include=FALSE}
+
+library(stringr)
+
+## Load keys
+# api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
+#                      stringsAsFactors = F)
+
+api_keys <- read.csv("https://www.dropbox.com/scl/fi/5ug1cfhmoi6v2m393broz/fb_credentials.csv?rlkey=xedl2727l7mnf7ayg0zgrxtr0&dl=1")
+
+api_keys <- api_keys %>%
+  dplyr::filter(Service == "facebook_marketing_ad",
+                Details == "robmarty3@gmail.com")
+
+TOKEN <- api_keys %>% 
+  dplyr::filter(Account == "token") %>% 
+  pull(Key)
+
+CREATION_ACT <- api_keys %>% 
+  dplyr::filter(Account == "creation_act") %>% 
+  pull(Key) %>% 
+  str_replace_all("ACT_", "") 
+
+VERSION <- api_keys %>% 
+  dplyr::filter(Account == "version") %>% 
+  pull(Key)
+```
+
+### Query data from WDI
+
+We query data from the [World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/). For each country, we query:
+
+* Total population (`SP.POP.TOTL`)
+* Male population (`SP.POP.TOTL.MA.ZS`)
+* Female population (`SP.POP.TOTL.FE.ZS`)
+* GDP per capita (`NY.GDP.PCAP.CD`)
+* Individuals using the Internet, % of population (`IT.NET.USER.ZS`)
+
+```{r query_wdi1, include=FALSE, warning=FALSE, message=FALSE}
+
+OUT_PATH <- file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+                      "wdidata_example-pop-gdp-gender.Rds")
+
+if(!file.exists(OUT_PATH)){
+  
+  wdi_df <- WDI(country = "all",
+                indicator = c("SP.POP.TOTL",
+                              "SP.POP.TOTL.MA.ZS",
+                              "SP.POP.TOTL.FE.ZS",
+                              "NY.GDP.PCAP.CD",
+                              "IT.NET.USER.ZS"),
+                start = 2021,
+                end = 2021,
+                extra = T)
+  
+  wdi_df <- wdi_df %>%
+    filter(region == "Sub-Saharan Africa")
+  
+  saveRDS(wdi_df, OUT_PATH)
+  
+} else{
+  wdi_df <- readRDS(OUT_PATH)
+}
+```
+
+```{r query_wdi2, include=TRUE, warning=FALSE, message=FALSE, eval = F}
+wdi_df <- WDI(country = "all",
+              indicator = c("SP.POP.TOTL",
+                            "SP.POP.TOTL.MA.ZS",
+                            "SP.POP.TOTL.FE.ZS",
+                            "NY.GDP.PCAP.CD",
+                            "IT.NET.USER.ZS"),
+              start = 2021,
+              end = 2021,
+              extra = T)
+
+wdi_df <- wdi_df %>%
+  filter(region == "Sub-Saharan Africa")
+```
+
+### Query data from Facebook
+
+We separately query the number of male and female monthly active users on Facebook for each country.
+
+```{r query_fb1, include=FALSE, warning=FALSE, message=FALSE}
+
+OUT_PATH <- file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+                      "fbdata_example-pop-gdp-gender.Rds")
+
+if(!file.exists(OUT_PATH)){
+  
+  fb_df <- query_fb_marketing_api(
+    location_unit_type = "countries",
+    location_keys      = map_param_vec(wdi_df$iso2c),
+    gender             = map_param(1, 2),
+    version            = VERSION, 
+    creation_act       = CREATION_ACT, 
+    token              = TOKEN)
+  
+  saveRDS(fb_df, OUT_PATH)
+  
+} else{
+  fb_df <- readRDS(OUT_PATH)
+}
+```
+
+```{r query_fb2, include=TRUE, eval = F}
+fb_df <- query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = map_param_vec(wdi_df$iso2c),
+  gender             = map_param(1, 2),
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+### Cleanup data
+
+Here we merge together the WDI and Facebook datasets queried above and clean-up the dataset.
+
+```{r query_fb, include=TRUE, warning=FALSE, message=FALSE}
+fb_clean_df <- fb_df %>%
+  rename(iso2c = location_keys) %>%
+  mutate(gender = case_when(
+    gender == "1" ~ "fb_male",
+    gender == "2" ~ "fb_female"
+  )) %>%
+  pivot_wider(id_cols = c(iso2c),
+              names_from = gender,
+              values_from = estimate_mau_upper_bound) %>%
+  left_join(wdi_df, by = "iso2c") %>%
+  clean_names() %>%
+  mutate(fb_total = fb_female + fb_male,
+         fb_per_female = fb_female/fb_total*100,
+         wdi_per_female = sp_pop_totl_fe_zs,
+         per_fb_pop = fb_total/sp_pop_totl*100) 
+
+fb_clean_df %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%",
+             height = "300px")
+```
+
+### Analysis
+
+#### Setup
+
+Below we create a theme that we will use across figures.
+
+```{r figures1, include=TRUE, warning=FALSE, message=FALSE}
+## Make theme for figures
+p_theme <- theme(plot.title = element_text(face = "bold", size = 10),
+                 plot.subtitle = element_text(face = "italic", size = 10),
+                 axis.text = element_text(color = "black"),
+                 axis.title = element_text(size = 10))
+```
+
+#### Facebook Usage, Internet Connectivity, and GDP
+
+We create figures to show the distribution of the percent of population on Facebook and the correlation of this indicator with percent of population online and GDP as measured by WDI. Panel A shows notable variation in the percent of population on Facebook---values range from about 0% to over 75%. Both the percent of population online and per capita GDP appear positively correlated with the percent of population on Facebook. 
+
+```{r figures2, include=TRUE, warning=FALSE, message=FALSE, fig.height=2.5, fig.width=7.5}
+p_1a <- fb_clean_df %>%
+  ggplot() +
+  geom_histogram(aes(x = per_fb_pop),
+                 fill = "#4267B2",
+                 color = "black") +
+  labs(x = "% population on Facebook",
+       y = "N countries",
+       title = "A. % population on Facebook\nacross countries") +
+  theme_classic2() +
+  p_theme
+
+p_1b <- fb_clean_df %>%
+  ggplot() +
+  geom_point(aes(x = per_fb_pop,
+                 y = it_net_user_zs),
+             fill = "#4267B2",
+             pch = 21) +
+  labs(x = "% population on Facebook",
+       y = "% population using internet",
+       title = "B. Internet connectivity vs\n% population on Facebook") +
+  xlim(0, 100) +
+  ylim(0, 100) +
+  theme_classic2() +
+  p_theme 
+
+p_1c <- fb_clean_df %>%
+  ggplot() +
+  geom_point(aes(x = per_fb_pop,
+                 y = ny_gdp_pcap_cd),
+             fill = "#4267B2",
+             pch = 21) +
+  labs(x = "% population on Facebook",
+       y = "GDP per capita",
+       title = "C. Per capita GDP vs\n% population on Facebook") +
+  theme_classic2() +
+  p_theme
+
+ggarrange(p_1a, p_1b, p_1c, nrow = 1)
+```
+
+#### Digital Gender Divide
+
+Here we examine variation in the percent of Facebook users that are female across countries. Panel A shows notable variation in the percent of female Facebook users across countries, ranging from 20 to over 50%---while, as expected, the percent of female population as measured by WDI is about 50% for all countries. 
+
+```{r figures3, include=TRUE, warning=FALSE, message=FALSE, fig.height=2.5, fig.width=7}
+p_2a <- fb_clean_df %>%
+  ggplot() +
+  geom_point(aes(x = fb_per_female,
+                 y = wdi_per_female),
+             pch = 21,
+             size = 2,
+             fill = "red") +
+  xlim(20, 55) +
+  ylim(20, 55) + 
+  theme_classic2() +
+  p_theme +
+  labs(x = "% of Facebook users that are female",
+       y = "% females in population (WDI)",
+       title = "A. % females in population (WDI) vs\n% of Facebook users that are female")
+
+p_2b <- fb_clean_df %>%
+  mutate(income = income %>%
+           factor(levels = c("Low income",
+                             "Lower middle income",
+                             "Upper middle income",
+                             "High income"))) %>%
+  ggplot(aes(x = fb_per_female,
+             y = income)) +
+  geom_boxplot(color = "gray50",
+               outlier.size = 0) +
+  geom_jitter(width = 0,
+              height = 0.1,
+              pch = 21,
+              size = 2,
+              fill = "red") +
+  labs(x = "% of Facebook users that are female",
+       y = NULL,
+       title = "B. Income vs. % of Facebook users\nthat are female") + 
+  theme_classic2() + 
+  scale_x_continuous(breaks = seq(0, 60, 20),
+                     limits = c(0, 60)) +
+  p_theme
+
+ggarrange(p_2a, p_2b, nrow = 1, widths = c(0.45, 0.55))
+```

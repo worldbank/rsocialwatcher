@@ -21,9 +21,39 @@ knitr::opts_chunk$set(
 )
 ```
 
-* [Setup](#Setup)
-* [Querying Parameter IDs](#query_param)
+# Table of Contents
 
+* [Setup](#setup)
+* [Querying Parameter IDs](#query_param)
+  * [User Type IDs](#param_users)
+  * [Location Key](#param_locs)
+  * [Location Key with Coordinates/Geometries](#param_locs)
+* [Get coordinates/geometries for location keys](#coord_geom)
+* [Querying Data](#query_data)
+  * [Different Location Types](#query_data_loc)
+    * [Radius around lat/lon](#query_data_loc_latlon)
+    * [Location IDs - Country, State, District, City, Neighborhood, etc.](#query_data_loc_keys)
+      * [Country Groups](#query_data_loc_keys_country_groups)
+      * [Country](#query_data_loc_keys_country)
+      * [Region](#query_data_loc_keys_region)
+      * [Large Geographic Area](#query_data_loc_keys_lga)
+      * [Medium Geographic Area](#query_data_loc_keys_mga)
+      * [Small Geographic Area](#query_data_loc_keys_sga)
+      * [City](#query_data_loc_keys_city)
+      * [Subcity](#query_data_loc_keys_subcity)
+      * [Neighborhood](#query_data_loc_keys_neighborhood)
+      * [Zip Code](#query_data_loc_keys_zipcode)
+      * [Geo Market (U.S. Designated Market Areas)](#query_data_loc_keys_geo_market)
+      * [Electoral Districts](#query_data_loc_keys_electoral)
+  * [Querying data using parameter IDs](#query_data_ids)
+    * [Using one parameter ID per parameter type](#query_data_ids_options)
+    * [And and OR Categories](#query_data_ids_andor)
+      * [Within parameter types](#query_data_ids_andor_within)
+      * [Across parameter types: Flexible Targetting](#query_data_ids_andor_flex)
+    * [Excluding Categories](#query_data_ids_exclude)
+  * [Multiple Queries](#query_data_ids_multquery)
+    * [Simple Examples](#query_data_ids_multquery_simple)
+    * [And/Or Conditions](#query_data_ids_multquery_andor)
 
 # Setup <a name="setup"></a>
 
@@ -51,10 +81,10 @@ VERSION      <- "VERSION-HERE"
 
 ```{r loadkey, include=FALSE}
 ## Load keys
-api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
-                     stringsAsFactors = F)
+# api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
+#                      stringsAsFactors = F)
 
-#api_keys <- read.csv("https://www.dropbox.com/scl/fi/5ug1cfhmoi6v2m393broz/fb_credentials.csv?rlkey=xedl2727l7mnf7ayg0zgrxtr0&dl=1")
+api_keys <- read.csv("https://www.dropbox.com/scl/fi/5ug1cfhmoi6v2m393broz/fb_credentials.csv?rlkey=xedl2727l7mnf7ayg0zgrxtr0&dl=1")
 
 api_keys <- api_keys %>%
   dplyr::filter(Service == "facebook_marketing_ad",
@@ -732,7 +762,7 @@ bind_rows(comm_or_music_df,
 
 ```
 
-### Exlcuding Categories <a name="query_data_ids_exclude"></a>
+### Excluding Categories <a name="query_data_ids_exclude"></a>
 
 Many parameters come with an alternate input that starts with `excl_` to exclude types of users. For example, there are both `behaviors` and `interests` parameters, as well as `excl_behaviors` and `excl_interests` parameters. The below code shows an example querying users who likely commute to work and are not tagged as interested in music.
 
@@ -789,6 +819,20 @@ Below we show simple examples using `map_param`.
 ## Number of Users in US or Mexico, as separate queries
 df_out <- query_fb_marketing_api(location_unit_type = "countries",
                                  location_key       = map_param("US", "MX"),
+                                 version            = VERSION, 
+                                 creation_act       = CREATION_ACT, 
+                                 token              = TOKEN)
+
+df_out %>% 
+  kable() %>% 
+  kable_styling() %>% 
+  scroll_box(width = "100%")
+
+## Same query as above, but using a pre-defined vector of countries
+# Because we use a vector, we need to use map_param_vec instead of map_param
+countries_vec <- c("US", "MX")
+df_out <- query_fb_marketing_api(location_unit_type = "countries",
+                                 location_key       = map_param_vec(countries_vec),
                                  version            = VERSION, 
                                  creation_act       = CREATION_ACT, 
                                  token              = TOKEN)

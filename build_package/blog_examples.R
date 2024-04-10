@@ -36,18 +36,21 @@ VERSION <- api_keys %>%
 
 # Query data -------------------------------------------------------------------
 # Query Africa or Asia or something ??
-wdi_df <- WDI(country = "all",
-              indicator = c("SP.POP.TOTL",
-                            "SP.POP.TOTL.MA.ZS",
-                            "SP.POP.TOTL.FE.ZS",
-                            "NY.GDP.PCAP.CD",
-                            "IT.NET.USER.ZS"),
-              start = 2021,
-              end = 2021,
-              extra = T)
+# wdi_df <- WDI(country = "all",
+#               indicator = c("SP.POP.TOTL",
+#                             "SP.POP.TOTL.MA.ZS",
+#                             "SP.POP.TOTL.FE.ZS",
+#                             "NY.GDP.PCAP.CD",
+#                             "IT.NET.USER.ZS"),
+#               start = 2021,
+#               end = 2021,
+#               extra = T)
+# 
+# wdi_df <- wdi_df %>%
+#   filter(region == "Sub-Saharan Africa")
 
-wdi_df <- wdi_df %>%
-  filter(region == "Sub-Saharan Africa")
+wdi_df <- readRDS(file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+                           "wdidata_example-pop-gdp-gender.Rds"))
 
 # Query data -------------------------------------------------------------------
 #### Grab parameters
@@ -63,15 +66,17 @@ restaurant_id <- interests_df %>%
   pull(id)
 
 #### Query data
-fb_df <- query_fb_marketing_api(
-  location_unit_type = "countries",
-  location_keys      = map_param(wdi_df$iso2c) %>% unlist(),
-  gender = map_param(1, 2),
-  version            = VERSION, 
-  creation_act       = CREATION_ACT, 
-  token              = TOKEN,
-  show_result = T)
+# fb_df <- query_fb_marketing_api(
+#   location_unit_type = "countries",
+#   location_keys      = map_param(wdi_df$iso2c) %>% unlist(),
+#   gender = map_param(1, 2),
+#   version            = VERSION, 
+#   creation_act       = CREATION_ACT, 
+#   token              = TOKEN,
+#   show_result = T)
 
+fb_df <- readRDS(file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+                           "fbdata_example-pop-gdp-gender.Rds"))
 saveRDS(fb_df, "~/Desktop/fb_df.Rds")
 
 #####
@@ -87,8 +92,8 @@ fb_clean_df <- fb_df %>%
   left_join(wdi_df, by = "iso2c") %>%
   clean_names() %>%
   mutate(fb_total = fb_female + fb_male,
-         fb_per_female = fb_female/fb_total,
-         wdi_per_female = sp_pop_totl_fe_zs/100,
+         fb_per_female = fb_female/fb_total*100,
+         wdi_per_female = sp_pop_totl_fe_zs,
          per_fb_pop = fb_total/sp_pop_totl*100) 
 
 ####
@@ -148,13 +153,12 @@ p_2a <- fb_clean_df %>%
              pch = 21,
              size = 2,
              fill = "red") +
-  xlim(0.2,0.55) +
-  ylim(0.2,0.55) + 
+  xlim(20, 55) +
+  ylim(20, 55) + 
   theme_classic2() +
   p_theme +
   labs(x = "% of Facebook users that are female",
        y = "% females in population (WDI)",
-       #subtitle = "The proportion of females on Facebook is much lower than\nthe proportion of females in the population for most countries",
        title = "A. % females in population (WDI) vs\n% of Facebook users that are female")
 
 p_2b <- fb_clean_df %>%
@@ -174,12 +178,10 @@ p_2b <- fb_clean_df %>%
               fill = "red") +
   labs(x = "% of Facebook users that are female",
        y = NULL,
-       #subtitle = "Countries with higher income levels tend to see more equal share of females on Facebook",
        title = "B. Income vs. % of Facebook users\nthat are female") + 
   theme_classic2() + 
-  #xlim(0, 0.6) +
-  scale_x_continuous(breaks = seq(0, 0.6, 0.2),
-                     limits = c(0, 0.6)) +
+  scale_x_continuous(breaks = seq(0, 60, 20),
+                     limits = c(0, 60)) +
   p_theme
 
 p_2 <- ggarrange(p_2a, p_2b, nrow = 1, widths = c(0.45, 0.55))
