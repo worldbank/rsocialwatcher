@@ -408,16 +408,20 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     out <- F
     
-    if(is.null(x)) out <- T
-    
-    if(!is.null(x)){
-      if(length(x) > 1){
+    if(is.null(x)){
+      out <- T
+    } else{
+      
+      if(length(x) == 0){
+        out <- T
+      } else if(length(x) > 1){
         out <- F
       } else{
         if(is.na(x)) out <- T
       }
+
     }
-    
+      
     return(out)
     
   }
