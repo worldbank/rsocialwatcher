@@ -404,34 +404,44 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   
   # Checks ---------------------------------------------------------------------
   # If NA, change to NULL
-  if(is.na(interests))               interests        <- NULL
-  if(is.na(behaviors))               behaviors        <- NULL
-  if(is.na(college_years))           college_years    <- NULL
-  if(is.na(education_majors))        education_majors <- NULL
-  if(is.na(education_schools))       education_schools <- NULL
-  if(is.na(education_statuses))      education_statuses <- NULL
-  if(is.na(family_statuses))         family_statuses <- NULL
-  if(is.na(income))                  income <- NULL
-  if(is.na(industries))              industries <- NULL
-  if(is.na(life_events))             life_events <- NULL
-  if(is.na(relationship_statuses))   relationship_statuses <- NULL
-  if(is.na(work_positions))          work_positions <- NULL
-  if(is.na(work_employers))          work_employers <- NULL
-  if(is.na(excl_interests))          excl_interests <- NULL
-  if(is.na(excl_behaviors))          excl_behaviors <- NULL
-  if(is.na(excl_college_years))      excl_college_years <- NULL
-  if(is.na(excl_education_majors))   excl_education_majors <- NULL
-  if(is.na(excl_education_schools))  excl_education_schools <- NULL
-  if(is.na(excl_education_statuses)) excl_education_statuses <- NULL
-  if(is.na(excl_family_statuses))    excl_family_statuses <- NULL
-  if(is.na(excl_income))             excl_income <- NULL
-  if(is.na(excl_industries))         excl_industries <- NULL
-  if(is.na(excl_life_events))        excl_life_events <- NULL
-  if(is.na(excl_relationship_statuses)) excl_relationship_statuses <- NULL
-  if(is.na(excl_work_positions))     excl_work_positions <- NULL
-  if(is.na(excl_work_employers))     excl_work_employers <- NULL
-  if(is.na(user_os))                 user_os <- NULL
-  if(is.na(wireless_carrier))        wireless_carrier <- NULL
+  is_na_null <- function(x){
+    
+    if(!is.null(x)){
+      if(is.na(x)) x <- NULL
+    }
+    
+    return(x)
+
+  }
+
+  if(is_na_null(interests))               interests        <- NULL
+  if(is_na_null(behaviors))               behaviors        <- NULL
+  if(is_na_null(college_years))           college_years    <- NULL
+  if(is_na_null(education_majors))        education_majors <- NULL
+  if(is_na_null(education_schools))       education_schools <- NULL
+  if(is_na_null(education_statuses))      education_statuses <- NULL
+  if(is_na_null(family_statuses))         family_statuses <- NULL
+  if(is_na_null(income))                  income <- NULL
+  if(is_na_null(industries))              industries <- NULL
+  if(is_na_null(life_events))             life_events <- NULL
+  if(is_na_null(relationship_statuses))   relationship_statuses <- NULL
+  if(is_na_null(work_positions))          work_positions <- NULL
+  if(is_na_null(work_employers))          work_employers <- NULL
+  if(is_na_null(excl_interests))          excl_interests <- NULL
+  if(is_na_null(excl_behaviors))          excl_behaviors <- NULL
+  if(is_na_null(excl_college_years))      excl_college_years <- NULL
+  if(is_na_null(excl_education_majors))   excl_education_majors <- NULL
+  if(is_na_null(excl_education_schools))  excl_education_schools <- NULL
+  if(is_na_null(excl_education_statuses)) excl_education_statuses <- NULL
+  if(is_na_null(excl_family_statuses))    excl_family_statuses <- NULL
+  if(is_na_null(excl_income))             excl_income <- NULL
+  if(is_na_null(excl_industries))         excl_industries <- NULL
+  if(is_na_null(excl_life_events))        excl_life_events <- NULL
+  if(is_na_null(excl_relationship_statuses)) excl_relationship_statuses <- NULL
+  if(is_na_null(excl_work_positions))     excl_work_positions <- NULL
+  if(is_na_null(excl_work_employers))     excl_work_employers <- NULL
+  if(is_na_null(user_os))                 user_os <- NULL
+  if(is_na_null(wireless_carrier))        wireless_carrier <- NULL
   
   if(!is.null(user_os)){
     if(is.list(user_os)){
@@ -775,16 +785,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                            estimate_mau_lower_bound, 
                            estimate_mau_upper_bound, 
                            api_call_time_utc), as.character))
-        
-        ## Add ID names
-        # if(add_param_id_name_vars){
-        #   query_val_df <- fill_fb_id_names(query_val_df,
-        #                                    version = version,
-        #                                    token = token)
-        # }
-        
-        
-        
+      
         if(add_query){
           query_val_df$query <- query
           if(add_query_hide_credentials){
