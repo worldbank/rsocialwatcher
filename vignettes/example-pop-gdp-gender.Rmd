@@ -14,7 +14,7 @@ vignette: >
   %\VignetteIndexEntry{rsocialwatcher}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r init, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -85,10 +85,10 @@ We query data from the [World Development Indicators (WDI)](https://datatopics.w
 
 ```{r query_wdi1, include=FALSE, warning=FALSE, message=FALSE}
 
-OUT_PATH <- file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+OUT_PATH <- file.path("~/Dropbox", "fb_data_examples",
                       "wdidata_example-pop-gdp-gender.Rds")
 
-if(!file.exists(OUT_PATH)){
+if(F){
   
   wdi_df <- WDI(country = "all",
                 indicator = c("SP.POP.TOTL",
@@ -104,9 +104,10 @@ if(!file.exists(OUT_PATH)){
     filter(region == "Sub-Saharan Africa")
   
   saveRDS(wdi_df, OUT_PATH)
+  write.csv(wdi_df, OUT_PATH %>% str_replace_all(".Rds", ".csv"))
   
 } else{
-  wdi_df <- readRDS(OUT_PATH)
+  wdi_df <- read.csv("https://www.dropbox.com/scl/fi/jsjud17x2s220eag8xlsv/wdidata_example-pop-gdp-gender.csv?rlkey=rt94gl2j8gveglnrm92yfitp0&dl=1")
 }
 ```
 
@@ -131,11 +132,10 @@ We separately query the number of male and female monthly active users on Facebo
 
 ```{r query_fb1, include=FALSE, warning=FALSE, message=FALSE}
 
-OUT_PATH <- file.path("~/Documents", "Github", "rsocialwatcher", "vignettes",
+if(F){
+  OUT_PATH <- file.path("~/Dropbox", "fb_data_examples",
                       "fbdata_example-pop-gdp-gender.Rds")
 
-if(!file.exists(OUT_PATH)){
-  
   fb_df <- query_fb_marketing_api(
     location_unit_type = "countries",
     location_keys      = map_param_vec(wdi_df$iso2c),
@@ -145,9 +145,10 @@ if(!file.exists(OUT_PATH)){
     token              = TOKEN)
   
   saveRDS(fb_df, OUT_PATH)
+  write.csv(fb_df, OUT_PATH %>% str_replace_all(".Rds", ".csv"))
   
 } else{
-  fb_df <- readRDS(OUT_PATH)
+  fb_df <- read.csv("https://www.dropbox.com/scl/fi/c81162rvt3vdgroracm9h/fbdata_example-pop-gdp-gender.csv?rlkey=1wdfwpqwm7sds2l1dddzvtvyt&dl=1")
 }
 ```
 
