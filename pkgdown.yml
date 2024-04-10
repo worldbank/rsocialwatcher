@@ -3,8 +3,9 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   create_facebook_credentials: create_facebook_credentials.html
+  example-pop-gdp-gender: example-pop-gdp-gender.html
   rsocialwatcher-vignette: rsocialwatcher-vignette.html
-last_built: 2024-04-10T13:08Z
+last_built: 2024-04-10T14:57Z
 urls:
   reference: https://worldbank.github.io/rsocialwatcher/reference
   article: https://worldbank.github.io/rsocialwatcher/articles
