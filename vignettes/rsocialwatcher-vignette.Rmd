@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# [Setup](#Setup)
-# [Querying Parameter IDs](#query_param)
+* [Setup](#Setup)
+* [Querying Parameter IDs](#query_param)
 
 
 # Setup <a name="setup"></a>
