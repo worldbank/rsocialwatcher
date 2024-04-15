@@ -1,4 +1,5 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^vignettes/
 ^\.github$
