@@ -164,8 +164,26 @@ NA
 NA
 }
 
+\section{Parameters}{
+
+\itemize{
+\item Within parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies, while \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
+\item Across parameters, OR conditions are used. For example, if enter \code{interests = 6003349442621} and \code{behaviors = 6008297697383} are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
+\item And conditions across parameters can be specified using the \code{flex_target} argument.
+}
+}
+
 \section{Exclude parameters}{
 NA
+}
+
+\section{Non-Flexible parameters}{
+
+\itemize{
+\item Across parameters, AND conditions are used. For example, if \code{gender = 1} and \code{age_min = 30}, queries users that are male AND are over 30 years old.
+\item These parameters \emph{cannot} be specified in \code{flex_targeting}
+\item Within parameters, vectors (\code{c()}) specify OR conditions. AND conditions cannot be specified within these parameters.
+}
 }
 
 \section{Flex Targeting}{
