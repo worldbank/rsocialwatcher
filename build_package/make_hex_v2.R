@@ -64,12 +64,12 @@ if(T){
   y_min <- min(points_df$y) * (1-SCALE)
   y_max <- max(points_df$y) * (1+SCALE)
   
-  points_df$y <- points_df$y - 0.02
+  points_df$y <- points_df$y + 0.01
   points_df$x <- points_df$x + 0.05
-  
+
   points_v2_df <- points_df %>%
-    mutate(x = x + runif(n(), -0.15, 0.15),
-           y = y + runif(n(), -0.15, 0.15))
+    mutate(x = x + runif(n(), -0.17, 0.17),
+           y = y + runif(n(), -0.17, 0.17))
   
   points_v3_df <- points_df %>%
     mutate(x = x + runif(n(), -0.3, 0.3),
@@ -80,6 +80,7 @@ if(T){
                aes(x = x,
                    y = y),
                color = "white",
+               alpha = 0.8,
                size = 0.05) +
     geom_point(data = points_v2_df,
                aes(x = x,
@@ -103,7 +104,7 @@ if(T){
           spotlight = F,
           #l_alpha = 0.3, #0.15,
           p_size=19, #7 
-          p_y = 1.4, # 1.40,
+          p_y = 1.45, # 1.40,
           p_family = "sans",
           p_fontface = "italic",
           s_x=1, 
@@ -117,7 +118,7 @@ if(T){
           l_y = 1.4,
           l_x = 0.93,
           l_width = 3,
-          l_height = 3,
+          l_height = 2,
           filename="~/Documents/Github/rsocialwatcher/man/figures/logo.png")
   
 }
