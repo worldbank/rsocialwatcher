@@ -969,11 +969,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @import lubridate
 #' @import jsonlite
 #' @import httr
-#' @import curl
 #' @import stringr
 #' @import splitstackshape
 #' @import sf
 #' @rawNamespace import(purrr, except = c(flatten))
+#' @rawNamespace import(curl, except = c(handle_reset))
 query_fb_marketing_api <- function(location_unit_type,
                                    lat_lon = NULL,
                                    radius = NULL,
