@@ -54,60 +54,45 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.
-\subsection{If location_unit_type is "coordinates"}{
-}}
+\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.}
 
 \item{lat_lon}{Coordinates, c(lat, lon). For example, \code{c(38.90, -77.01)}}
 
 \item{radius}{Radius around coordinate}
 
-\item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}
-\subsection{If location_unit_type is not "coordinates"}{
-}}
+\item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}}
 
-\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.
-\subsection{Other location parameters}{
-}}
+\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
 
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
 
-\item{locales}{Locales ID. For more information on locales, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional}{Advanced Targeting Documentation}
-\subsection{Parameters}{
-\itemize{
-\item Within parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies, while \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
-\item Across parameters, OR conditions are used. For example, if enter \code{interests = 6003349442621} and \code{behaviors = 6008297697383} are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
-\item And conditions across parameters can be specified using the \code{flex_target} argument.
-}
-}}
+\item{locales}{Locales ID. For more information on locales, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional}{Advanced Targeting Documentation}}
 
-\item{interests}{Interest IDs. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameters(type = "interests", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests}{Basic Targeting Documentation}.}
+\item{interests}{Interest IDs. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment or movies. Use \code{get_fb_parameter_ids(type = "interests", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests}{Basic Targeting Documentation}.}
 
-\item{behaviors}{Behavior IDs. For example, \code{behaviors = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameters(type = "behaviors", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#behaviors}{Basic Targeting Documentation}.}
+\item{behaviors}{Behavior IDs. For example, \code{behaviors = c(6002714895372, 6008297697383)} will target users who are either frequent travelers or returned from travels 2 weeks ago. Use \code{get_fb_parameter_ids(type = "behaviors", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#behaviors}{Basic Targeting Documentation}.}
 
 \item{college_years}{College graduation years. For example, \code{college_years = c(2014, 2015)} will target users who graduated college in 2014 or 2015. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
-\item{education_majors}{Education major IDs. For example, \code{education_majors = 123} will target users who majored in computer science. Use \code{get_fb_parameters(type = "education_majors", q = "Computer", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
+\item{education_majors}{Education major IDs. For example, \code{education_majors = 123} will target users who majored in computer science. Use \code{get_fb_parameter_ids(type = "education_majors", q = "Computer", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
-\item{education_schools}{School IDs. For example, \code{education_schools = 105930651606} will taget users at/who graduated from Harvard University. Use \code{get_fb_parameters(type = "education_schools", q = "Harvard", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
+\item{education_schools}{School IDs. For example, \code{education_schools = 105930651606} will taget users at/who graduated from Harvard University. Use \code{get_fb_parameter_ids(type = "education_schools", q = "Harvard", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
-\item{education_statuses}{Education status IDs. For example, \code{education_statuses = c(9,10)} will yeild those who report to have either a Master degree or professional degree. Use \code{get_fb_parameters(type = "education_statuses", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
+\item{education_statuses}{Education status IDs. For example, \code{education_statuses = c(9,10)} will yeild those who report to have either a Master degree or professional degree. Use \code{get_fb_parameter_ids(type = "education_statuses", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
-\item{family_statuses}{Family status IDs. For example, \code{family_statuses = c(6023080302983, 6023005681983)} targets users who are parents with preteens or parents with teenagers. Use \code{get_fb_parameters(type = "family_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+\item{family_statuses}{Family status IDs. For example, \code{family_statuses = c(6023080302983, 6023005681983)} targets users who are parents with preteens or parents with teenagers. Use \code{get_fb_parameter_ids(type = "family_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
-\item{income}{Income IDs. For example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameters(type = "income")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+\item{income}{Income IDs. For example, \code{income = c(6107813553183, 6107813554583)} targets users with a household income in the top 10\%-25\% or 25\%-50\% of ZIP codes (US). Use \code{get_fb_parameter_ids(type = "income")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
-\item{industries}{Industries IDs. For example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameters(type = "industries")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+\item{industries}{Industries IDs. For example, \code{industries = c(6008888980183, 6008888972183)} targets users who work in sales or legal services. Use \code{get_fb_parameter_ids(type = "industries")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
-\item{life_events}{Life event IDs. For example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameters(type = "life_events")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+\item{life_events}{Life event IDs. For example, \code{life_events = c(6005149512172, 6005149512172)} targets users who recently moved or are in a new job. Use \code{get_fb_parameter_ids(type = "life_events")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
-\item{relationship_statuses}{Relationship status IDs. For example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. Use \code{get_fb_parameters(type = "relationship_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
+\item{relationship_statuses}{Relationship status IDs. For example, \code{relationship_statuses = c(3,4)} targets those who are married or engaged. Use \code{get_fb_parameter_ids(type = "relationship_statuses")} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
-\item{work_positions}{Work position IDs. For example, \code{work_positions = 105763692790962} will target users who indicate they are contractors. Use \code{get_fb_parameters(type = "work_positions", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
+\item{work_positions}{Work position IDs. For example, \code{work_positions = 105763692790962} will target users who indicate they are contractors. Use \code{get_fb_parameter_ids(type = "work_positions", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
-\item{work_employers}{Work employer IDs. For example, \code{work_employers = 50431654} will target users who work for Microsoft. Use \code{get_fb_parameters(type = "work_employers", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.
-\subsection{Exclude parameters}{
-}}
+\item{work_employers}{Work employer IDs. For example, \code{work_employers = 50431654} will target users who work for Microsoft. Use \code{get_fb_parameter_ids(type = "work_employers", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
 \item{excl_interests}{Interest IDs to exclude.}
 
@@ -133,14 +118,7 @@ query_fb_marketing_api(
 
 \item{excl_work_positions}{Work position IDs to exclude.}
 
-\item{excl_work_employers}{Work employer IDs to exclude.
-\subsection{Non-Flexible parameters}{
-\itemize{
-\item Across parameters, AND conditions are used. For example, if \code{gender = 1} and \code{age_min = 30}, queries users that are male AND are over 30 years old.
-\item These parameters \emph{cannot} be specified in \code{flex_targeting}
-\item Within parameters, vectors (\code{c()}) specify OR conditions. AND conditions cannot be specified within these parameters.
-}
-}}
+\item{excl_work_employers}{Work employer IDs to exclude.}
 
 \item{user_os}{User operating systems. For example, \verb{user_os = ('iOS', 'Android')} targets those that use either an iOS or Android OS; \code{user_os = c("Android_ver_4.2_and_above")} targets those using Android version 4.2 and above; and \code{user_os = c("iOS_ver_8.0_to_9.0")} targets those using iOS version 8.0 to 9.0. Different versions can be specified. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#demographic}{Advanced Targeting Documentation}.}
 
@@ -150,27 +128,19 @@ query_fb_marketing_api(
 
 \item{age_min}{Minimum age. Default is 18. See \code{age_min} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
 
-\item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.
-\subsection{Flex Targeting}{
-}}
+\item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
 
-\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.
-\subsection{Credentials}{
-}}
+\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.}
 
 \item{version}{API version. e.g., "v18.0"}
 
 \item{creation_act}{Facebook creation act}
 
-\item{token}{Facebook API token
-\subsection{Scraping parameters}{
-}}
+\item{token}{Facebook API token}
 
 \item{sleep_time}{How much time (in seconds) to pause between each query (default: \code{0.1}).}
 
-\item{show_result}{After each query, whether to print the number of monthly active users (default: \code{FALSE}).
-\subsection{Return query text as variable in returned dataframe}{
-}}
+\item{show_result}{After each query, whether to print the number of monthly active users (default: \code{FALSE}).}
 
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
 
@@ -182,6 +152,38 @@ Dataframe that includes (1) daily and monthly active users and (2) parameter val
 \description{
 Query Facebook Marketing API
 }
+\section{If location_unit_type is "coordinates"}{
+NA
+}
+
+\section{If location_unit_type is not "coordinates"}{
+NA
+}
+
+\section{Other location parameters}{
+NA
+}
+
+\section{Exclude parameters}{
+NA
+}
+
+\section{Flex Targeting}{
+NA
+}
+
+\section{Credentials}{
+NA
+}
+
+\section{Scraping parameters}{
+NA
+}
+
+\section{Return query text as variable in returned dataframe}{
+NA
+}
+
 \examples{
 \dontrun{
 #### Define version, creation act, and token
@@ -215,5 +217,5 @@ query_fb_marketing_api(
 }
 }
 \seealso{
-\code{\link[=get_fb_parameters]{get_fb_parameters()}} To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html}{the documentation here}.
+\code{\link[=get_fb_parameter_ids]{get_fb_parameter_ids()}} To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html}{the documentation here}.
 }

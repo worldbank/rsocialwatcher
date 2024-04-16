@@ -34,7 +34,7 @@ get_fb_suggested_radius <- function(location,
       longitude=longitude,
       distance_unit=distance_unit,
       access_token=token
-    )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+    )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   
   return(out_df)
 }

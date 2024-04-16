@@ -151,7 +151,7 @@ get_location_coords_i <- function(location_unit_type,
   
   out_df <- GET(
     paste0("https://graph.facebook.com/",version,"/search"),
-    query=q_list) %>% content(as="text") %>% fromJSON %>%. [[1]]
+    query=q_list) %>% content(as="text") %>% fromJSON %>% pluck(1)
   
   if(!is.null(out_df$message)){
     if(out_df$code != 1){
@@ -187,8 +187,8 @@ get_location_coords_i <- function(location_unit_type,
           
           poly_i <- poly[[i]]
           poly_i <- poly_i %>%
-            mutate(lng = lng %>% as.numeric,
-                   lat = lat %>% as.numeric)
+            mutate(lng = .data$lng %>% as.numeric,
+                   lat = .data$lat %>% as.numeric)
           
           # Combine the lng and lat columns into a matrix
           coords <- cbind(poly_i$lng, poly_i$lat)
@@ -206,7 +206,7 @@ get_location_coords_i <- function(location_unit_type,
           st_as_sf()
         
         poly_sf <- poly_sf %>%
-          dplyr::rename(geometry = x)
+          dplyr::rename(geometry = .data$x)
         
       }
       

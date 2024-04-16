@@ -2,10 +2,10 @@ Package: rsocialwatcher
 Title: A Social Data Collector for Facebook Marketing API
 Version: 0.1.0
 Authors@R: 
-    person("Robert", "Marty", , "robmarty3@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Robert", "Marty", , "rmarty@worldbank.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3164-3813"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
@@ -20,6 +20,7 @@ Imports:
   lubridate,
   jsonlite,
   httr,
+  curl,
   stringr,
   splitstackshape,
   sf,

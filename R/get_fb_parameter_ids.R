@@ -124,7 +124,7 @@ get_fb_parameter_ids <- function(type,
         class=type,
         access_token=token,
         limit = ifelse(is.null(limit), 2000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% "locales"){
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
@@ -132,7 +132,7 @@ get_fb_parameter_ids <- function(type,
         type='adlocale',
         access_token=token,
         limit = ifelse(is.null(limit), 2000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% "work_positions"){
     if(is.null(q)) stop("'q' required")
     out_df <- GET(
@@ -142,7 +142,7 @@ get_fb_parameter_ids <- function(type,
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% "work_employers"){
     if(is.null(q)) stop("'q' required")
     out_df <- GET(
@@ -152,7 +152,7 @@ get_fb_parameter_ids <- function(type,
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% "education_statuses"){
     
     out_df <- bind_rows(data.frame(id = 1, name = "HIGH_SCHOOL"),
@@ -193,7 +193,7 @@ get_fb_parameter_ids <- function(type,
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% "education_schools"){
     if(is.null(q)) stop("'q' required")
     out_df <- GET(
@@ -203,7 +203,7 @@ get_fb_parameter_ids <- function(type,
         q=q,
         access_token=token,
         limit = ifelse(is.null(limit), 5000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% c("country", "country_group")){
     out_df <- GET(
       paste0("https://graph.facebook.com/",version,"/search"),
@@ -212,7 +212,7 @@ get_fb_parameter_ids <- function(type,
         type='adgeolocation',
         access_token=token,
         limit = ifelse(is.null(limit), 300, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } else if (type %in% c("region",
                          "large_geo_area",
                          "medium_geo_area",
@@ -241,7 +241,7 @@ get_fb_parameter_ids <- function(type,
         key=key,
         access_token=token,
         limit = ifelse(is.null(limit), 1000, limit)
-      )) %>% content(as="text") %>% fromJSON %>%. [[1]]
+      )) %>% content(as="text") %>% fromJSON %>% pluck(1)
   } 
   
   if(!is.null(out_df$code)){
