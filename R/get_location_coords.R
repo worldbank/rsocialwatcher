@@ -2,7 +2,7 @@
 
 #' Get Coordinates/Geometries for Valid Location Keys
 #' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
-#' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
+#' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
 #' @param version API version. e.g., "v17.0"
 #' @param token Facebook API token
 #' @param large_query_chunk_size The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. By default, the function will query 10 locations at a time. (Default: 10).
