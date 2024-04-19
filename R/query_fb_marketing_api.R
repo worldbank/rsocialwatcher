@@ -872,7 +872,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
 #' @section If location_unit_type is not "coordinates"
-#' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
+#' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
 #' @section Other location parameters
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
 #' @param locales Locales ID. For more information on locales, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional)
@@ -917,7 +917,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @section Flex Targeting
-#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
+#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
 #' @section Credentials
 #' @param version API version. e.g., "v18.0"
 #' @param creation_act Facebook creation act
@@ -931,7 +931,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' 
 #' @return Dataframe that includes (1) daily and monthly active users and (2) parameter values
 #' 
-#' @seealso [get_fb_parameter_ids()] To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see [the documentation here](https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html).
+#' @seealso [get_fb_parameter_ids()] To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html).
 #' @examples
 #' \dontrun{
 #' #### Define version, creation act, and token

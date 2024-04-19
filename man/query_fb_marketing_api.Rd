@@ -62,7 +62,7 @@ query_fb_marketing_api(
 
 \item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}}
 
-\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
+\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
 
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
 
@@ -130,7 +130,7 @@ query_fb_marketing_api(
 
 \item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
 
-\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.}
+\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.}
 
 \item{version}{API version. e.g., "v18.0"}
 
@@ -235,5 +235,5 @@ query_fb_marketing_api(
 }
 }
 \seealso{
-\code{\link[=get_fb_parameter_ids]{get_fb_parameter_ids()}} To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html}{the documentation here}.
+\code{\link[=get_fb_parameter_ids]{get_fb_parameter_ids()}} To get IDs and descriptions for behaviors, demographics, interests, and locales. For additional details on how to use the package, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html}{the documentation here}.
 }

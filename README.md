@@ -58,7 +58,7 @@ library(rsocialwatcher)
 library(dplyr)
 
 # Define API version, creation act & token -------------------------------------
-VERSION      <- "[ENTER HERE]"
+VERSION      <- "[ENTER HERE]" # Example: "v19.0"
 CREATION_ACT <- "[ENTER HERE]"
 TOKEN        <- "[ENTER HERE]"
 ```
