@@ -10,7 +10,7 @@ Query data from the Facebook Marketing API using R, with a focus for social scie
 
 ## Overview <a name="overview"></a>
 
-This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, Facebook marketing data has been used for:
+This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for Python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, Facebook marketing data has been used for:
 
 * Poverty estimation ([here](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) and [here](https://www.nature.com/articles/s41598-023-49564-6))
 * [Disease surveillance](https://arxiv.org/abs/1705.04045)
