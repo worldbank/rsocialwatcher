@@ -3,11 +3,12 @@
 #' Get Coordinates/Geometries for Valid Location Keys
 #' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
 #' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
-#' @param version API version. e.g., "v17.0"
+#' @param version API version. e.g., "v19.0"
 #' @param token Facebook API token
 #' @param large_query_chunk_size The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. By default, the function will query 10 locations at a time. (Default: 10).
 #' @param large_query_pause The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. After each query, the `large_query_pause` can be set to > 0 to sleep for `large_query_pause` seconds in order to not make too many API calls too quickly. (Default: 0).
 #' @param limit Number of parameter IDs to search for. 
+#' @param verbose If the function needs to make multiple queries to obtain location information for all location keys, print progress. (Default: `TRUE`).
 #'
 #' @return Spatial features dataframe
 #' 
@@ -49,7 +50,9 @@ get_location_coords <- function(location_unit_type,
                                       length.out = length(location_keys)))
       
       out_sf <- map_df(location_keys_list, function(loc_keys_i){
-        cat(paste0("Querying coordinates/geometries for location keys: ", paste(loc_keys_i, collapse = ", ") ))
+        if(verbose){
+          cat(paste0("Querying coordinates/geometries for location keys: ", paste(loc_keys_i, collapse = ", ") ))
+        }
         
         out_sf_i <- get_location_coords_i(location_unit_type,
                                           loc_keys_i,

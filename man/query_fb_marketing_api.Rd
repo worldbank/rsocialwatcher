@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_fb_marketing_api.R
 \name{query_fb_marketing_api}
 \alias{query_fb_marketing_api}
-\title{Query Facebook Marketing API}
+\title{Query 'Facebook Marketing' API}
 \usage{
 query_fb_marketing_api(
   location_unit_type,
@@ -48,8 +48,9 @@ query_fb_marketing_api(
   creation_act,
   token,
   sleep_time = 0.1,
-  show_result = F,
-  add_query = F,
+  show_result = FALSE,
+  verbose = TRUE,
+  add_query = FALSE,
   add_query_hide_credentials = T
 )
 }
@@ -132,7 +133,7 @@ query_fb_marketing_api(
 
 \item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.}
 
-\item{version}{API version. e.g., "v18.0"}
+\item{version}{API version. e.g., "v19.0"}
 
 \item{creation_act}{Facebook creation act}
 
@@ -142,6 +143,8 @@ query_fb_marketing_api(
 
 \item{show_result}{After each query, whether to print the number of monthly active users (default: \code{FALSE}).}
 
+\item{verbose}{Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: \code{TRUE}).}
+
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}
 
 \item{add_query_hide_credentials}{If \code{TRUE} (and \code{add_query} is \code{TRUE}), hide the \code{creation_act} and \code{token} from the query text returned in the dataframe}
@@ -150,7 +153,7 @@ query_fb_marketing_api(
 Dataframe that includes (1) daily and monthly active users and (2) parameter values
 }
 \description{
-Query Facebook Marketing API
+Query 'Facebook Marketing' API
 }
 \section{If location_unit_type is "coordinates"}{
 NA

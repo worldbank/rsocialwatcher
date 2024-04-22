@@ -4,8 +4,8 @@
 #' 
 #' @param location Vector of latitude and longitude (`c(lat, lon)`).
 #' @param distance_unit Either `"kilometer"` or "`mile`"; defaults to "`kilometer`"
-#' @param version Facebook Marketing API version; for example, "v14.0"
-#' @param token Facebook Marketing API token
+#' @param version 'Facebook Marketing' API version; for example, "v19.0"
+#' @param token 'Facebook Marketing' API token
 #' 
 #' @return Dataframe with suggested radius and distance unit
 #' 

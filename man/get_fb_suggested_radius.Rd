@@ -11,9 +11,9 @@ get_fb_suggested_radius(location, distance_unit = "kilometer", version, token)
 
 \item{distance_unit}{Either \code{"kilometer"} or "\code{mile}"; defaults to "\code{kilometer}"}
 
-\item{version}{Facebook Marketing API version; for example, "v14.0"}
+\item{version}{'Facebook Marketing' API version; for example, "v19.0"}
 
-\item{token}{Facebook Marketing API token}
+\item{token}{'Facebook Marketing' API token}
 }
 \value{
 Dataframe with suggested radius and distance unit

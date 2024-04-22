@@ -13,15 +13,15 @@ get_fb_parameter_ids(
   region_id = NULL,
   key = NULL,
   limit = NULL,
-  add_location_coords = F
+  add_location_coords = FALSE
 )
 }
 \arguments{
 \item{type}{Type of data. Either: "behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses", "work_positions", "work_employers", "education_statuses", "relationship_statuses", "education_majors", "locales", "country", "country_group", "region", "large_geo_area", "medium_geo_area", "small_geo_area", "city", "subcity", "neighborhood", "zip", "geo_market", "electoral_district", "zip"}
 
-\item{version}{Facebook Marketing API version; for example, "v14.0"}
+\item{version}{'Facebook Marketing' API version; for example, "v19.0"}
 
-\item{token}{Facebook Marketing API token}
+\item{token}{'Facebook Marketing' API token}
 
 \item{q}{Query string to limit search. For example, when searching job titles, setting \code{q="data"} will return jobs with "data" in the name, such as "data science."}
 

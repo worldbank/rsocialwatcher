@@ -23,8 +23,8 @@ n_embedded_lists <- function(obj){
 #' that can be used in the query_fb_marketing_api function.
 #'
 #' @param type Type of data. Either: "behaviors", "demographics", "interests", "income", "industries", "life_events", "family_statuses", "work_positions", "work_employers", "education_statuses", "relationship_statuses", "education_majors", "locales", "country", "country_group", "region", "large_geo_area", "medium_geo_area", "small_geo_area", "city", "subcity", "neighborhood", "zip", "geo_market", "electoral_district", "zip"   
-#' @param version Facebook Marketing API version; for example, "v14.0"
-#' @param token Facebook Marketing API token
+#' @param version 'Facebook Marketing' API version; for example, "v19.0"
+#' @param token 'Facebook Marketing' API token
 #' @param q Query string to limit search. For example, when searching job titles, setting `q="data"` will return jobs with "data" in the name, such as "data science."
 #' @param country_code When searching locations, limit the search to a specific country; for example, only search for cities within a specific country.
 #' @param region_id When searching locations, limit the search to a specific region; for example, only search for cities within a specific region.

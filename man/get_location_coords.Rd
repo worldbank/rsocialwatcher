@@ -19,7 +19,7 @@ get_location_coords(
 
 \item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
 
-\item{version}{API version. e.g., "v17.0"}
+\item{version}{API version. e.g., "v19.0"}
 
 \item{token}{Facebook API token}
 
@@ -28,6 +28,8 @@ get_location_coords(
 \item{large_query_pause}{The function will first try to query all locations using one API call. If too many locations are requested, the function will query in chunks. After each query, the \code{large_query_pause} can be set to > 0 to sleep for \code{large_query_pause} seconds in order to not make too many API calls too quickly. (Default: 0).}
 
 \item{limit}{Number of parameter IDs to search for.}
+
+\item{verbose}{If the function needs to make multiple queries to obtain location information for all location keys, print progress. (Default: \code{TRUE}).}
 }
 \value{
 Spatial features dataframe

@@ -14,71 +14,6 @@ is_null_or_na <- function(x){
   return(out)
 }
 
-#' Map Parameters
-#' Instruct `query_fb_marketing_api()` to make separate queries. `query_fb_marketing_api()` makes a separate query for each item in `map_param()`.
-#' 
-#' @param ... Vector or list
-#' @return Object of class `map_param`
-#' @examples
-#' \dontrun{
-#' # Make 3 queries:
-#' # 1. Number of males and females MAU/DAU
-#' # 2. Number of male MAU/DAU
-#' # 3. Number of female MAU/DAU
-#' query_fb_marketing_api(
-#'   location_unit_type = "countries",
-#'   location_keys      = "US",
-#'   gender             = map_param(c(1,2), 1, 2)
-#'   version            = VERSION, 
-#'   creation_act       = CREATION_ACT, 
-#'   token              = TOKEN)
-#' }
-#' @export
-#' 
-map_param <- function(...){
-  # Function will create a separate query for each item. 
-  # Creates a list, where the first element in the list is "map_param", where the
-  # function then interprets each element of the list as a separate query.
-  # Complex queries can still be made:
-  # map_param
-  
-  OUT <- list(...)
-  #OUT <- as.list(c("map_param", OUT))
-  class(OUT) <- "map_param"
-  
-  return(OUT)
-}
-
-#' Map Parameters over Vector
-#' Instruct `query_fb_marketing_api()` to make separate queries for each item in a vector. 
-#' 
-#' @param ... Vector
-#' @return Object of class `map_param`
-#' @examples
-#' \dontrun{
-#' # Make 2 queries:
-#' # 1. Number of male MAU/DAU
-#' # 2. Number of female MAU/DAU
-#' query_fb_marketing_api(
-#'   location_unit_type = "countries",
-#'   location_keys      = "US",
-#'   gender             = map_param_vec(1:2)
-#'   version            = VERSION, 
-#'   creation_act       = CREATION_ACT, 
-#'   token              = TOKEN)
-#' }
-#' @export
-#' 
-map_param_vec <- function(...){
-
-  OUT <- list(...)
-  #OUT <- as.list(c("map_param", OUT))
-  OUT <- unlist(OUT)
-  class(OUT) <- "map_param"
-  
-  return(OUT)
-}
-
 group <- function(...){
   list(c(...))
 }
@@ -723,7 +658,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
       query_val <- url(query) %>% fromJSON
       
       if(!is.null(query_val$error)){
-        warning("Error message from Facebook Marketing API")
+        warning("Error message from 'Facebook Marketing' API")
         if(query_val$error$code != 80004) warning(query_val)
       }
       
@@ -868,7 +803,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 }
 
 # Query: ALL CALLS -------------------------------------------------------------
-#' Query Facebook Marketing API
+#' Query 'Facebook Marketing' API
 #' 
 #' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
 #' @section If location_unit_type is "coordinates"
@@ -923,7 +858,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @section Flex Targeting
 #' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
 #' @section Credentials
-#' @param version API version. e.g., "v18.0"
+#' @param version API version. e.g., "v19.0"
 #' @param creation_act Facebook creation act
 #' @param token Facebook API token
 #' @section Scraping parameters
