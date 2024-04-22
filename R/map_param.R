@@ -1,5 +1,5 @@
 #' Map Parameters within `query_fb_marketing_api()`
-#' Groups input into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param`. 
+#' Groups input into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param`. A `map_param` object is structured as a list, where the `map_param` class triggers the `query_fb_marketing_api` function to make a separate API query for each item in the list.
 #' 
 #' @param ... Vector or list
 #' @return Object of class `map_param` to be used as input to the `query_fb_marketing_api()` function to make multiple API queries. 
@@ -34,7 +34,7 @@ map_param <- function(...){
 }
 
 #' Map Parameters over Vector
-#' Converts a vector into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param` (ie, for each item in the original vector entered into `map_param`). 
+#' Converts a vector into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param` (ie, for each item in the original vector entered into `map_param`). A `map_param` object is structured as a list, where the `map_param` class triggers the `query_fb_marketing_api` function to make a separate API query for each item in the list.
 #' 
 #' @param ... Vector
 #' @return Object of class `map_param` to be used as input to the `query_fb_marketing_api()` function to make multiple API queries. 

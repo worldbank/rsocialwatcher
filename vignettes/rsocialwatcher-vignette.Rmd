@@ -668,7 +668,7 @@ To specify AND or OR conditions for the same parameter type:
 
 ```{r and_or_within, include=TRUE, warning=FALSE, message=FALSE}
 
-beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent travellers") %>% pull(id)
 beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
 
@@ -878,7 +878,7 @@ And/or conditions work as before: vectors `c()` specify OR conditions, while lis
 
 ```{r vec_list_1_andor, include=TRUE, warning=FALSE, message=FALSE}
 
-beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent Travelers") %>% pull(id)
+beh_freqtrvl_id  <- behaviors_df %>% filter(name == "Frequent travellers") %>% pull(id)
 beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
 
