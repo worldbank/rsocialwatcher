@@ -1,8 +1,8 @@
-#' Map Parameters
-#' Converts a vector or list into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate query for each item within `map_param`. 
+#' Map Parameters within `query_fb_marketing_api()`
+#' Groups input into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param`. 
 #' 
 #' @param ... Vector or list
-#' @return Object of class `map_param`; a list structured that contains different parameters for the `query_fb_marketing_api()` function.
+#' @return Object of class `map_param` to be used as input to the `query_fb_marketing_api()` function to make multiple API queries. 
 #' @examples
 #' \dontrun{
 #' # Make 3 queries:
@@ -34,10 +34,10 @@ map_param <- function(...){
 }
 
 #' Map Parameters over Vector
-#' Converts a vector into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate query for each item within `map_param` (ie, for each item in the original vector entered into `map_param`). 
+#' Converts a vector into a `map_param` object. When a `map_param` object is entered as a parameter in `query_fb_marketing_api()`, `query_fb_marketing_api()` makes a separate API query for each item within `map_param` (ie, for each item in the original vector entered into `map_param`). 
 #' 
 #' @param ... Vector
-#' @return Object of class `map_param`; a list structured that contains different parameters for the `query_fb_marketing_api()` function.
+#' @return Object of class `map_param` to be used as input to the `query_fb_marketing_api()` function to make multiple API queries. 
 #' @examples
 #' \dontrun{
 #' # Make 2 queries:
