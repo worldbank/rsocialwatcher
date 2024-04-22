@@ -42,7 +42,8 @@ map_param <- function(...){
   # map_param
   
   OUT <- list(...)
-  OUT <- as.list(c("map_param", OUT))
+  #OUT <- as.list(c("map_param", OUT))
+  class(OUT) <- "map_param"
   
   return(OUT)
 }
@@ -74,8 +75,9 @@ map_param_vec <- function(...){
   # map_param
   
   OUT <- list(...)
-  OUT <- as.list(c("map_param", OUT))
+  #OUT <- as.list(c("map_param", OUT))
   OUT <- unlist(OUT)
+  class(OUT) <- "map_param"
   
   return(OUT)
 }
@@ -252,9 +254,9 @@ make_iterable <- function(x){
   
   if(!is.null(x)){
     
-    if(x[[1]][1] == "map_param"){
+    if(class(x)[1] == "map_param"){
       # Already an iterable list; take away the "map_param" identifier
-      x <- x[x != "map_param"]
+      #x <- x[x != "map_param"]
       
     } else{
       # Not an iterable list; put in a list, so just iterate over once
@@ -397,6 +399,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
                                          ## Query info
                                          sleep_time,
                                          show_result,
+                                         verbose,
                                          
                                          ## Add to dataframe
                                          add_query,
@@ -590,7 +593,10 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   
   # Check internet -------------------------------------------------------------
   # Stall if not connected to internet
-  while(!curl::has_internet()){ Sys.sleep(5); print("Looking for internet")}
+  while(!curl::has_internet()){ 
+    Sys.sleep(5)
+    if(verbose) cat("Looking for internet")
+  }
   
   # Make query -----------------------------------------------------------------
   
@@ -717,12 +723,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
-      #print(query)
       query_val <- url(query) %>% fromJSON
       
       if(!is.null(query_val$error)){
         warning("Error message from Facebook Marketing API")
-        if(query_val$error$code != 80004) print(query_val)
+        if(query_val$error$code != 80004) warning(query_val)
       }
       
       #### If there is no error
@@ -815,7 +820,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         }
         
         if(show_result){
-          print(query_val_df$estimate_mau_upper_bound)
+          cat(query_val_df$estimate_mau_upper_bound)
         }
         
         ## Sleep
@@ -828,7 +833,9 @@ query_fb_marketing_api_1call <- function(location_unit_type,
           if((query_val$error$code == 80004)){
             try_api_call <- TRUE
             
-            cat("Too many calls, so pausing for 30 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.\n")
+            if(verbose){
+              cat("Too many calls, so pausing for 30 seconds then will try the query again; will only move to the next API query after the current query has successfully been called.\n")
+            }
             
             Sys.sleep(30)
           } 
@@ -925,6 +932,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @section Scraping parameters
 #' @param sleep_time How much time (in seconds) to pause between each query (default: `0.1`).
 #' @param show_result After each query, whether to print the number of monthly active users (default: `FALSE`).
+#' @param verbose Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: `TRUE`). 
 #' @section Return query text as variable in returned dataframe
 #' @param add_query If `TRUE`, add query text as variable in returned dataframe 
 #' @param add_query_hide_credentials If `TRUE` (and `add_query` is `TRUE`), hide the `creation_act` and `token` from the query text returned in the dataframe
@@ -1028,10 +1036,11 @@ query_fb_marketing_api <- function(location_unit_type,
                                    
                                    ## Query info
                                    sleep_time = 0.1,
-                                   show_result = F,
+                                   show_result = FALSE,
+                                   verbose = TRUE,
                                    
                                    ## Add to dataframe
-                                   add_query = F,
+                                   add_query = FALSE,
                                    add_query_hide_credentials = T){
   
   # Checks ---------------------------------------------------------------------
@@ -1096,17 +1105,16 @@ query_fb_marketing_api <- function(location_unit_type,
     }
   }
   
-  # TODO: Checks for which ones can't have map_param
-  
   # Convert param inputs to iterable list --------------------------------------
   ## Latitude/Longitude
   # Need to treat lat/lon bit differently as the input is a vector of lat/lon
   
   if(is.list(lat_lon)){
     
-    if(lat_lon[[1]] == "map_param"){
+    if(class(lat_lon)[1] == "map_param"){
       
-      lat_lon <- lat_lon[lat_lon != "map_param"] %>% unlist()
+      #lat_lon <- lat_lon[lat_lon != "map_param"] %>% unlist()
+      lat_lon <- lat_lon %>% unlist()
       lat_lon <- split(lat_lon, ceiling(seq_along(lat_lon)/2))
     } else{
       stop('"lat_lon" cannot be a list')
@@ -1278,6 +1286,7 @@ query_fb_marketing_api <- function(location_unit_type,
                    MoreArgs = list(location_unit_type         = location_unit_type,
                                    sleep_time                 = sleep_time,
                                    show_result                = show_result,
+                                   verbose                    = verbose,
                                    add_query                  = add_query, 
                                    add_query_hide_credentials = add_query_hide_credentials),
                    

@@ -69,7 +69,7 @@ get_fb_parameter_ids <- function(type,
                                  region_id = NULL,
                                  key=NULL,
                                  limit = NULL,
-                                 add_location_coords = F){
+                                 add_location_coords = FALSE){
   
   # Checks ---------------------------------------------------------------------
   #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")

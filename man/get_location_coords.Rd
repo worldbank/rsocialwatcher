@@ -17,7 +17,7 @@ get_location_coords(
 \arguments{
 \item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.}
 
-\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://ramarty.github.io/rSocialWatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
+\item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.}
 
 \item{version}{API version. e.g., "v17.0"}
 
