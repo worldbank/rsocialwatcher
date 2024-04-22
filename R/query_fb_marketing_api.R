@@ -18,6 +18,7 @@ is_null_or_na <- function(x){
 #' Instruct `query_fb_marketing_api()` to make separate queries. `query_fb_marketing_api()` makes a separate query for each item in `map_param()`.
 #' 
 #' @param ... Vector or list
+#' @return Object of class `map_param`
 #' @examples
 #' \dontrun{
 #' # Make 3 queries:
@@ -52,6 +53,7 @@ map_param <- function(...){
 #' Instruct `query_fb_marketing_api()` to make separate queries for each item in a vector. 
 #' 
 #' @param ... Vector
+#' @return Object of class `map_param`
 #' @examples
 #' \dontrun{
 #' # Make 2 queries:
@@ -60,7 +62,7 @@ map_param <- function(...){
 #' query_fb_marketing_api(
 #'   location_unit_type = "countries",
 #'   location_keys      = "US",
-#'   gender             = map_param(1:2)
+#'   gender             = map_param_vec(1:2)
 #'   version            = VERSION, 
 #'   creation_act       = CREATION_ACT, 
 #'   token              = TOKEN)
@@ -68,12 +70,7 @@ map_param <- function(...){
 #' @export
 #' 
 map_param_vec <- function(...){
-  # Function will create a separate query for each item. 
-  # Creates a list, where the first element in the list is "map_param", where the
-  # function then interprets each element of the list as a separate query.
-  # Complex queries can still be made:
-  # map_param
-  
+
   OUT <- list(...)
   #OUT <- as.list(c("map_param", OUT))
   OUT <- unlist(OUT)

@@ -784,20 +784,16 @@ comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
 
 ## Multiple Queries <a name="query_data_ids_multquery"></a>
 
-The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls. For example, when `location_unit_type = "countries"`, `location_key = map_param("US", "MX")` will make one query for the US, and a second query for Mexico.
-
-Note that `map_param` simply creates a list where each item entered into `map_param` becomes a different item in the list. In addition, the `map_param` assigns the first value of this list as the string `"map_param"`, which is used within the function to indicate that a seprate query should be made for each item in the list. 
-
-More generally, for any `list` or `vector` where the first element of the `list` or `vector` is `map_param`, separate queries will be made for additional elements. 
+The function allows making multiple queries within one function call. All parameters in the `map_param` function will be iterated as separate calls. For example, when `location_unit_type = "countries"`, `location_key = map_param("US", "MX")` will make one query for the US, and a second query for Mexico. The `map_param` functions creates an object of the class `map_param`, which instructs the `query_fb_marketing_api()` to make separate queries for different items in `map_param`.
 
 Below shows examples. Assume hat we are using `map_param` to create separate queries for interests, for interest ID `1` and `2`.
 
-__Example 1: Simple example,__ making one query to determing the number of users with an interest in `1`, and a separate query to determine the number of users with an interest in `2`.
+__Example 1: Simple example,__ making one query to determining the number of users with an interest in `1`, and a separate query to determine the number of users with an interest in `2`.
 ```{r map_param_ex1, include=TRUE, warning=FALSE, message=FALSE}
 map_param(1, 2)
 ```
 
-__Example 2: Note that below will only make one query,__ querying users with an interest in 1 OR 2. The first item in the list is `"map_param`, indicating that the next items should be made in separate queries. However, there is only one separate item: `c(1,2)` -- which the function interprets using an `OR` condition.
+__Example 2: Note that below will only make one query,__ querying users with an interest in 1 OR 2. There is only one item: `c(1,2)` -- which the function interprets using an `OR` condition.
 ```{r map_param_ex2, include=TRUE, warning=FALSE, message=FALSE}
 interests_vec <- c(1, 2)
 
