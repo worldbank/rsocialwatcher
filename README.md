@@ -126,7 +126,7 @@ us_states_sf <- get_fb_parameter_ids(
   add_location_coords = T)
 ```
 
-### Get suggested radius
+### Get suggested radius <a name="suggested-radius"></a>
 
 Facebook enables querying a specific location to determine a suggested radius to reach enough people (see [Facebook documentation here](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius)). We can use the `get_fb_suggested_radius` function to get the suggested radius. Below shows the querying the suggested radius for Paris, France and Paris, Kentucky. 
 
@@ -265,7 +265,7 @@ However, for the below:
 ```r
 countries <- c("US", "CA", "MX", "FR", "GB", "ES")
 
-# INCORRECT: The below will make 1 query, querying the number of MAU/DAU across countries.
+# INCORRECT: The below will make 1 query, querying the number of MAU/DAU across the six countries. The function inteprets the input as the number of Facebook users in the US or Canada or Mexico, etc.
 us_mult_cnt_param_df <- query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = map_param(countries),
@@ -299,6 +299,31 @@ mult_queries_df <- query_fb_marketing_api(
   creation_act       = c(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3)
   token              = c(TOKEN_1,        TOKEN_2,        TOKEN_3) )
 ```
+
+### Summary of Input Methods <a name="summary_inputs"></a>
+
+The below table summarizes different ways parameters can be entered into the `query_fb_marketing_api` for different purposes. The table uses output from the following code. 
+
+```r
+behaviors_df <- get_fb_parameter_ids("behaviors", VERSION, TOKEN)
+
+beh_mac_id <- behaviors_df %>% 
+  filter(name == "Facebook access (OS): Mac OS X") %>% 
+  pull(id)
+  
+beh_tech_id <- behaviors_df %>% 
+  filter(name == "Technology early adopters") %>% 
+  pull(id)
+  
+beh_ids <- c(beh_mac_id, beh_tech_id)
+```
+
+Method               | Function          | Example input in `query_fb_marketing_api(behaviors = [], ...)` | Description
+------               | ------            | ------                               | ------
+Or condition         | `c()`             | `c(beh_mac_id, beh_tech_id)`         | Facebook users with `beh_mac_id` OR `beh_tech_id` behaviors
+And condition        | `list()`          | `list(beh_mac_id, beh_tech_id)`      | Facebook users with `beh_mac_id` AND `beh_tech_id` behaviors
+Two queries [Way 1]  | `map_param()`     | `map_param(beh_mac_id, beh_tech_id)` | One query for Facebook users with `beh_mac_id`; second query for `beh_tech_id`
+Two queries [Way 2]  | `map_param_vec()` | `map_param_vec(beh_ids)`             | One query for Facebook users with `beh_mac_id`; second query for `beh_tech_id`
 
 ## Usage <a name="usage"></a>
 See [this vignette](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 
