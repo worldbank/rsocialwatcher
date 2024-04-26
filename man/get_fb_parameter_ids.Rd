@@ -72,7 +72,11 @@ get_fb_parameter_ids(type = "life_events", version = VERSION, token = TOKEN)
 #### Location IDs
 get_fb_parameter_ids(type = "country", version = VERSION, token = TOKEN)
 get_fb_parameter_ids(type = "region", country_code = "US", version = VERSION, token = TOKEN)
-get_fb_parameter_ids(type = "large_geo_area", country_code = "LB", q = "Akkar", version = VERSION, token = TOKEN)
+get_fb_parameter_ids(type         = "medium_geo_area", 
+                     country_code = "US", 
+                     q            = "Henrico", 
+                     version      = VERSION, 
+                     token        = TOKEN)
 
 }
 }
