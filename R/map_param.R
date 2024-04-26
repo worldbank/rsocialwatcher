@@ -27,7 +27,6 @@ map_param <- function(...){
   # map_param
   
   OUT <- list(...)
-  #OUT <- as.list(c("map_param", OUT))
   class(OUT) <- "map_param"
   
   return(OUT)
@@ -56,7 +55,6 @@ map_param <- function(...){
 map_param_vec <- function(...){
   
   OUT <- list(...)
-  #OUT <- as.list(c("map_param", OUT))
   OUT <- unlist(OUT)
   class(OUT) <- "map_param"
   
