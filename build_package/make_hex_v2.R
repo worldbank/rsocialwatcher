@@ -66,7 +66,7 @@ if(T){
   
   points_df$y <- points_df$y + 0.01
   points_df$x <- points_df$x + 0.05
-
+  
   points_v2_df <- points_df %>%
     mutate(x = x + runif(n(), -0.17, 0.17),
            y = y + runif(n(), -0.17, 0.17))
@@ -97,10 +97,17 @@ if(T){
     scale_x_continuous(limits = c(x_min, x_max)) +
     scale_y_continuous(limits = c(y_min, y_max)) +
     theme_void() +
-    theme(panel.background = element_rect(fill = rgb(44, 100, 246, maxColorValue = 255) )) 
+    theme_transparent()
+  
+  #+
+  #theme(panel.background = element_rect(fill = rgb(44, 100, 246, maxColorValue = 255) ),
+  #      plot.margin=grid::unit(c(0,0,0,0), "mm")) 
+  
 
   sticker(p, 
           package="rsocialwatcher", 
+          h_fill="#2C64F6", 
+          h_color="black",
           spotlight = F,
           #l_alpha = 0.3, #0.15,
           p_size=19, #7 
@@ -112,8 +119,8 @@ if(T){
           s_width=2.5, 
           s_height=2.5,
           p_color = "white",
-          h_fill = "black",
-          h_color = "black",
+          #h_fill = "black",
+          #h_color = "black",
           white_around_sticker = T,
           l_y = 1.4,
           l_x = 0.93,

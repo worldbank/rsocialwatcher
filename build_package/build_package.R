@@ -21,5 +21,5 @@ if(F){
   devtools::check_win_release("~/Documents/Github/rsocialwatcher")
   devtools::check_win_oldrelease("~/Documents/Github/rsocialwatcher")
   
-  devtools::build("~/Documents/Github/rsocialwatcher")
+  devtools::build("~/Documents/Github/rsocialwatcher") 
 }

@@ -11,7 +11,8 @@ get_location_coords(
   token,
   large_query_chunk_size = 10,
   large_query_pause = 0,
-  limit = NULL
+  limit = NULL,
+  verbose = TRUE
 )
 }
 \arguments{

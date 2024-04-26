@@ -56,8 +56,9 @@ n_embedded_lists <- function(obj){
 #' get_fb_parameter_ids(type = "life_events", version = VERSION, token = TOKEN)
 #' 
 #' #### Location IDs
-#' 
-#' 
+#' get_fb_parameter_ids(type = "country", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "region", country_code = "US", version = VERSION, token = TOKEN)
+#' get_fb_parameter_ids(type = "large_geo_area", country_code = "LB", q = "Akkar", version = VERSION, token = TOKEN)
 #' 
 #' }
 #' @export
@@ -72,10 +73,7 @@ get_fb_parameter_ids <- function(type,
                                  add_location_coords = FALSE){
   
   # Checks ---------------------------------------------------------------------
-  #if(!(type %in% c("behaviors", "demographics", "interests", "locales"))) stop("Invalid type; type must be either: 'behaviors', 'demographics', 'interests', or 'locales'")
-  #if( (type == "work_positions") & is.null(q)) stop("When type = 'work_positions', 'q' must be specified.")
-  #if( (type == "work_employers") & is.null(q)) stop("When type = 'work_employers', 'q' must be specified.")
-  
+
   #### Make plural
   if(type == "countries")           type <- "country"
   if(type == "country_groups")      type <- "country_group"

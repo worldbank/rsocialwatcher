@@ -2,8 +2,8 @@
 % Please edit documentation in R/map_param.R
 \name{map_param}
 \alias{map_param}
-\title{Map Parameters
-Converts a vector or list into a \code{map_param} object. When a \code{map_param} object is entered as a parameter in \code{query_fb_marketing_api()}, \code{query_fb_marketing_api()} makes a separate query for each item within \code{map_param}.}
+\title{Map Parameters within \code{query_fb_marketing_api()}
+Groups input into a \code{map_param} object. When a \code{map_param} object is entered as a parameter in \code{query_fb_marketing_api()}, \code{query_fb_marketing_api()} makes a separate API query for each item within \code{map_param}. A \code{map_param} object is structured as a list, where the \code{map_param} class triggers the \code{query_fb_marketing_api} function to make a separate API query for each item in the list.}
 \usage{
 map_param(...)
 }
@@ -11,11 +11,11 @@ map_param(...)
 \item{...}{Vector or list}
 }
 \value{
-Object of class \code{map_param}; a list structured that contains different parameters for the \code{query_fb_marketing_api()} function.
+Object of class \code{map_param} to be used as input to the \code{query_fb_marketing_api()} function to make multiple API queries.
 }
 \description{
-Map Parameters
-Converts a vector or list into a \code{map_param} object. When a \code{map_param} object is entered as a parameter in \code{query_fb_marketing_api()}, \code{query_fb_marketing_api()} makes a separate query for each item within \code{map_param}.
+Map Parameters within \code{query_fb_marketing_api()}
+Groups input into a \code{map_param} object. When a \code{map_param} object is entered as a parameter in \code{query_fb_marketing_api()}, \code{query_fb_marketing_api()} makes a separate API query for each item within \code{map_param}. A \code{map_param} object is structured as a list, where the \code{map_param} class triggers the \code{query_fb_marketing_api} function to make a separate API query for each item in the list.
 }
 \examples{
 \dontrun{

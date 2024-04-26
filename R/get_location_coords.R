@@ -32,7 +32,8 @@ get_location_coords <- function(location_unit_type,
                                 token,
                                 large_query_chunk_size = 10,
                                 large_query_pause = 0,
-                                limit = NULL){
+                                limit = NULL,
+                                verbose = TRUE){
   
   #### Query data
   out_sf <- get_location_coords_i(location_unit_type,
