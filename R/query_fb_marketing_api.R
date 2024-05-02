@@ -973,7 +973,7 @@ query_fb_marketing_api <- function(location_unit_type,
                                    
                                    ## Add to dataframe
                                    add_query = FALSE,
-                                   add_query_hide_credentials = T){
+                                   add_query_hide_credentials = TRUE){
   
   # Checks ---------------------------------------------------------------------
   if(!is.null(flex_target)){

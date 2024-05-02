@@ -27,7 +27,13 @@ The package provides the following functions:
 * [`get_fb_suggested_radius()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
 
 ## Installation <a name="installation"></a>
-The package is available via Github and can be install using `devtools`.
+The package can be installed via CRAN.
+
+```r
+install.packages("rsocialwatcher")
+```
+
+To install the development version from Github:
 
 ```r
 # install.packages("devtools")

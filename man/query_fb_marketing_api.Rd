@@ -51,7 +51,7 @@ query_fb_marketing_api(
   show_result = FALSE,
   verbose = TRUE,
   add_query = FALSE,
-  add_query_hide_credentials = T
+  add_query_hide_credentials = TRUE
 )
 }
 \arguments{
