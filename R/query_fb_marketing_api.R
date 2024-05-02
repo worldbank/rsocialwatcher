@@ -655,7 +655,11 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     
     query_val_df <- tryCatch({
       
-      query_val <- url(query) %>% fromJSON
+      #query_val <- url(query) %>% fromJSON
+      query_val <- GET(query) %>%
+        content(as="text") %>%
+        fromJSON() %>%
+        pluck(1)
       
       if(!is.null(query_val$error)){
         warning("Error message from 'Facebook Marketing' API")

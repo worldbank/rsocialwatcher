@@ -64,6 +64,7 @@ First, we load relevant packages and create variables for our Facebook API keys.
 library(rsocialwatcher)
 library(tidyverse)
 library(dplyr)
+library(purrr)
 library(lubridate)
 library(jsonlite)
 library(httr)
@@ -80,9 +81,9 @@ VERSION      <- "VERSION-HERE"
 ```
 
 ```{r loadkey, include=FALSE}
-TOKEN        <- Sys.getenv(FB_TOKEN = TOKEN)
-CREATION_ACT <- Sys.getenv(FB_CREATION_ACT = CREATION_ACT)
-VERSION      <- Sys.getenv(FB_VERSION = VERSION)
+TOKEN        <- Sys.getenv("FB_TOKEN")
+CREATION_ACT <- Sys.getenv("FB_CREATION_ACT")
+VERSION      <- Sys.getenv("FB_VERSION")
 ```
 
 ---

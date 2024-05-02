@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher)
 [![activity](https://img.shields.io/github/commit-activity/m/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
-
+[![R-CMD-check](https://github.com/worldbank/rsocialwatcher/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/worldbank/rsocialwatcher/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Query data from the Facebook Marketing API using R, with a focus for social science research. 
