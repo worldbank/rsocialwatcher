@@ -815,8 +815,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' Query 'Facebook Marketing' API
 #' 
 #' @param location_unit_type Either `"coordinates"` (for buffer around single point) or type of geographic location, including: `"countries"`, `"regions"`, `"cities"`, `"zips"`, `"places"`, `"geo_markets"`, `"electoral_district"`, or `"country_groups"`. See the [Basic Targetting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location) documentation for more information. 
-#' ## If location_unit_type is "coordinates"
-#' Parameters when `location_unit_type = "coordinates"`
+#' ## ------------------------------
+#' If location_unit_type is "coordinates"
 #' @param lat_lon Coordinates, c(lat, lon). For example, `c(38.90, -77.01)`
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
