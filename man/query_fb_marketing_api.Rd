@@ -55,7 +55,9 @@ query_fb_marketing_api(
 )
 }
 \arguments{
-\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.}
+\item{location_unit_type}{Either \code{"coordinates"} (for buffer around single point) or type of geographic location, including: \code{"countries"}, \code{"regions"}, \code{"cities"}, \code{"zips"}, \code{"places"}, \code{"geo_markets"}, \code{"electoral_district"}, or \code{"country_groups"}. See the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location}{Basic Targetting} documentation for more information.
+\subsection{If location_unit_type is "coordinates"}{
+}}
 
 \item{lat_lon}{Coordinates, c(lat, lon). For example, \code{c(38.90, -77.01)}}
 
@@ -155,10 +157,6 @@ Dataframe that includes (1) daily and monthly active users and (2) parameter val
 \description{
 Query 'Facebook Marketing' API
 }
-\section{If location_unit_type is "coordinates"}{
-NA
-}
-
 \section{If location_unit_type is not "coordinates"}{
 NA
 }
