@@ -164,7 +164,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types location_keys gender age_min age_max
 #> 1          countries home or recent            US 1 or 2      18      65
 #>     api_call_time_utc
-#> 1 2024-05-02 21:32:44
+#> 1 2024-05-02 22:21:39
 ```
 
 **Example:** Query Facebook users around specific location
@@ -183,7 +183,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types radius radius_unit gender age_min age_max
 #> 1        coordinates home or recent      5   kilometer 1 or 2      18      65
 #>   latitude longitude   api_call_time_utc
-#> 1   40.712   -74.006 2024-05-02 21:32:45
+#> 1   40.712   -74.006 2024-05-02 22:21:40
 ```
 
 ### Obtain location coordinates/geometries <a name="quick-location"></a>
@@ -288,7 +288,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types location_keys     behaviors gender age_min
 #> 1          countries home or recent            US 6003966451572 1 or 2      18
 #>   age_max   api_call_time_utc
-#> 1      65 2024-05-02 21:32:52
+#> 1      65 2024-05-02 22:21:51
 ```
 
 **Example \[Two parameters, OR condition\]:** Facebook users who
@@ -313,7 +313,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types location_keys
 #> 1          countries home or recent            US
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:53
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:52
 ```
 
 **Example \[Two parameters, AND condition\]:** Facebook users who
@@ -334,7 +334,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types location_keys
 #> 1          countries home or recent            US
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 21:32:54
+#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:52
 ```
 
 **Example \[Two parameters, OR and AND condition\]:** Facebook users who
@@ -364,7 +364,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types location_keys     interests
 #> 1          countries home or recent            US 6003404634364
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 21:32:54
+#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:53
 ```
 
 ### Map Over Multiple Queries <a name="quick-multiple"></a>
@@ -397,9 +397,9 @@ query_fb_marketing_api(
 #> 2          countries home or recent            CA 6003404634364
 #> 3          countries home or recent            MX 6003404634364
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:54
-#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:55
-#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:55
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:53
+#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:53
+#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:54
 ```
 
 **Example:** Make queries for different and behaviors. In total, six
@@ -429,12 +429,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            CA 6003404634364 6003808923172
 #> 6          countries home or recent            MX 6003404634364 6003808923172
 #>   gender age_min age_max   api_call_time_utc
-#> 1 1 or 2      18      65 2024-05-02 21:32:55
-#> 2 1 or 2      18      65 2024-05-02 21:32:55
-#> 3 1 or 2      18      65 2024-05-02 21:32:56
-#> 4 1 or 2      18      65 2024-05-02 21:32:56
-#> 5 1 or 2      18      65 2024-05-02 21:32:57
-#> 6 1 or 2      18      65 2024-05-02 21:32:57
+#> 1 1 or 2      18      65 2024-05-02 22:21:54
+#> 2 1 or 2      18      65 2024-05-02 22:21:55
+#> 3 1 or 2      18      65 2024-05-02 22:21:55
+#> 4 1 or 2      18      65 2024-05-02 22:21:55
+#> 5 1 or 2      18      65 2024-05-02 22:21:56
+#> 6 1 or 2      18      65 2024-05-02 22:21:57
 ```
 
 **Example:** Make query for each country, for:
@@ -472,12 +472,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            CA 6003404634364
 #> 6          countries home or recent            MX 6003404634364
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:57
-#> 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:58
-#> 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:32:58
-#> 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 21:32:58
-#> 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 21:32:59
-#> 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 21:32:59
+#> 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:57
+#> 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:57
+#> 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:58
+#> 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:58
+#> 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:58
+#> 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:59
 ```
 
 **Example:** Make queries using vector as input. Below, we want to make
@@ -514,7 +514,7 @@ query_fb_marketing_api(
 #>   location_unit_type location_types                    location_keys gender
 #> 1          countries home or recent US or CA or MX or FR or GB or ES 1 or 2
 #>   age_min age_max   api_call_time_utc
-#> 1      18      65 2024-05-02 21:33:00
+#> 1      18      65 2024-05-02 22:21:59
 ```
 
 **Incorrect approach to make query for each country**
@@ -544,12 +544,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            GB 1 or 2      18      65
 #> 6          countries home or recent            ES 1 or 2      18      65
 #>     api_call_time_utc
-#> 1 2024-05-02 21:33:00
-#> 2 2024-05-02 21:33:01
-#> 3 2024-05-02 21:33:01
-#> 4 2024-05-02 21:33:02
-#> 5 2024-05-02 21:33:02
-#> 6 2024-05-02 21:33:02
+#> 1 2024-05-02 22:21:59
+#> 2 2024-05-02 22:22:00
+#> 3 2024-05-02 22:22:00
+#> 4 2024-05-02 22:22:01
+#> 5 2024-05-02 22:22:01
+#> 6 2024-05-02 22:22:02
 ```
 
 ### Using Multiple API Tokens <a name="multiple_tokens"></a>
@@ -606,13 +606,13 @@ query_fb_marketing_api(
 #> 6          countries home or recent            DE 6003404634364
 #> 7          countries home or recent            IT 6003404634364
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:02
-#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:03
-#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:03
-#> 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:04
-#> 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:04
-#> 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:04
-#> 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 21:33:05
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03
+#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03
+#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03
+#> 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04
+#> 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04
+#> 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04
+#> 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:05
 ```
 
 ### Summary of Input Methods <a name="summary_inputs"></a>
