@@ -1,5 +1,15 @@
 # rsocialwatcher <img src="man/figures/logo.png" align="right" width="200" />
 
+<!-- badges: start -->
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rsocialwatcher)](https://cran.r-project.org/package=rsocialwatcher)
+![downloads](http://cranlogs.r-pkg.org/badges/grand-total/rsocialwatcher)
+[![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher)
+[![activity](https://img.shields.io/github/commit-activity/m/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher/graphs/commit-activity)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
+
+<!-- badges: end -->
+
 Query data from the Facebook Marketing API using R, with a focus for social science research. 
 
 * [Overview](#overview)
