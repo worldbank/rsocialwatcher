@@ -80,28 +80,9 @@ VERSION      <- "VERSION-HERE"
 ```
 
 ```{r loadkey, include=FALSE}
-## Load keys
-# api_keys <- read.csv("~/Dropbox/World Bank/Webscraping/Files for Server/api_keys.csv",
-#                      stringsAsFactors = F)
-
-api_keys <- read.csv("https://www.dropbox.com/scl/fi/5ug1cfhmoi6v2m393broz/fb_credentials.csv?rlkey=xedl2727l7mnf7ayg0zgrxtr0&dl=1")
-
-api_keys <- api_keys %>%
-  dplyr::filter(Service == "facebook_marketing_ad",
-                Details == "robmarty3@gmail.com")
-
-TOKEN <- api_keys %>% 
-  dplyr::filter(Account == "token") %>% 
-  pull(Key)
-
-CREATION_ACT <- api_keys %>% 
-  dplyr::filter(Account == "creation_act") %>% 
-  pull(Key) %>% 
-  str_replace_all("ACT_", "") 
-
-VERSION <- api_keys %>% 
-  dplyr::filter(Account == "version") %>% 
-  pull(Key)
+TOKEN        <- Sys.getenv(FB_TOKEN = TOKEN)
+CREATION_ACT <- Sys.getenv(FB_CREATION_ACT = CREATION_ACT)
+VERSION      <- Sys.getenv(FB_VERSION = VERSION)
 ```
 
 ---
@@ -713,21 +694,18 @@ __Example 1: OR Condition__
 The below shows an example setting an OR condition for interest ID 2 and behavior ID 2. Both interest:1 and behavior:2 are in the same list index, so are grouped using an OR condition (interests:1 OR behavior 2)
 ```
 flex_param <- list("interests" = 1, "behaviors" = 2)
-# flex_param[[1]]
 ```
 
 __Example 2: AND Condition__
 The below shows an example setting an AND condition for interest ID 2 and behavior ID 2. interest:1 and behavior:2 are separated across list indices, so are separated by an AND condition (interests:1 AND behavior:2)
 ```
 flex_param <- list(list("interests" = 1), list("behaviors" = 2))
-# flex_param[[1]] AND flex_param[[2]]
 ```
 
 __Example 3: OR and AND Conditions__
 The below shows a more complicated example, which grabs all users that meet (EITHER interests:1 or behaviors:3) AND (behaviors:2). Everything within `flex_param[[1]]` are grouped within OR conditions, but different indices (`flex_param[[1]]` and `flex_param[[2]]`) are separated by AND conditions.
 ```
 flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = 2))
-# flex_param[[1]] AND flex_param[[2]]
 ```
 
 ```{r and_or_across, include=TRUE, warning=FALSE, message=FALSE}

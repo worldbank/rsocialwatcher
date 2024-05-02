@@ -5,3 +5,4 @@
 ^build_package/
 ^\.github$
 ^README.md$
+^README\.Rmd$

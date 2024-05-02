@@ -1,0 +1,405 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rsocialwatcher <img src="man/figures/logo.png" align="right" width="200" />
+
+<!-- badges: start -->
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rsocialwatcher)](https://cran.r-project.org/package=rsocialwatcher)
+![downloads](http://cranlogs.r-pkg.org/badges/grand-total/rsocialwatcher)
+[![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher)
+[![activity](https://img.shields.io/github/commit-activity/m/worldbank/rsocialwatcher)](https://github.com/worldbank/rsocialwatcher/graphs/commit-activity)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
+
+<!-- badges: end -->
+
+Query data from the Facebook Marketing API using R, with a focus for social science research. 
+
+* [Overview](#overview)
+* [Installation](#installation)
+* [Credentials](#credentials)
+* [Quick Start](#quick)
+* [Usage](#usage)
+
+## Overview <a name="overview"></a>
+
+This package facilitates querying data from the Facebook Marketing API. The packages is inspired by [pySocialWatcher](https://github.com/maraujo/pySocialWatcher), which is a similar package built for Python. Emerging research has shown that the Facebook Marketing API can provide useful data for social science research. For example, Facebook marketing data has been used for:
+
+* Poverty estimation ([here](https://ojs.aaai.org//index.php/ICWSM/article/view/7361) and [here](https://www.nature.com/articles/s41598-023-49564-6))
+* [Disease surveillance](https://arxiv.org/abs/1705.04045)
+* Migrants in United States ([here](https://link.springer.com/article/10.1007/s11113-020-09599-3) and [here](https://onlinelibrary.wiley.com/doi/abs/10.1111/padr.12102))
+* [Monitoring refugee and migrant flows in Venezuela](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0229175)
+* [Quantifying mobility patterns](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0224134)
+* [Studying the Urban/Rural Divide](https://arxiv.org/pdf/2002.11645.pdf)
+
+The package provides the following functions:
+
+* [`get_fb_parameter_ids()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_parameter_ids.html): To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* [`get_location_coords()`](https://worldbank.github.io/rsocialwatcher/reference/get_location_coords.html): To obtain coordinates and, when available, geometries of locations based on their location keys.
+* [`query_fb_marketing_api()`](https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_suggested_radius()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
+
+## Installation
+
+The package can be installed via CRAN.
+
+```r
+install.packages("rsocialwatcher")
+```
+
+You can install the development version of rsocialwatcher from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("worldbank/rsocialwatcher")
+```
+
+## Facebook API Credentials <a name="credentials"></a>
+
+Using the Facebook Marketing API requires indicating the following:
+
+1. Token
+2. Version
+3. Creation
+
+Follow the instructions [here](https://worldbank.github.io/rsocialwatcher/articles/create_facebook_credentials.html) to obtain these credentials.
+
+## Quickstart <a name="quick"></a>
+
+* [Setup](#quick-setup)
+* [Get Facebook Parameter IDs](#quick-param-id)
+* [Query Facebook Users for Different Location Types](#quick-location)
+* [Query Facebook Users by Different Attributes](#quick-attributes)
+* [Map Over Multiple Queries](#quick-multiple)
+
+### Setup <a name="quick-setup"></a>
+```r
+library(rsocialwatcher)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# Define API version, creation act & token -------------------------------------
+VERSION      <- "[ENTER HERE]" # Example: "v19.0"
+CREATION_ACT <- "[ENTER HERE]"
+TOKEN        <- "[ENTER HERE]"
+```
+
+### Get dataframes of select parameter IDs <a name="quick-param-id"></a>
+```{r, include = F}
+library(rsocialwatcher)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+TOKEN        <- Sys.getenv("FB_TOKEN")
+CREATION_ACT <- Sys.getenv("FB_CREATION_ACT")
+VERSION      <- Sys.getenv("FB_VERSION")
+```
+
+```{r, message = F, warning=F}
+# Get dataframe of Facebook parameter IDs and descriptions ---------------------
+## Interests and behaviors
+interests_df <- get_fb_parameter_ids("interests", VERSION, TOKEN)
+behaviors_df <- get_fb_parameter_ids("behaviors", VERSION, TOKEN)
+
+head(behaviors_df[,1:3])
+```
+
+```{r, message = F, warning=F}
+## Locations: countries
+country_df   <- get_fb_parameter_ids("country", VERSION, TOKEN)
+
+head(country_df)
+```
+
+### Query data for different location types <a name="quick-location"></a>
+
+__Example:__ Query Facebook users in US
+```{r, message = F, warning=F}
+us_key <- country_df %>% 
+  filter(name == "United States") %>% 
+  pull(key)
+
+query_fb_marketing_api(
+  location_unit_type = "countries",
+  location_keys      = us_key,
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+__Example:__ Query Facebook users around specific location
+```{r, message = F, warning=F}
+query_fb_marketing_api(
+  location_unit_type = "coordinates",
+  lat_lon            = c(40.712, -74.006),
+  radius             = 5,
+  radius_unit        = "kilometer",
+  version            = VERSION, 
+  creation_act       = CREATION_ACT, 
+  token              = TOKEN)
+```
+
+### Obtain location coordinates/geometries <a name="quick-location"></a>
+
+__Example:__ Location coordinates and, when available, geometries can be obtained using the `get_location_coords` function.
+
+```{r, message = F, warning=F}
+get_location_coords(
+  location_unit_type = "countries",
+  location_keys      = c("US", "MX", "CA"),
+  version            = VERSION,
+  token              = TOKEN
+)
+```
+
+__Example:__ In addition, when obtaining location IDs using the `query_fb_marketing_api` function, we can directly add coordinates/geometries by setting the `add_location_coords` to `TRUE`.
+
+```{r, message = F, warning=F}
+get_fb_parameter_ids(
+  type = "region", 
+  country_code = "US", 
+  version = VERSION, 
+  token = TOKEN,
+  add_location_coords = T) %>%
+  head()
+```
+
+### Get suggested radius <a name="suggested-radius"></a>
+
+Facebook enables querying a specific location to determine a suggested radius to reach enough people (see [Facebook documentation here](https://developers.facebook.com/docs/marketing-api/audiences/reference/targeting-search/#radius)). We can use the `get_fb_suggested_radius` function to get the suggested radius. Below shows the querying the suggested radius for Paris, France and Paris, Kentucky. 
+
+```{r, message = F, warning=F}
+# Paris, France
+get_fb_suggested_radius(location = c(48.856667, 2.352222),
+                        version = VERSION,
+                        token = TOKEN)
+
+# Paris, Kentucky
+get_fb_suggested_radius(location = c(38.209682, -84.253915),
+                        version = VERSION,
+                        token = TOKEN)
+```
+
+### Query data for different user attributes <a name="quick-attributes"></a>
+
+__Example [One parameter]:__ Facebook users who primarily access Facebook using Mac OS X living in the US
+```{r, message = F, warning=F}
+beh_mac_id <- behaviors_df %>% 
+  filter(name == "Facebook access (OS): Mac OS X") %>% 
+  pull(id)
+
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
+  behaviors          = beh_mac_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
+```{r, message = F, warning=F}
+beh_tech_id <- behaviors_df %>% 
+  filter(name == "Technology early adopters") %>% 
+  pull(id)
+
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
+  behaviors          = c(beh_mac_id, beh_tech_id),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example [Two parameters, AND condition]:__ Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. _Lists of IDs are used to specify AND conditions._
+```{r, message = F, warning=F}
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
+  behaviors          = list(beh_mac_id, beh_tech_id),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. __The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples.__
+```{r, message = F, warning=F}
+int_comp_id <- interests_df %>% 
+  filter(name == "Computers (computers & electronics)") %>% 
+  pull(id)
+
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
+  behaviors          = list(beh_mac_id, beh_tech_id),
+  interests          = int_comp_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+### Map Over Multiple Queries <a name="quick-multiple"></a>
+
+Putting parameters in the `map_param` function results in the `query_fb_marketing_api` function making multiple queries.
+
+__Example:__ Make queries for different countries.
+```{r, message = F, warning=F}
+country_df %>% 
+  filter(name %in% c("United States", "Canada", "Mexico")) %>% 
+  pull(key)
+
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX"),
+  behaviors          = c(beh_mac_id, beh_tech_id),
+  interests          = int_comp_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example:__ Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).
+```{r, message = F, warning=F}
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX"),
+  behaviors          = map_param(beh_mac_id, beh_tech_id),
+  interests          = int_comp_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example:__ Make query for each country, for:
+
+* Those that access Facebook using Mac OS X OR who are likely technology early adopters
+* Those that access Facebook using Mac OS X AND who are likely technology early adopters
+
+The below illustrates how we can make complex queries (ie, using AND and OR) conditions within `map_param()`
+
+```{r, message = F, warning=F}
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX"),
+  behaviors          = map_param(c(beh_mac_id, beh_tech_id), # OR condition
+                                 list(beh_mac_id, beh_tech_id)), # AND condition
+  interests          = int_comp_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+__Example:__ Make queries using vector as input. Below, we want to make a separate query for six countries. We define the following vector:
+
+```r
+countries <- c("US", "CA", "MX", "FR", "GB", "ES")
+```
+
+However, for the below:
+
+```r
+location_keys = map_param(countries)
+```
+
+`map_param()` views `countries` as one item (a vector of countries), so will make just 1 query---querying the number of MAU/DAU across countries. To make a query for each item in the vector, we use `map_param_vec()`.
+
+__Incorrect attempt to making query for each country__
+```{r, message = F, warning=F}
+countries <- c("US", "CA", "MX", "FR", "GB", "ES")
+
+# INCORRECT: The below will make 1 query, querying the number of MAU/DAU across the six countries. The function inteprets the input as the number of Facebook users in the US or Canada or Mexico, etc.
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param(countries),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+
+```
+
+__Incorrect approach to make query for each country__
+```{r, message = F, warning=F}
+countries <- c("US", "CA", "MX", "FR", "GB", "ES")
+
+# CORRECT: The below will make 6 queries, one for each country.
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param_vec(countries),
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+### Using Multiple API Tokens <a name="multiple_tokens"></a>
+
+The Facebook API is rate limited, where only a certain number of queries can be made in a given time. If the rate limit is reached, `query_fb_marketing_api` will pause then try the query until it is successfully called. `query_fb_marketing_api` can take a long time to complete if mapping over a large number of queries.
+
+Multiple API tokens can be used to minimize delay times from the function reaching its rate limit. To use multiple tokens, enter a vector with multiple entries for `version`, `creation_act`, and `token`.
+
+__Example:__ Using multiple API tokens
+```{r, message = F, warning=F}
+# We only have 1 token, but we'll pretend we have three
+TOKEN_1 <- TOKEN
+TOKEN_2 <- TOKEN
+TOKEN_3 <- TOKEN
+
+VERSION_1 <- VERSION
+VERSION_2 <- VERSION
+VERSION_3 <- VERSION
+
+CREATION_ACT_1 <- CREATION_ACT
+CREATION_ACT_2 <- CREATION_ACT
+CREATION_ACT_3 <- CREATION_ACT
+
+# Make query
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = map_param("US", "CA", "MX", "GB", "FR", "DE", "IT"),
+  behaviors          = c(beh_mac_id, beh_tech_id),
+  interests          = int_comp_id,
+  version            = c(VERSION_1,      VERSION_2,      VERSION_3) ,
+  creation_act       = c(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3),
+  token              = c(TOKEN_1,        TOKEN_2,        TOKEN_3) )
+```
+
+### Summary of Input Methods <a name="summary_inputs"></a>
+
+The below table summarizes different ways parameters can be entered into the `query_fb_marketing_api` for different purposes. The table uses output from the following code. 
+
+```{r, message = F, warning=F, eval=F}
+behaviors_df <- get_fb_parameter_ids("behaviors", VERSION, TOKEN)
+
+beh_mac_id <- behaviors_df %>% 
+  filter(name == "Facebook access (OS): Mac OS X") %>% 
+  pull(id)
+  
+beh_tech_id <- behaviors_df %>% 
+  filter(name == "Technology early adopters") %>% 
+  pull(id)
+  
+beh_ids <- c(beh_mac_id, beh_tech_id)
+```
+
+Method               | Function          | Example input in `query_fb_marketing_api(behaviors = [], ...)` | Description
+------               | ------            | ------                               | ------
+Or condition         | `c()`             | `c(beh_mac_id, beh_tech_id)`         | Facebook users with `beh_mac_id` OR `beh_tech_id` behaviors
+And condition        | `list()`          | `list(beh_mac_id, beh_tech_id)`      | Facebook users with `beh_mac_id` AND `beh_tech_id` behaviors
+Two queries [Way 1]  | `map_param()`     | `map_param(beh_mac_id, beh_tech_id)` | One query for Facebook users with `beh_mac_id`; second query for `beh_tech_id`
+Two queries [Way 2]  | `map_param_vec()` | `map_param_vec(beh_ids)`             | One query for Facebook users with `beh_mac_id`; second query for `beh_tech_id`
+
+## Usage <a name="usage"></a>
+See [this vignette](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html) for additional information and examples illustrating how to use the package. 
