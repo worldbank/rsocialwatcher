@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rsocialwatcher</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,7 +110,12 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>location_unit_type</dt>
-<dd><p>Either <code>"coordinates"</code> (for buffer around single point) or type of geographic location, including: <code>"countries"</code>, <code>"regions"</code>, <code>"cities"</code>, <code>"zips"</code>, <code>"places"</code>, <code>"geo_markets"</code>, <code>"electoral_district"</code>, or <code>"country_groups"</code>. See the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location" class="external-link">Basic Targetting</a> documentation for more information.</p></dd>
+<dd><p>Either <code>"coordinates"</code> (for buffer around single point) or type of geographic location, including: <code>"countries"</code>, <code>"regions"</code>, <code>"cities"</code>, <code>"zips"</code>, <code>"places"</code>, <code>"geo_markets"</code>, <code>"electoral_district"</code>, or <code>"country_groups"</code>. See the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#location" class="external-link">Basic Targetting</a> documentation for more information.</p><div class="section">
+<h3 id="-">------------------------------<a class="anchor" aria-label="anchor" href="#-"></a></h3>
+
+
+<p><strong>If location_unit_type is "coordinates"</strong></p>
+</div></dd>
 
 
 <dt>lat_lon</dt>
@@ -122,11 +127,21 @@
 
 
 <dt>radius_unit</dt>
-<dd><p>Unit for radius; either <code>"kilometer"</code> or <code>"mile"</code></p></dd>
+<dd><p>Unit for radius; either <code>"kilometer"</code> or <code>"mile"</code></p><div class="section">
+<h3 id="--1">------------------------------<a class="anchor" aria-label="anchor" href="#--1"></a></h3>
+
+
+<p><strong>If location_unit_type is not "coordinates"</strong></p>
+</div></dd>
 
 
 <dt>location_keys</dt>
-<dd><p>Key associated with location. Use the <code>get_fb_parameter_ids</code> function to get location keys; see <a href="https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids">here</a> for examples.</p></dd>
+<dd><p>Key associated with location. Use the <code>get_fb_parameter_ids</code> function to get location keys; see <a href="https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids">here</a> for examples.</p><div class="section">
+<h3 id="--2">------------------------------<a class="anchor" aria-label="anchor" href="#--2"></a></h3>
+
+
+<p><strong>Other location parameters</strong></p>
+</div></dd>
 
 
 <dt>location_types</dt>
@@ -134,7 +149,14 @@
 
 
 <dt>locales</dt>
-<dd><p>Locales ID. For more information on locales, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional" class="external-link">Advanced Targeting Documentation</a></p></dd>
+<dd><p>Locales ID. For more information on locales, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional" class="external-link">Advanced Targeting Documentation</a></p><div class="section">
+<h3 id="--3">------------------------------<a class="anchor" aria-label="anchor" href="#--3"></a></h3>
+
+
+<p><strong>Parameters:</strong></p><ul><li><p>Within parameters, vectors (<code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>) specify OR conditions and lists (<code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) specify AND conditions. For example, <code>interests = c(6003349442621, 6003139266461)</code> will target users who are interested in either entertainment OR movies, while <code>interests = list(6003349442621, 6003139266461)</code> will target users who are interested in either entertainment AND movies.</p></li>
+<li><p>Across parameters, OR conditions are used. For example, if enter <code>interests = 6003349442621</code> and <code>behaviors = 6008297697383</code> are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.</p></li>
+<li><p>And conditions across parameters can be specified using the <code>flex_target</code> argument.</p></li>
+</ul></div></dd>
 
 
 <dt>interests</dt>
@@ -186,7 +208,12 @@
 
 
 <dt>work_employers</dt>
-<dd><p>Work employer IDs. For example, <code>work_employers = 50431654</code> will target users who work for Microsoft. Use <code>get_fb_parameter_ids(type = "work_employers", ...)</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace" class="external-link">Advanced Targeting Documentation</a>.</p></dd>
+<dd><p>Work employer IDs. For example, <code>work_employers = 50431654</code> will target users who work for Microsoft. Use <code>get_fb_parameter_ids(type = "work_employers", ...)</code> to get dataframe with IDs and descriptions. For more information, see the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace" class="external-link">Advanced Targeting Documentation</a>.</p><div class="section">
+<h3 id="--4">------------------------------<a class="anchor" aria-label="anchor" href="#--4"></a></h3>
+
+
+<p><strong>Exlcude Facebook users from query by select parameters</strong></p>
+</div></dd>
 
 
 <dt>excl_interests</dt>
@@ -238,7 +265,14 @@
 
 
 <dt>excl_work_employers</dt>
-<dd><p>Work employer IDs to exclude.</p></dd>
+<dd><p>Work employer IDs to exclude.</p><div class="section">
+<h3 id="--5">------------------------------<a class="anchor" aria-label="anchor" href="#--5"></a></h3>
+
+
+<p><strong>Non-Flexible parameters:</strong></p><ul><li><p>Across parameters, AND conditions are used. For example, if <code>gender = 1</code> and <code>age_min = 30</code>, queries users that are male AND are over 30 years old.</p></li>
+<li><p>These parameters <em>cannot</em> be specified in <code>flex_targeting</code></p></li>
+<li><p>Within parameters, vectors (<code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>) specify OR conditions. AND conditions cannot be specified within these parameters.</p></li>
+</ul></div></dd>
 
 
 <dt>user_os</dt>
@@ -258,11 +292,21 @@
 
 
 <dt>age_max</dt>
-<dd><p>Maximum age. Default is 65. See <code>age_max</code> in the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics" class="external-link">Basic Targeting Documentation</a>.</p></dd>
+<dd><p>Maximum age. Default is 65. See <code>age_max</code> in the <a href="https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics" class="external-link">Basic Targeting Documentation</a>.</p><div class="section">
+<h3 id="--6">------------------------------<a class="anchor" aria-label="anchor" href="#--6"></a></h3>
+
+
+<p><strong>Flex targeting parameters</strong></p>
+</div></dd>
 
 
 <dt>flex_target</dt>
-<dd><p>Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see <a href="https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting">the documentation here</a>.</p></dd>
+<dd><p>Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see <a href="https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting">the documentation here</a>.</p><div class="section">
+<h3 id="--7">------------------------------<a class="anchor" aria-label="anchor" href="#--7"></a></h3>
+
+
+<p><strong>Parameters for credentials</strong></p>
+</div></dd>
 
 
 <dt>version</dt>
@@ -274,7 +318,12 @@
 
 
 <dt>token</dt>
-<dd><p>Facebook API token</p></dd>
+<dd><p>Facebook API token</p><div class="section">
+<h3 id="--8">------------------------------<a class="anchor" aria-label="anchor" href="#--8"></a></h3>
+
+
+<p><strong>Scraping parameters</strong></p>
+</div></dd>
 
 
 <dt>sleep_time</dt>
@@ -286,7 +335,12 @@
 
 
 <dt>verbose</dt>
-<dd><p>Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: <code>TRUE</code>).</p></dd>
+<dd><p>Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: <code>TRUE</code>).</p><div class="section">
+<h3 id="--9">------------------------------<a class="anchor" aria-label="anchor" href="#--9"></a></h3>
+
+
+<p><strong>Return query text</strong></p>
+</div></dd>
 
 
 <dt>add_query</dt>
@@ -302,54 +356,6 @@
     
 
 <p>Dataframe that includes (1) daily and monthly active users and (2) parameter values</p>
-    </div>
-    <div class="section level2">
-    <h2 id="if-location-unit-type-is-coordinates-">If location_unit_type is "coordinates"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-is-coordinates-"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="if-location-unit-type-is-not-coordinates-">If location_unit_type is not "coordinates"<a class="anchor" aria-label="anchor" href="#if-location-unit-type-is-not-coordinates-"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="other-location-parameters">Other location parameters<a class="anchor" aria-label="anchor" href="#other-location-parameters"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a></h2>
-    
-
-<ul><li><p>Within parameters, vectors (<code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>) specify OR conditions and lists (<code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) specify AND conditions. For example, <code>interests = c(6003349442621, 6003139266461)</code> will target users who are interested in either entertainment OR movies, while <code>interests = list(6003349442621, 6003139266461)</code> will target users who are interested in either entertainment AND movies.</p></li>
-<li><p>Across parameters, OR conditions are used. For example, if enter <code>interests = 6003349442621</code> and <code>behaviors = 6008297697383</code> are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.</p></li>
-<li><p>And conditions across parameters can be specified using the <code>flex_target</code> argument.</p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="exclude-parameters">Exclude parameters<a class="anchor" aria-label="anchor" href="#exclude-parameters"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="non-flexible-parameters">Non-Flexible parameters<a class="anchor" aria-label="anchor" href="#non-flexible-parameters"></a></h2>
-    
-
-<ul><li><p>Across parameters, AND conditions are used. For example, if <code>gender = 1</code> and <code>age_min = 30</code>, queries users that are male AND are over 30 years old.</p></li>
-<li><p>These parameters <em>cannot</em> be specified in <code>flex_targeting</code></p></li>
-<li><p>Within parameters, vectors (<code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>) specify OR conditions. AND conditions cannot be specified within these parameters.</p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="flex-targeting">Flex Targeting<a class="anchor" aria-label="anchor" href="#flex-targeting"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="credentials">Credentials<a class="anchor" aria-label="anchor" href="#credentials"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="scraping-parameters">Scraping parameters<a class="anchor" aria-label="anchor" href="#scraping-parameters"></a></h2>
-    <p>NA</p>
-    </div>
-    <div class="section level2">
-    <h2 id="return-query-text-as-variable-in-returned-dataframe">Return query text as variable in returned dataframe<a class="anchor" aria-label="anchor" href="#return-query-text-as-variable-in-returned-dataframe"></a></h2>
-    <p>NA</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

@@ -5,7 +5,7 @@ articles:
   create_facebook_credentials: create_facebook_credentials.html
   example-pop-gdp-gender: example-pop-gdp-gender.html
   rsocialwatcher-vignette: rsocialwatcher-vignette.html
-last_built: 2024-05-02T20:37Z
+last_built: 2024-05-02T22:23Z
 urls:
   reference: https://worldbank.github.io/rsocialwatcher/reference
   article: https://worldbank.github.io/rsocialwatcher/articles
