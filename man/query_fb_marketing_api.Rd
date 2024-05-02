@@ -66,21 +66,23 @@ query_fb_marketing_api(
 \item{radius}{Radius around coordinate}
 
 \item{radius_unit}{Unit for radius; either \code{"kilometer"} or \code{"mile"}
-\subsection{If location_unit_type is not "coordinates"}{
+\subsection{------------------------------}{
 
-Parameters when \code{location_unit_type} is not \code{"coordinates"}
+\strong{If location_unit_type is not "coordinates"}
 }}
 
 \item{location_keys}{Key associated with location. Use the \code{get_fb_parameter_ids} function to get location keys; see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids}{here} for examples.
-\subsection{Other location parameters}{
+\subsection{------------------------------}{
 
-Location parameters relevant regardless of \code{location_unit_type}
+\strong{Other location parameters}
 }}
 
 \item{location_types}{Either: (1) \code{"home"} (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) \code{"recent"} (people whose recent location is in the selected area, determined by mobile device data), (3) \code{"travel_in"} (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) \code{c("home", "recent")} (for people in either category)}
 
 \item{locales}{Locales ID. For more information on locales, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional}{Advanced Targeting Documentation}
-\subsection{Parameters:}{
+\subsection{------------------------------}{
+
+\strong{Parameters:}
 \itemize{
 \item Within parameters, vectors (\code{c()}) specify OR conditions and lists (\code{list()}) specify AND conditions. For example, \code{interests = c(6003349442621, 6003139266461)} will target users who are interested in either entertainment OR movies, while \code{interests = list(6003349442621, 6003139266461)} will target users who are interested in either entertainment AND movies.
 \item Across parameters, OR conditions are used. For example, if enter \code{interests = 6003349442621} and \code{behaviors = 6008297697383} are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
@@ -113,9 +115,9 @@ Location parameters relevant regardless of \code{location_unit_type}
 \item{work_positions}{Work position IDs. For example, \code{work_positions = 105763692790962} will target users who indicate they are contractors. Use \code{get_fb_parameter_ids(type = "work_positions", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.}
 
 \item{work_employers}{Work employer IDs. For example, \code{work_employers = 50431654} will target users who work for Microsoft. Use \code{get_fb_parameter_ids(type = "work_employers", ...)} to get dataframe with IDs and descriptions. For more information, see the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace}{Advanced Targeting Documentation}.
-\subsection{Exclude parameters}{
+\subsection{------------------------------}{
 
-Exlcude Facebook users from query by select parameters
+\strong{Exlcude Facebook users from query by select parameters}
 }}
 
 \item{excl_interests}{Interest IDs to exclude.}
@@ -143,7 +145,9 @@ Exlcude Facebook users from query by select parameters
 \item{excl_work_positions}{Work position IDs to exclude.}
 
 \item{excl_work_employers}{Work employer IDs to exclude.
-\subsection{Non-Flexible parameters:}{
+\subsection{------------------------------}{
+
+\strong{Non-Flexible parameters:}
 \itemize{
 \item Across parameters, AND conditions are used. For example, if \code{gender = 1} and \code{age_min = 30}, queries users that are male AND are over 30 years old.
 \item These parameters \emph{cannot} be specified in \code{flex_targeting}
@@ -160,15 +164,15 @@ Exlcude Facebook users from query by select parameters
 \item{age_min}{Minimum age. Default is 18. See \code{age_min} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.}
 
 \item{age_max}{Maximum age. Default is 65. See \code{age_max} in the \href{https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics}{Basic Targeting Documentation}.
-\subsection{Flex Targeting}{
+\subsection{------------------------------}{
 
-Flex targeting parameters
+\strong{Flex targeting parameters}
 }}
 
 \item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.
-\subsection{Credentials}{
+\subsection{------------------------------}{
 
-Parameters for credentials
+\strong{Parameters for credentials}
 }}
 
 \item{version}{API version. e.g., "v19.0"}
@@ -176,9 +180,9 @@ Parameters for credentials
 \item{creation_act}{Facebook creation act}
 
 \item{token}{Facebook API token
-\subsection{Scraping parameters}{
+\subsection{------------------------------}{
 
-Parameters related to querying data
+\strong{Scraping parameters}
 }}
 
 \item{sleep_time}{How much time (in seconds) to pause between each query (default: \code{0.1}).}
@@ -186,9 +190,9 @@ Parameters related to querying data
 \item{show_result}{After each query, whether to print the number of monthly active users (default: \code{FALSE}).}
 
 \item{verbose}{Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: \code{TRUE}).
-\subsection{Return query text}{
+\subsection{------------------------------}{
 
-Add query text as variable in returned dataframe
+\strong{Return query text}
 }}
 
 \item{add_query}{If \code{TRUE}, add query text as variable in returned dataframe}

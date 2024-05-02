@@ -821,15 +821,17 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param radius Radius around coordinate
 #' @param radius_unit Unit for radius; either `"kilometer"` or `"mile"`
 #'
-#' ## If location_unit_type is not "coordinates"
-#' Parameters when `location_unit_type` is not `"coordinates"`
+#' ## ------------------------------
+#' __If location_unit_type is not "coordinates"__
 #' @param location_keys Key associated with location. Use the `get_fb_parameter_ids` function to get location keys; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#location-ids) for examples.
-#' ## Other location parameters
-#' Location parameters relevant regardless of `location_unit_type`
+#'
+#' ## ------------------------------
+#' __Other location parameters__
 #' @param location_types Either: (1) `"home"` (people whose stated location in Facebook profile "current city" is in an area, valided by IP), (2) `"recent"` (people whose recent location is in the selected area, determined by mobile device data), (3) `"travel_in"` (people whose most recent location is in selected area and more than 100 miles from stated current city), (4) `c("home", "recent")` (for people in either category)
 #' @param locales Locales ID. For more information on locales, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#additional)
 #'
-#' ## Parameters:
+#' ## ------------------------------
+#' __Parameters:__
 #' * Within parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies, while `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
 #' * Across parameters, OR conditions are used. For example, if enter `interests = 6003349442621` and `behaviors = 6008297697383` are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
 #' * And conditions across parameters can be specified using the `flex_target` argument.
@@ -847,8 +849,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param work_positions Work position IDs. For example, `work_positions = 105763692790962` will target users who indicate they are contractors. Use `get_fb_parameter_ids(type = "work_positions", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
 #' @param work_employers Work employer IDs. For example, `work_employers = 50431654` will target users who work for Microsoft. Use `get_fb_parameter_ids(type = "work_employers", ...)` to get dataframe with IDs and descriptions. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
 #'
-#' ## Exclude parameters
-#' Exlcude Facebook users from query by select parameters
+#' ## ------------------------------
+#' __Exlcude Facebook users from query by select parameters__
 #' @param excl_interests Interest IDs to exclude.
 #' @param excl_behaviors Behavior IDs to exclude.
 #' @param excl_college_years Colleage year IDs to exclude.
@@ -863,7 +865,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param excl_work_positions Work position IDs to exclude.
 #' @param excl_work_employers Work employer IDs to exclude.
 #'
-#' ## Non-Flexible parameters:
+#' ## ------------------------------
+#' __Non-Flexible parameters:__
 #' * Across parameters, AND conditions are used. For example, if `gender = 1` and `age_min = 30`, queries users that are male AND are over 30 years old.
 #' * These parameters _cannot_ be specified in `flex_targeting`
 #' * Within parameters, vectors (`c()`) specify OR conditions. AND conditions cannot be specified within these parameters.
@@ -873,24 +876,24 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' @param age_min Minimum age. Default is 18. See `age_min` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #' @param age_max Maximum age. Default is 65. See `age_max` in the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#demographics).
 #'
-#' ## Flex Targeting
-#' Flex targeting parameters
+#' ## ------------------------------
+#' __Flex targeting parameters__
 #' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
 #'
-#' ## Credentials
-#' Parameters for credentials
+#' ## ------------------------------
+#' __Parameters for credentials__
 #' @param version API version. e.g., "v19.0"
 #' @param creation_act Facebook creation act
 #' @param token Facebook API token
 #'
-#' ## Scraping parameters
-#' Parameters related to querying data
+#' ## ------------------------------
+#' __Scraping parameters__
 #' @param sleep_time How much time (in seconds) to pause between each query (default: `0.1`).
 #' @param show_result After each query, whether to print the number of monthly active users (default: `FALSE`).
 #' @param verbose Display messages that indicate the function is pausing before making additional queries. Pausing can result from API key rate limits or no internet (default: `TRUE`). 
 #'
-#' ## Return query text
-#' Add query text as variable in returned dataframe
+#' ## ------------------------------
+#' __Return query text__
 #' @param add_query If `TRUE`, add query text as variable in returned dataframe 
 #' @param add_query_hide_credentials If `TRUE` (and `add_query` is `TRUE`), hide the `creation_act` and `token` from the query text returned in the dataframe
 #' 
