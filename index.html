@@ -207,11 +207,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>, </span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    220866095                234900000                276400000</span></span>
+<span><span class="co">#&gt; 1    219540402                234900000                276400000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys gender age_min age_max</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 1 or 2      18      65</span></span>
 <span><span class="co">#&gt;     api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 2024-05-02 22:21:39</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 2024-05-03 14:09:28</span></span></code></pre></div>
 <p><strong>Example:</strong> Query Facebook users around specific location</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span></span>
@@ -223,11 +223,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>, </span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1      1876885                  2400000                  2800000</span></span>
+<span><span class="co">#&gt; 1      1856166                  2400000                  2800000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types radius radius_unit gender age_min age_max</span></span>
 <span><span class="co">#&gt; 1        coordinates home or recent      5   kilometer 1 or 2      18      65</span></span>
 <span><span class="co">#&gt;   latitude longitude   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1   40.712   -74.006 2024-05-02 22:21:40</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   40.712   -74.006 2024-05-03 14:09:28</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="obtain-location-coordinatesgeometries-">Obtain location coordinates/geometries <a name="quick-location"></a>
@@ -316,11 +316,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1       113816                   138400                   162900</span></span>
+<span><span class="co">#&gt; 1       113090                   138400                   162800</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     behaviors gender age_min</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003966451572 1 or 2      18</span></span>
 <span><span class="co">#&gt;   age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1      65 2024-05-02 22:21:51</span></span></code></pre></div>
+<span><span class="co">#&gt; 1      65 2024-05-03 14:09:42</span></span></code></pre></div>
 <p><strong>Example [Two parameters, OR condition]:</strong> Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. <em>Vectors of IDs are used to specify OR conditions.</em></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beh_tech_id</span> <span class="op">&lt;-</span> <span class="va">behaviors_df</span> <span class="op">|&gt;</span> </span>
@@ -335,11 +335,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1     13909628                 14000000                 16500000</span></span>
+<span><span class="co">#&gt; 1     13790834                 14000000                 16500000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US</span></span>
 <span><span class="co">#&gt;                        behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:52</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:43</span></span></code></pre></div>
 <p><strong>Example [Two parameters, AND condition]:</strong> Facebook users who primarily access Facebook using Mac OS X AND who are likely technology early adopters who live in the US. <em>Lists of IDs are used to specify AND conditions.</em></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span></span>
@@ -350,11 +350,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1     13845826                 13900000                 16400000</span></span>
+<span><span class="co">#&gt; 1     13730212                 13900000                 16300000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US</span></span>
 <span><span class="co">#&gt;                         behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:52</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-03 14:09:44</span></span></code></pre></div>
 <p><strong>Example [Two parameters, OR and AND condition]:</strong> Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. <strong>The “flex_target” parameters can be used to specify AND conditions across parameters; see <a href="https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting">here</a> for examples.</strong></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">int_comp_id</span> <span class="op">&lt;-</span> <span class="va">interests_df</span> <span class="op">|&gt;</span> </span>
@@ -370,11 +370,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    105523552                 99100000                116600000</span></span>
+<span><span class="co">#&gt; 1    104952241                 99100000                116600000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     interests</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003404634364</span></span>
 <span><span class="co">#&gt;                         behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:53</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-03 14:09:44</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="map-over-multiple-queries-">Map Over Multiple Queries <a name="quick-multiple"></a>
@@ -397,17 +397,17 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    105479855                 99200000                116700000</span></span>
-<span><span class="co">#&gt; 2     13438802                 12500000                 14700000</span></span>
-<span><span class="co">#&gt; 3     50468275                 46600000                 54800000</span></span>
+<span><span class="co">#&gt; 1    105018913                 99200000                116700000</span></span>
+<span><span class="co">#&gt; 2     13409403                 12500000                 14700000</span></span>
+<span><span class="co">#&gt; 3     50295664                 46600000                 54800000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     interests</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003404634364</span></span>
 <span><span class="co">#&gt; 2          countries home or recent            CA 6003404634364</span></span>
 <span><span class="co">#&gt; 3          countries home or recent            MX 6003404634364</span></span>
 <span><span class="co">#&gt;                        behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:53</span></span>
-<span><span class="co">#&gt; 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:53</span></span>
-<span><span class="co">#&gt; 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:54</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:45</span></span>
+<span><span class="co">#&gt; 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:47</span></span>
+<span><span class="co">#&gt; 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:47</span></span></code></pre></div>
 <p><strong>Example:</strong> Make queries for different and behaviors. In total, six queries are made (mapping over three countries and two parameters).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/query_fb_marketing_api.html">query_fb_marketing_api</a></span><span class="op">(</span></span>
@@ -419,12 +419,12 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    100310148                 93200000                109700000</span></span>
-<span><span class="co">#&gt; 2     12956546                 12000000                 14100000</span></span>
-<span><span class="co">#&gt; 3     49189379                 45200000                 53100000</span></span>
-<span><span class="co">#&gt; 4    105523552                 99100000                116600000</span></span>
-<span><span class="co">#&gt; 5     13440272                 12500000                 14700000</span></span>
-<span><span class="co">#&gt; 6     50471015                 46600000                 54800000</span></span>
+<span><span class="co">#&gt; 1     99865885                 92900000                109300000</span></span>
+<span><span class="co">#&gt; 2     12924117                 12000000                 14100000</span></span>
+<span><span class="co">#&gt; 3     49149021                 45200000                 53100000</span></span>
+<span><span class="co">#&gt; 4    104952241                 99100000                116600000</span></span>
+<span><span class="co">#&gt; 5     13413078                 12500000                 14700000</span></span>
+<span><span class="co">#&gt; 6     50301144                 46600000                 54800000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     interests     behaviors</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003404634364 6003966451572</span></span>
 <span><span class="co">#&gt; 2          countries home or recent            CA 6003404634364 6003966451572</span></span>
@@ -433,12 +433,12 @@
 <span><span class="co">#&gt; 5          countries home or recent            CA 6003404634364 6003808923172</span></span>
 <span><span class="co">#&gt; 6          countries home or recent            MX 6003404634364 6003808923172</span></span>
 <span><span class="co">#&gt;   gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 1 or 2      18      65 2024-05-02 22:21:54</span></span>
-<span><span class="co">#&gt; 2 1 or 2      18      65 2024-05-02 22:21:55</span></span>
-<span><span class="co">#&gt; 3 1 or 2      18      65 2024-05-02 22:21:55</span></span>
-<span><span class="co">#&gt; 4 1 or 2      18      65 2024-05-02 22:21:55</span></span>
-<span><span class="co">#&gt; 5 1 or 2      18      65 2024-05-02 22:21:56</span></span>
-<span><span class="co">#&gt; 6 1 or 2      18      65 2024-05-02 22:21:57</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 1 or 2      18      65 2024-05-03 14:09:48</span></span>
+<span><span class="co">#&gt; 2 1 or 2      18      65 2024-05-03 14:09:49</span></span>
+<span><span class="co">#&gt; 3 1 or 2      18      65 2024-05-03 14:09:50</span></span>
+<span><span class="co">#&gt; 4 1 or 2      18      65 2024-05-03 14:09:51</span></span>
+<span><span class="co">#&gt; 5 1 or 2      18      65 2024-05-03 14:09:51</span></span>
+<span><span class="co">#&gt; 6 1 or 2      18      65 2024-05-03 14:09:52</span></span></code></pre></div>
 <p><strong>Example:</strong> Make query for each country, for:</p>
 <ul>
 <li>Those that access Facebook using Mac OS X OR who are likely technology early adopters</li>
@@ -456,12 +456,12 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    105479855                 99200000                116700000</span></span>
-<span><span class="co">#&gt; 2     13438802                 12500000                 14700000</span></span>
-<span><span class="co">#&gt; 3     50468275                 46600000                 54800000</span></span>
-<span><span class="co">#&gt; 4    105523552                 99100000                116600000</span></span>
-<span><span class="co">#&gt; 5     13440272                 12500000                 14700000</span></span>
-<span><span class="co">#&gt; 6     50471015                 46600000                 54800000</span></span>
+<span><span class="co">#&gt; 1    105018913                 99200000                116700000</span></span>
+<span><span class="co">#&gt; 2     13409403                 12500000                 14700000</span></span>
+<span><span class="co">#&gt; 3     50295664                 46600000                 54800000</span></span>
+<span><span class="co">#&gt; 4    104952241                 99100000                116600000</span></span>
+<span><span class="co">#&gt; 5     13413078                 12500000                 14700000</span></span>
+<span><span class="co">#&gt; 6     50301144                 46600000                 54800000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     interests</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003404634364</span></span>
 <span><span class="co">#&gt; 2          countries home or recent            CA 6003404634364</span></span>
@@ -470,12 +470,12 @@
 <span><span class="co">#&gt; 5          countries home or recent            CA 6003404634364</span></span>
 <span><span class="co">#&gt; 6          countries home or recent            MX 6003404634364</span></span>
 <span><span class="co">#&gt;                         behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:57</span></span>
-<span><span class="co">#&gt; 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:57</span></span>
-<span><span class="co">#&gt; 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:21:58</span></span>
-<span><span class="co">#&gt; 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:58</span></span>
-<span><span class="co">#&gt; 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:58</span></span>
-<span><span class="co">#&gt; 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-02 22:21:59</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:53</span></span>
+<span><span class="co">#&gt; 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:53</span></span>
+<span><span class="co">#&gt; 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:53</span></span>
+<span><span class="co">#&gt; 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-03 14:09:54</span></span>
+<span><span class="co">#&gt; 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-03 14:09:54</span></span>
+<span><span class="co">#&gt; 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-03 14:09:55</span></span></code></pre></div>
 <p><strong>Example:</strong> Make queries using vector as input. Below, we want to make a separate query for six countries. We define the following vector:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>, <span class="st">"FR"</span>, <span class="st">"GB"</span>, <span class="st">"ES"</span><span class="op">)</span></span></code></pre></div>
@@ -495,11 +495,11 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    450358706                484900000                570500000</span></span>
+<span><span class="co">#&gt; 1    448362056                484200000                569700000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types                    location_keys gender</span></span>
 <span><span class="co">#&gt; 1          countries home or recent US or CA or MX or FR or GB or ES 1 or 2</span></span>
 <span><span class="co">#&gt;   age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1      18      65 2024-05-02 22:21:59</span></span></code></pre></div>
+<span><span class="co">#&gt; 1      18      65 2024-05-03 14:09:55</span></span></code></pre></div>
 <p><strong>Incorrect approach to make query for each country</strong></p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"US"</span>, <span class="st">"CA"</span>, <span class="st">"MX"</span>, <span class="st">"FR"</span>, <span class="st">"GB"</span>, <span class="st">"ES"</span><span class="op">)</span></span>
@@ -512,12 +512,12 @@
 <span>  creation_act       <span class="op">=</span> <span class="va">CREATION_ACT</span>,</span>
 <span>  token              <span class="op">=</span> <span class="va">TOKEN</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    220866095                234900000                276400000</span></span>
-<span><span class="co">#&gt; 2     26536702                 27700000                 32600000</span></span>
-<span><span class="co">#&gt; 3     88865140                 95600000                112400000</span></span>
-<span><span class="co">#&gt; 4     37595504                 39700000                 46800000</span></span>
-<span><span class="co">#&gt; 5     46284439                 46800000                 55100000</span></span>
-<span><span class="co">#&gt; 6     28378595                 30700000                 36100000</span></span>
+<span><span class="co">#&gt; 1    219540402                234900000                276400000</span></span>
+<span><span class="co">#&gt; 2     26458466                 27700000                 32600000</span></span>
+<span><span class="co">#&gt; 3     88774985                 95600000                112400000</span></span>
+<span><span class="co">#&gt; 4     37285979                 39700000                 46800000</span></span>
+<span><span class="co">#&gt; 5     46006198                 47000000                 55300000</span></span>
+<span><span class="co">#&gt; 6     28039272                 30700000                 36100000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys gender age_min age_max</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 1 or 2      18      65</span></span>
 <span><span class="co">#&gt; 2          countries home or recent            CA 1 or 2      18      65</span></span>
@@ -526,12 +526,12 @@
 <span><span class="co">#&gt; 5          countries home or recent            GB 1 or 2      18      65</span></span>
 <span><span class="co">#&gt; 6          countries home or recent            ES 1 or 2      18      65</span></span>
 <span><span class="co">#&gt;     api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 2024-05-02 22:21:59</span></span>
-<span><span class="co">#&gt; 2 2024-05-02 22:22:00</span></span>
-<span><span class="co">#&gt; 3 2024-05-02 22:22:00</span></span>
-<span><span class="co">#&gt; 4 2024-05-02 22:22:01</span></span>
-<span><span class="co">#&gt; 5 2024-05-02 22:22:01</span></span>
-<span><span class="co">#&gt; 6 2024-05-02 22:22:02</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 2024-05-03 14:09:56</span></span>
+<span><span class="co">#&gt; 2 2024-05-03 14:09:56</span></span>
+<span><span class="co">#&gt; 3 2024-05-03 14:09:57</span></span>
+<span><span class="co">#&gt; 4 2024-05-03 14:09:58</span></span>
+<span><span class="co">#&gt; 5 2024-05-03 14:09:58</span></span>
+<span><span class="co">#&gt; 6 2024-05-03 14:09:58</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="using-multiple-api-tokens-">Using Multiple API Tokens <a name="multiple_tokens"></a>
@@ -564,13 +564,13 @@
 <span>  creation_act       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">CREATION_ACT_1</span>, <span class="va">CREATION_ACT_2</span>, <span class="va">CREATION_ACT_3</span><span class="op">)</span>,</span>
 <span>  token              <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">TOKEN_1</span>,        <span class="va">TOKEN_2</span>,        <span class="va">TOKEN_3</span><span class="op">)</span> <span class="op">)</span></span>
 <span><span class="co">#&gt;   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound</span></span>
-<span><span class="co">#&gt; 1    105479855                 99200000                116700000</span></span>
-<span><span class="co">#&gt; 2     13438802                 12500000                 14700000</span></span>
-<span><span class="co">#&gt; 3     50468275                 46600000                 54800000</span></span>
-<span><span class="co">#&gt; 4     21326847                 19400000                 22900000</span></span>
-<span><span class="co">#&gt; 5     17893599                 16800000                 19700000</span></span>
-<span><span class="co">#&gt; 6     21240062                 20300000                 23900000</span></span>
-<span><span class="co">#&gt; 7     19518088                 17600000                 20700000</span></span>
+<span><span class="co">#&gt; 1    105018913                 99200000                116700000</span></span>
+<span><span class="co">#&gt; 2     13409403                 12500000                 14700000</span></span>
+<span><span class="co">#&gt; 3     50295664                 46600000                 54800000</span></span>
+<span><span class="co">#&gt; 4     21251281                 19400000                 22900000</span></span>
+<span><span class="co">#&gt; 5     17695624                 16800000                 19800000</span></span>
+<span><span class="co">#&gt; 6     21115788                 20200000                 23800000</span></span>
+<span><span class="co">#&gt; 7     19427012                 17700000                 20900000</span></span>
 <span><span class="co">#&gt;   location_unit_type location_types location_keys     interests</span></span>
 <span><span class="co">#&gt; 1          countries home or recent            US 6003404634364</span></span>
 <span><span class="co">#&gt; 2          countries home or recent            CA 6003404634364</span></span>
@@ -580,13 +580,13 @@
 <span><span class="co">#&gt; 6          countries home or recent            DE 6003404634364</span></span>
 <span><span class="co">#&gt; 7          countries home or recent            IT 6003404634364</span></span>
 <span><span class="co">#&gt;                        behaviors gender age_min age_max   api_call_time_utc</span></span>
-<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03</span></span>
-<span><span class="co">#&gt; 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03</span></span>
-<span><span class="co">#&gt; 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:03</span></span>
-<span><span class="co">#&gt; 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04</span></span>
-<span><span class="co">#&gt; 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04</span></span>
-<span><span class="co">#&gt; 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:04</span></span>
-<span><span class="co">#&gt; 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-02 22:22:05</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:59</span></span>
+<span><span class="co">#&gt; 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:09:59</span></span>
+<span><span class="co">#&gt; 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:10:00</span></span>
+<span><span class="co">#&gt; 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:10:01</span></span>
+<span><span class="co">#&gt; 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:10:02</span></span>
+<span><span class="co">#&gt; 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:10:02</span></span>
+<span><span class="co">#&gt; 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-03 14:10:03</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="summary-of-input-methods-">Summary of Input Methods <a name="summary_inputs"></a>
