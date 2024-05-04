@@ -120,9 +120,16 @@ rm_blank <- function(x){
   x[x != ""]
 }
 
-add_comma_if_not_blank <- function(x){
-  if(x != ""){
-    x <- paste0(x, "},{")
+add_comma_if_not_blank <- function(x, sep_param_type_and){
+  if(sep_param_type_and){
+    if(x != ""){
+      x <- paste0(x, "},{")
+    }
+  } else{
+    # Or condition
+    if(x != ""){
+      x <- paste0(x, ",")
+    }
   }
   
   return(x)
@@ -141,7 +148,8 @@ make_flex_spec_or <- function(param,
 }
 
 make_flex_spec <- function(param, 
-                           name){
+                           name,
+                           sep_param_type_and = TRUE){
   
   #add_id <- F # ?? Needed ??
   if(name == "interests")             add_id <- T
@@ -177,7 +185,7 @@ make_flex_spec <- function(param,
   out <- lapply(param, make_flex_spec_or, name, add_id) %>% 
     rm_blank() %>% 
     paste(collapse = "},{") %>%
-    add_comma_if_not_blank()
+    add_comma_if_not_blank(sep_param_type_and)
   
   return(out)
 }
@@ -592,7 +600,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
         flex_target_ii <- flex_target_i[i]
         
         make_flex_spec(flex_target_ii, 
-                       names(flex_target_ii))
+                       names(flex_target_ii),
+                       sep_param_type_and = FALSE) # Separate diff param types by OR condition
       }) %>%
         paste0(collapse = "") %>%
         str_replace_all(",$", "")
@@ -659,7 +668,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     query_val_df <- tryCatch({
       
       #query_val <- url(query) %>% fromJSON
-
+      
       query_val <- GET(query) %>%
         content(as="text") %>%
         fromJSON() 

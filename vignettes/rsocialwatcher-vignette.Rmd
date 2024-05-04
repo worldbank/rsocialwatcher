@@ -88,10 +88,13 @@ VERSION      <- Sys.getenv("FB_VERSION")
 
 ---
 
-The `rsocialwatcher` package provides two functions:
+The `rsocialwatcher` package provides the following functions:
 
-* `get_fb_parameter_ids`: To obtain IDs for targeting users by different characteristics, including different types and by their location.
-* `query_fb_marketing_api`: Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_parameter_ids()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_parameter_ids.html): To obtain IDs for targeting users by different characteristics, including (1) different parameter types (eg, behaviors and interests) and (2) location keys (eg, city keys)
+* [`get_location_coords()`](https://worldbank.github.io/rsocialwatcher/reference/get_location_coords.html): To obtain coordinates and, when available, geometries of locations based on their location keys.
+* [`query_fb_marketing_api()`](https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
+* [`get_fb_suggested_radius()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
+
 
 # Querying Parameter IDs <a name="query_param"></a>
 
@@ -596,36 +599,36 @@ query_fb_marketing_api(
 
 ### Using one parameter ID per parameter type <a name="query_data_ids_options"></a>
 
-We use parameter IDs to query the number of Facebook users by behaviors, interests, etc. Below we show examples querying data by behaviors and interests. An OR condition is used when parameters are entered for multiple parameter types. For example, the third example shows querying users by a behavior and an interest---setting a value in `query_fb_marketing_api` for the `behaviors` (commuters) and `interests` (music) parameters. In this case, the function determines the number of Facebook users that are commuters OR have an interest in music.
+We use parameter IDs to query the number of Facebook users by behaviors, interests, etc. Below we show examples querying data by behaviors and interests. An AND condition is used when parameters are entered for multiple parameter types. For example, the third example shows querying users by a behavior and an interest---setting a value in `query_fb_marketing_api` for the `behaviors` (commuters) and `interests` (music) parameters. In this case, the function determines the number of Facebook users that are commuters AND have an interest in music.
 
 ```{r simple_query_params_ex, include=TRUE, warning=FALSE, message=FALSE}
 
 # Likely commute to work in US
 beh_comm_id <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
-comm_us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                     location_keys      = "US",
-                                     behaviors          = beh_comm_id,
-                                     version            = VERSION, 
-                                     creation_act       = CREATION_ACT, 
-                                     token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       behaviors          = beh_comm_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 
 # Interested in music in US
 int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
-music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                      location_keys      = "US",
-                                      interests          = int_music_id,
-                                      version            = VERSION, 
-                                      creation_act       = CREATION_ACT, 
-                                      token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       interests          = int_music_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 
 # Likely commute to work OR interested in music in US
-comm_or_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                              location_keys      = "US",
-                                              behaviors          = beh_comm_id,
-                                              interests          = int_music_id,
-                                              version            = VERSION, 
-                                              creation_act       = CREATION_ACT, 
-                                              token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       behaviors          = beh_comm_id,
+                       interests          = int_music_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 ```
 
 ### And and OR Categories <a name="query_data_ids_andor"></a>
@@ -645,8 +648,8 @@ However, the following parameters can only except one input (a list or vector is
 
 To specify AND or OR conditions for the same parameter type:
 
-* Enter multiple parameter IDs within vectors to specify OR conditions
-* Enter multiple parameter IDs within lists to specify AND conditions
+* Enter multiple parameter IDs within __vectors c()__ to specify OR conditions
+* Enter multiple parameter IDs within __lists list()__ to specify AND conditions
 
 ```{r and_or_within, include=TRUE, warning=FALSE, message=FALSE}
 
@@ -655,35 +658,35 @@ beh_comm_id      <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 beh_sb_id        <- behaviors_df %>% filter(name == "Small business owners") %>% pull(id)
 
 # Users who are: Commuters or Travelers
-comm_or_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                          location_keys      = "US",
-                                          behaviors          = c(beh_comm_id, beh_freqtrvl_id),
-                                          version            = VERSION, 
-                                          creation_act       = CREATION_ACT, 
-                                          token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                      location_keys      = "US",
+                      behaviors          = c(beh_comm_id, beh_freqtrvl_id),
+                      version            = VERSION, 
+                      creation_act       = CREATION_ACT, 
+                      token              = TOKEN)
 
 # Users who are: Commuters and Travelers
-comm_or_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                          location_keys      = "US",
-                                          behaviors          = list(beh_comm_id, beh_freqtrvl_id),
-                                          version            = VERSION, 
-                                          creation_act       = CREATION_ACT, 
-                                          token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                      location_keys      = "US",
+                      behaviors          = list(beh_comm_id, beh_freqtrvl_id),
+                      version            = VERSION, 
+                      creation_act       = CREATION_ACT, 
+                      token              = TOKEN)
 
 # Users who are (Commuters or Small Business Owners) and Travelers
-comm_and_trvl_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                           location_keys      = "US",
-                                           behaviors          = list(c(beh_comm_id,
-                                                                       beh_sb_id), 
-                                                                     beh_freqtrvl_id),
-                                           version            = VERSION, 
-                                           creation_act       = CREATION_ACT, 
-                                           token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       behaviors          = list(c(beh_comm_id,
+                                                   beh_sb_id), 
+                                                 beh_freqtrvl_id),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 ```
 
-#### Across parameter types: Flexible Targetting <a name="query_data_ids_andor_flex"></a>
+#### Across parameter types: Flexible Targeting <a name="query_data_ids_andor_flex"></a>
 
-Flexible tagetting, using the `flex_target` parameter, allows for more complicated parameter specification---including AND conditions across parameter types (eg, behavior X AND interest Y). The input for `flex_target` follows the following logic:
+Flexible tageting, using the `flex_target` parameter, allows for more complicated parameter specification---including AND conditions across parameter types (eg, behavior X AND interest Y). The input for `flex_target` follows the following logic:
 
 * `flex_target` uses named lists to specify the (1) parameter type and (2) parameter ID
 * All parameters within the same list index are grouped using an OR condition
@@ -721,29 +724,33 @@ int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)")
 beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 
 ## OR CONDITION
-comm_or_music_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                           location_keys      = "US",
-                                           flex_target        = list("interests" = int_music_id,
-                                                                     "behaviors" = beh_comm_id),
-                                           version            = VERSION, 
-                                           creation_act       = CREATION_ACT, 
-                                           token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       flex_target        = list("interests" = int_music_id,
+                                                 "behaviors" = beh_comm_id),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 
 ## AND CONDITION
-comm_and_music_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                            location_keys      = "US",
-                                            flex_target        = list(list("interests" = int_music_id),
-                                                                      list("behaviors" = beh_comm_id)),
-                                            version            = VERSION, 
-                                            creation_act       = CREATION_ACT, 
-                                            token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       flex_target        = list(list("interests" = int_music_id),
+                                                 list("behaviors" = beh_comm_id)),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 
-bind_rows(comm_or_music_df,
-          comm_and_music_df) %>% 
-  kable() %>% 
-  kable_styling() %>% 
-  scroll_box(width = "100%",
-             height = "100%")
+## AND and OR CONDITION
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       flex_target        = list(list("interests" = int_music_id),
+                                                 list("behaviors" = c(beh_comm_id, beh_freqtrvl_id))),
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
+
+
 
 ```
 
@@ -757,13 +764,13 @@ Many parameters come with an alternate input that starts with `excl_` to exclude
 beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
 
-comm_no_music_us_df <- query_fb_marketing_api(location_unit_type = "countries",
-                                              location_keys      = "US",
-                                              behaviors          = beh_comm_id,
-                                              excl_interests     = int_music_id,
-                                              version            = VERSION, 
-                                              creation_act       = CREATION_ACT, 
-                                              token              = TOKEN)
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       behaviors          = beh_comm_id,
+                       excl_interests     = int_music_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
 ```
 
 

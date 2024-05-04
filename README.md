@@ -159,13 +159,12 @@ query_fb_marketing_api(
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1    219899444                234900000                276400000
 #>   location_unit_type location_types location_keys gender age_min age_max
 #> 1          countries home or recent            US 1 or 2      18      65
 #>     api_call_time_utc
-#> 1 2024-05-04 16:30:30
+#> 1 2024-05-04 17:03:38
 ```
 
 **Example:** Query Facebook users around specific location
@@ -179,13 +178,12 @@ query_fb_marketing_api(
   version            = VERSION, 
   creation_act       = CREATION_ACT, 
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'location_types':['home','recent'],'custom_locations':[{'latitude':40.712,'longitude':-74.006,'radius':5,'distance_unit':'kilometer'}]},'genders':[1,2],'age_min':18,'age_max':65}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1      1871425                  2400000                  2800000
 #>   location_unit_type location_types radius radius_unit gender age_min age_max
 #> 1        coordinates home or recent      5   kilometer 1 or 2      18      65
 #>   latitude longitude   api_call_time_utc
-#> 1   40.712   -74.006 2024-05-04 16:30:31
+#> 1   40.712   -74.006 2024-05-04 17:03:38
 ```
 
 ### Obtain location coordinates/geometries <a name="quick-location"></a>
@@ -285,19 +283,16 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'behaviors':[{'id':6003966451572}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1       114053                   138100                   162500
 #>   location_unit_type location_types location_keys     behaviors gender age_min
 #> 1          countries home or recent            US 6003966451572 1 or 2      18
 #>   age_max   api_call_time_utc
-#> 1      65 2024-05-04 16:30:47
+#> 1      65 2024-05-04 17:03:51
 ```
 
-**Example \[Two parameters, OR condition\]:** Facebook users who
-primarily access Facebook using Mac OS X OR who are likely technology
-early adopters who live in the US. *Vectors of IDs are used to specify
-OR conditions.*
+**Example \[One parameter\]:** Facebook users who are likely technology
+early adopters
 
 ``` r
 beh_tech_id <- behaviors_df |> 
@@ -307,17 +302,37 @@ beh_tech_id <- behaviors_df |>
 query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = "US",
+  behaviors          = beh_tech_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+#>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
+#> 1     13957411                 14100000                 16600000
+#>   location_unit_type location_types location_keys     behaviors gender age_min
+#> 1          countries home or recent            US 6003808923172 1 or 2      18
+#>   age_max   api_call_time_utc
+#> 1      65 2024-05-04 17:03:52
+```
+
+**Example \[Two parameters, OR condition\]:** Facebook users who
+primarily access Facebook using Mac OS X OR who are likely technology
+early adopters who live in the US. *Vectors of IDs are used to specify
+OR conditions.*
+
+``` r
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
   behaviors          = c(beh_mac_id, beh_tech_id),
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1     14107933                 14300000                 16800000
 #>   location_unit_type location_types location_keys
 #> 1          countries home or recent            US
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:47
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:03:53
 ```
 
 **Example \[Two parameters, AND condition\]:** Facebook users who
@@ -333,21 +348,20 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'behaviors':[{'id':6003966451572}]},{'behaviors':[{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1        10883                    10500                    12400
 #>   location_unit_type location_types location_keys
 #> 1          countries home or recent            US
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 16:30:48
+#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 17:03:55
 ```
 
-**Example \[Two parameters, OR and AND condition\]:** Facebook users who
-(primarily access Facebook using Mac OS X AND who are likely technology
-early adopters) OR are interested in computers, who live in the US.
-Multiple parameters (eg, behavior and interests) are grouped using OR
-conditions by default. **The “flex_target” parameters can be used to
-specify AND conditions across parameters; see
+**Example \[Two parameters types\]:** Across parameter types, AND
+conditions are used. The below example queries Facebook users who (1)
+primarily access Facebook using Mac OS X AND (2) who are likely
+technology early adopters AND (3) are interested in computers, who live
+in the US. **The “flex_target” parameters can be used to specify OR
+conditions across parameters; see
 [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting)
 for examples.**
 
@@ -364,13 +378,12 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]},{'behaviors':[{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
-#> 1      8403428                  7700000                  9100000
+#> 1         6538                     5900                     6900
 #>   location_unit_type location_types location_keys     interests
 #> 1          countries home or recent            US 6003404634364
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 16:30:49
+#> 1 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 17:03:57
 ```
 
 ### Map Over Multiple Queries <a name="quick-multiple"></a>
@@ -394,21 +407,18 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
-#> 1    105488484                 99300000                116800000
-#> 2     13369715                 12500000                 14700000
-#> 3     50269520                 46500000                 54700000
+#> 1      8388414                  7700000                  9100000
+#> 2       886291                   834100                   981300
+#> 3      2438417                  2200000                  2600000
 #>   location_unit_type location_types location_keys     interests
 #> 1          countries home or recent            US 6003404634364
 #> 2          countries home or recent            CA 6003404634364
 #> 3          countries home or recent            MX 6003404634364
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:50
-#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:50
-#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:51
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:03:58
+#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:03:59
+#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:03:59
 ```
 
 **Example:** Make queries for different and behaviors. In total, six
@@ -423,19 +433,13 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
-#> 1    100015428                 92900000                109300000
-#> 2     12934692                 12000000                 14100000
-#> 3     49061945                 45100000                 53100000
-#> 4    105511843                 99300000                116800000
-#> 5     13464525                 12500000                 14700000
-#> 6     50272255                 46500000                 54700000
+#> 1        61908                    58200                    68500
+#> 2        15795                    15000                    17700
+#> 3        22012                    20900                    24500
+#> 4      8311533                  7700000                  9000000
+#> 5       869378                   817800                   962100
+#> 6      2438287                  2200000                  2600000
 #>   location_unit_type location_types location_keys     interests     behaviors
 #> 1          countries home or recent            US 6003404634364 6003966451572
 #> 2          countries home or recent            CA 6003404634364 6003966451572
@@ -444,12 +448,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            CA 6003404634364 6003808923172
 #> 6          countries home or recent            MX 6003404634364 6003808923172
 #>   gender age_min age_max   api_call_time_utc
-#> 1 1 or 2      18      65 2024-05-04 16:30:52
-#> 2 1 or 2      18      65 2024-05-04 16:30:53
-#> 3 1 or 2      18      65 2024-05-04 16:30:54
-#> 4 1 or 2      18      65 2024-05-04 16:30:55
-#> 5 1 or 2      18      65 2024-05-04 16:30:56
-#> 6 1 or 2      18      65 2024-05-04 16:30:57
+#> 1 1 or 2      18      65 2024-05-04 17:04:00
+#> 2 1 or 2      18      65 2024-05-04 17:04:00
+#> 3 1 or 2      18      65 2024-05-04 17:04:01
+#> 4 1 or 2      18      65 2024-05-04 17:04:03
+#> 5 1 or 2      18      65 2024-05-04 17:04:04
+#> 6 1 or 2      18      65 2024-05-04 17:04:04
 ```
 
 **Example:** Make query for each country, for:
@@ -472,19 +476,13 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]},{'behaviors':[{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]},{'behaviors':[{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572}]},{'behaviors':[{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
-#> 1    105488484                 99300000                116800000
-#> 2     13369715                 12500000                 14700000
-#> 3     50269520                 46500000                 54700000
-#> 4      8403428                  7700000                  9100000
-#> 5       870786                   819100                   963700
-#> 6      2438287                  2200000                  2600000
+#> 1      8388414                  7700000                  9100000
+#> 2       886291                   834100                   981300
+#> 3      2438417                  2200000                  2600000
+#> 4         6538                     5900                     6900
+#> 5         1391                     1300                     1500
+#> 6         1699                     1500                     1700
 #>   location_unit_type location_types location_keys     interests
 #> 1          countries home or recent            US 6003404634364
 #> 2          countries home or recent            CA 6003404634364
@@ -493,12 +491,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            CA 6003404634364
 #> 6          countries home or recent            MX 6003404634364
 #>                         behaviors gender age_min age_max   api_call_time_utc
-#> 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:57
-#> 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:58
-#> 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:30:58
-#> 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 16:30:58
-#> 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 16:30:59
-#> 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 16:31:00
+#> 1  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:05
+#> 2  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:05
+#> 3  6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:05
+#> 4 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 17:04:06
+#> 5 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 17:04:07
+#> 6 6003966451572 and 6003808923172 1 or 2      18      65 2024-05-04 17:04:07
 ```
 
 **Example:** Make queries using vector as input. Below, we want to make
@@ -530,13 +528,12 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US','CA','MX','FR','GB','ES'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1    450330182                484900000                570500000
 #>   location_unit_type location_types                    location_keys gender
 #> 1          countries home or recent US or CA or MX or FR or GB or ES 1 or 2
 #>   age_min age_max   api_call_time_utc
-#> 1      18      65 2024-05-04 16:31:01
+#> 1      18      65 2024-05-04 17:04:07
 ```
 
 **Incorrect approach to make query for each country**
@@ -551,12 +548,6 @@ query_fb_marketing_api(
   version            = VERSION,
   creation_act       = CREATION_ACT,
   token              = TOKEN)
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['FR'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['GB'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['ES'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
 #> 1    219899444                234900000                276400000
 #> 2     26595379                 27700000                 32600000
@@ -572,12 +563,12 @@ query_fb_marketing_api(
 #> 5          countries home or recent            GB 1 or 2      18      65
 #> 6          countries home or recent            ES 1 or 2      18      65
 #>     api_call_time_utc
-#> 1 2024-05-04 16:31:01
-#> 2 2024-05-04 16:31:02
-#> 3 2024-05-04 16:31:03
-#> 4 2024-05-04 16:31:04
-#> 5 2024-05-04 16:31:04
-#> 6 2024-05-04 16:31:05
+#> 1 2024-05-04 17:04:08
+#> 2 2024-05-04 17:04:08
+#> 3 2024-05-04 17:04:11
+#> 4 2024-05-04 17:04:11
+#> 5 2024-05-04 17:04:12
+#> 6 2024-05-04 17:04:13
 ```
 
 ### Using Multiple API Tokens <a name="multiple_tokens"></a>
@@ -617,21 +608,14 @@ query_fb_marketing_api(
   version            = c(VERSION_1,      VERSION_2,      VERSION_3) ,
   creation_act       = c(CREATION_ACT_1, CREATION_ACT_2, CREATION_ACT_3),
   token              = c(TOKEN_1,        TOKEN_2,        TOKEN_3) )
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['US'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['CA'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['MX'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['GB'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['FR'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['DE'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
-#> [1] "https://graph.facebook.com/v19.0/act_4492889454107065/delivery_estimate?access_token=EAAI923NZCeAYBO6zgJ16MurEYZBZBTxiGtZAW6M4dci7mYIhTWVBGMCPX6S30KFZCkXvacFZBWpEBlnEJF3LyBaT8PMXP2hwtI7cPW4LHdDVSUlSk0DkXwdyByswTgc5Dddm1KZAsikZAReTfPiFYGJ7Na95EUNGqw4enEKVa2bC92mpC7R979BZAaNvbwvEZCZCZBbnxyOp5Kfm&include_headers=false&pretty=0&suppress_http_code=1&method=get&optimization_goal=REACH&pretty=0&suppress_http_code=1&targeting_spec={'geo_locations':{'countries':['IT'],'location_types':['home','recent']},'genders':[1,2],'age_min':18,'age_max':65,'flexible_spec':[{'interests':[{'id':6003404634364}],'behaviors':[{'id':6003966451572},{'id':6003808923172}]}]}"
 #>   estimate_dau estimate_mau_lower_bound estimate_mau_upper_bound
-#> 1    105488484                 99300000                116800000
-#> 2     13369715                 12500000                 14700000
-#> 3     50269520                 46500000                 54700000
-#> 4     21406178                 19600000                 23000000
-#> 5     17978305                 16800000                 19700000
-#> 6     21373710                 20200000                 23800000
-#> 7     19655016                 17700000                 20800000
+#> 1      8388414                  7700000                  9100000
+#> 2       886291                   834100                   981300
+#> 3      2438417                  2200000                  2600000
+#> 4       942296                   890600                  1000000
+#> 5       644377                   597500                   703000
+#> 6       672929                   626500                   737000
+#> 7       667252                   599300                   705000
 #>   location_unit_type location_types location_keys     interests
 #> 1          countries home or recent            US 6003404634364
 #> 2          countries home or recent            CA 6003404634364
@@ -641,13 +625,13 @@ query_fb_marketing_api(
 #> 6          countries home or recent            DE 6003404634364
 #> 7          countries home or recent            IT 6003404634364
 #>                        behaviors gender age_min age_max   api_call_time_utc
-#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:05
-#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:06
-#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:06
-#> 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:07
-#> 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:08
-#> 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:09
-#> 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 16:31:10
+#> 1 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:13
+#> 2 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:14
+#> 3 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:14
+#> 4 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:15
+#> 5 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:15
+#> 6 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:16
+#> 7 6003966451572 or 6003808923172 1 or 2      18      65 2024-05-04 17:04:16
 ```
 
 ### Summary of Input Methods <a name="summary_inputs"></a>
