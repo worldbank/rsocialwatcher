@@ -647,7 +647,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   query <- query_all %>% paste0("}")
   
   #### Remove unneeded brackets ####
-  query <- query %>% str_replace_all(",{}", "")
+  query <- query %>% str_replace_all(",\\{\\}", "")
   
   # Make Query -----------------------------------------------------------------
   # Make query and prep dataframe with results and parameter
