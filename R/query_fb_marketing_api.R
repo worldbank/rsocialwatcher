@@ -176,7 +176,7 @@ make_flex_spec <- function(param,
   
   out <- lapply(param, make_flex_spec_or, name, add_id) %>% 
     rm_blank() %>% 
-    paste(collapse = ",") %>%
+    paste(collapse = "},{") %>%
     add_comma_if_not_blank()
   
   return(out)
@@ -656,15 +656,10 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     query_val_df <- tryCatch({
       
       #query_val <- url(query) %>% fromJSON
+      print(query)
       query_val <- GET(query) %>%
         content(as="text") %>%
         fromJSON() 
-      
-      # print(query)
-      # print(query_val)
-      # 
-      # b <<- query
-      # a <<- query_val
       
       if(!is.null(query_val$error)){
         warning("Error message from 'Facebook Marketing' API")
