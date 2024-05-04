@@ -207,12 +207,23 @@ query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
+__Example [One parameter]:__ Facebook users who are likely technology early adopters
 ```{r, message = F, warning=F}
 beh_tech_id <- behaviors_df |> 
   filter(name == "Early technology adopters") |> 
   pull(id)
 
+query_fb_marketing_api(
+  location_unit_type = "country",
+  location_keys      = "US",
+  behaviors          = beh_tech_id,
+  version            = VERSION,
+  creation_act       = CREATION_ACT,
+  token              = TOKEN)
+```
+
+__Example [Two parameters, OR condition]:__ Facebook users who primarily access Facebook using Mac OS X OR who are likely technology early adopters who live in the US. _Vectors of IDs are used to specify OR conditions._
+```{r, message = F, warning=F}
 query_fb_marketing_api(
   location_unit_type = "country",
   location_keys      = "US",
@@ -234,7 +245,7 @@ query_fb_marketing_api(
   token              = TOKEN)
 ```
 
-__Example [Two parameters, OR and AND condition]:__ Facebook users who (primarily access Facebook using Mac OS X AND who are likely technology early adopters) OR are interested in computers, who live in the US. Multiple parameters (eg, behavior and interests) are grouped using OR conditions by default. __The "flex_target" parameters can be used to specify AND conditions across parameters; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples.__
+__Example [Two parameters types]:__ Across parameter types, AND conditions are used. The below example queries Facebook users who (1) primarily access Facebook using Mac OS X AND (2) who are likely technology early adopters AND (3) are interested in computers, who live in the US. __The "flex_target" parameters can be used to specify OR conditions across parameters; see [here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting) for examples.__
 ```{r, message = F, warning=F}
 int_comp_id <- interests_df |> 
   filter(name == "Computers (computers & electronics)") |> 

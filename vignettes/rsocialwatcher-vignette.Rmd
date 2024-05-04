@@ -709,6 +709,12 @@ The below shows a more complicated example, which grabs all users that meet (EIT
 flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = 2))
 ```
 
+__Example 4: OR and AND Conditions__
+The below shows a more complicated example, which grabs all users that meet (EITHER interests:1 or behaviors:3) AND (EITHER behaviors:2 or behaviors:4). Everything within `flex_param[[1]]` are grouped within OR conditions, but different indices (`flex_param[[1]]` and `flex_param[[2]]`) are separated by AND conditions.
+```
+flex_param <- list(list("interests" = 1, "behaviors" = 3), list("behaviors" = c(2,4)))
+```
+
 ```{r and_or_across, include=TRUE, warning=FALSE, message=FALSE}
 
 int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)

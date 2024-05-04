@@ -122,7 +122,7 @@ rm_blank <- function(x){
 
 add_comma_if_not_blank <- function(x){
   if(x != ""){
-    x <- paste0(x, ",")
+    x <- paste0(x, "},{")
   }
   
   return(x)
@@ -646,6 +646,9 @@ query_fb_marketing_api_1call <- function(location_unit_type,
   #### Add ending curly bracket ####
   query <- query_all %>% paste0("}")
   
+  #### Remove unneeded brackets ####
+  query <- query %>% str_replace_all(",{}", "")
+  
   # Make Query -----------------------------------------------------------------
   # Make query and prep dataframe with results and parameter
   try_api_call <- TRUE
@@ -656,7 +659,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
     query_val_df <- tryCatch({
       
       #query_val <- url(query) %>% fromJSON
-      print(query)
+
       query_val <- GET(query) %>%
         content(as="text") %>%
         fromJSON() 
@@ -828,8 +831,8 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #' ## ------------------------------
 #' __Parameters:__
 #' * Within parameters, vectors (`c()`) specify OR conditions and lists (`list()`) specify AND conditions. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment OR movies, while `interests = list(6003349442621, 6003139266461)` will target users who are interested in either entertainment AND movies.
-#' * Across parameters, OR conditions are used. For example, if enter `interests = 6003349442621` and `behaviors = 6008297697383` are specified, the function will query Facebook users interested in entertainment OR are frequent travelers.
-#' * And conditions across parameters can be specified using the `flex_target` argument.
+#' * Across parameters, AND conditions are used. For example, if enter `interests = 6003349442621` and `behaviors = 6008297697383` are specified, the function will query Facebook users interested in entertainment AND are frequent travelers.
+#' * Or conditions across parameters can be specified using the `flex_target` argument; see [package documentation](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#query_data_ids_andor_flex) for examples.
 #' @param interests Interest IDs. For example, `interests = c(6003349442621, 6003139266461)` will target users who are interested in either entertainment or movies. Use `get_fb_parameter_ids(type = "interests", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#interests).
 #' @param behaviors Behavior IDs. For example, `behaviors = c(6002714895372, 6008297697383)` will target users who are either frequent travelers or returned from travels 2 weeks ago. Use `get_fb_parameter_ids(type = "behaviors", ...)` to get dataframe with IDs and descriptions. For more information, see the [Basic Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting#behaviors).
 #' @param college_years College graduation years. For example, `college_years = c(2014, 2015)` will target users who graduated college in 2014 or 2015. For more information, see the [Advanced Targeting Documentation](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting#education_and_workplace).
