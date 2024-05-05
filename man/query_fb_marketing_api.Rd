@@ -169,7 +169,7 @@ query_fb_marketing_api(
 \strong{Flex targeting parameters}
 }}
 
-\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.
+\item{flex_target}{Flexible targeting allows for more complicated parameter specifications. For example, specifying OR conditions across parameter types (eg, behaviors, interests, etc). For information on how to use flexible targeting, see \href{https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting}{the documentation here}.
 \subsection{------------------------------}{
 
 \strong{Parameters for credentials}

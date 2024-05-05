@@ -621,7 +621,7 @@ query_fb_marketing_api(location_unit_type = "countries",
                        creation_act       = CREATION_ACT, 
                        token              = TOKEN)
 
-# Likely commute to work OR interested in music in US
+# Likely commute to work AND interested in music in US
 query_fb_marketing_api(location_unit_type = "countries",
                        location_keys      = "US",
                        behaviors          = beh_comm_id,
@@ -760,10 +760,18 @@ Many parameters come with an alternate input that starts with `excl_` to exclude
 
 ```{r exclude_ex, include=TRUE, warning=FALSE, message=FALSE}
 
-# Likely commute to work BUT NOT interested in music in US
 beh_comm_id  <- behaviors_df %>% filter(name == "Commuters") %>% pull(id)
 int_music_id <- interests_df %>% filter(name == "Music (entertainment & media)") %>% pull(id)
 
+# Like to commute
+query_fb_marketing_api(location_unit_type = "countries",
+                       location_keys      = "US",
+                       behaviors          = beh_comm_id,
+                       version            = VERSION, 
+                       creation_act       = CREATION_ACT, 
+                       token              = TOKEN)
+
+# Likely commute to work AND NOT interested in music in US
 query_fb_marketing_api(location_unit_type = "countries",
                        location_keys      = "US",
                        behaviors          = beh_comm_id,

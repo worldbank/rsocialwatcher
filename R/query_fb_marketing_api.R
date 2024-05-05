@@ -885,7 +885,7 @@ query_fb_marketing_api_1call <- function(location_unit_type,
 #'
 #' ## ------------------------------
 #' __Flex targeting parameters__
-#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying AND conditions across parameter types (eg, behaviors and interests). For information on how to use flexible targeting, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
+#' @param flex_target Flexible targeting allows for more complicated parameter specifications. For example, specifying OR conditions across parameter types (eg, behaviors, interests, etc). For information on how to use flexible targeting, see [the documentation here](https://worldbank.github.io/rsocialwatcher/articles/rsocialwatcher-vignette.html#across-parameter-types-flexible-targetting).
 #'
 #' ## ------------------------------
 #' __Parameters for credentials__

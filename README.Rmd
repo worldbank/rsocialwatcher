@@ -51,7 +51,7 @@ The package provides the following functions:
 * [`query_fb_marketing_api()`](https://worldbank.github.io/rsocialwatcher/reference/query_fb_marketing_api.html): Query daily and monthly active users, querying users for specific locations and by specific types. 
 * [`get_fb_suggested_radius()`](https://worldbank.github.io/rsocialwatcher/reference/get_fb_suggested_radius.html): Determine a suggested radius to reach enough people for a given coordinate pair.
 
-## Installation
+## Installation <a name="installation"></a>
 
 The package can be installed via CRAN.
 
