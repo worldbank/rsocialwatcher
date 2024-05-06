@@ -339,7 +339,7 @@ query_fb_marketing_api(
 
 ```
 
-__Incorrect approach to make query for each country__
+__Correct approach to make query for each country__
 ```{r, message = F, warning=F}
 countries <- c("US", "CA", "MX", "FR", "GB", "ES")
 
